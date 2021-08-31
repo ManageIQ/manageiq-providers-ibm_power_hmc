@@ -1,0 +1,26 @@
+:ems:
+  :ems_ibm_power_hmc:
+    :blacklisted_event_names: []
+    :event_handling:
+      :event_groups:
+:ems_refresh:
+  :ibm_power_hmc:
+    :refresh_interval: 15.minutes
+:http_proxy:
+  :ibm_power_hmc:
+    :host:
+    :password:
+    :port:
+    :user:
+:log:
+  :level_ibm_power_hmc: info
+:workers:
+  :worker_base:
+    :event_catcher:
+      :event_catcher_ibm_power_hmc:
+        :poll: 20.seconds
+    :queue_worker_base:
+      :ems_metrics_collector_worker:
+        :ems_metrics_collector_worker_ibm_power_hmc: {}
+      :ems_refresh_worker:
+        :ems_refresh_worker_ibm_power_hmc: {}
