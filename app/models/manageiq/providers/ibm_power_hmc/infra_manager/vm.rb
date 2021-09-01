@@ -5,27 +5,64 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_start
-    with_provider_object(&:start)
+    $log.info("Damien: raw_start ems_ref=#{ems_ref}")
+    ext_management_system.with_provider_connection do |connection|
+      # Damien: check VIOS or LPAR from description?
+      connection.poweron_lpar(ems_ref)
+    end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "on")
+    update!(:raw_power_state => "on") # Damien: "starting"
   end
 
   def raw_stop
-    with_provider_object(&:stop)
+    $log.info("Damien: raw_stop ems_ref=#{ems_ref}")
+    ext_management_system.with_provider_connection do |connection|
+      # Damien: check VIOS or LPAR from description?
+      connection.poweroff_lpar(ems_ref, { "operation" => "shutdown" })
+    end
     # Temporarily update state for quick UI response until refresh comes along
     update!(:raw_power_state => "off")
   end
 
-  def raw_pause
-    with_provider_object(&:pause)
+  def raw_shutdown_guest
+    $log.info("Damien: raw_shutdown_guest ems_ref=#{ems_ref}")
+    ext_management_system.with_provider_connection do |connection|
+      # Damien: check VIOS or LPAR from description?
+      connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown" })
+    end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "paused")
+    update!(:raw_power_state => "off")
+  end
+
+  def raw_reboot_guest
+    $log.info("Damien: raw_reboot_guest ems_ref=#{ems_ref}")
+    ext_management_system.with_provider_connection do |connection|
+      # Damien: check VIOS or LPAR from description?
+      connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown", "restart" => "true" })
+    end
+    # Temporarily update state for quick UI response until refresh comes along
+    update!(:raw_power_state => "off")
+  end
+
+  def raw_reset
+    $log.info("Damien: raw_reset ems_ref=#{ems_ref}")
+    ext_management_system.with_provider_connection do |connection|
+      # Damien: check VIOS or LPAR from description?
+      connection.poweroff_lpar(ems_ref, { "operation" => "shutdown", "restart" => "true", "immediate" => "true" })
+    end
+    # Temporarily update state for quick UI response until refresh comes along
+    update!(:raw_power_state => "off")
+  end
+
+  def raw_destroy
   end
 
   def raw_suspend
-    with_provider_object(&:suspend)
     # Temporarily update state for quick UI response until refresh comes along
     update!(:raw_power_state => "suspended")
+  end
+
+  def raw_rename
   end
 
   POWER_STATES = {
@@ -36,6 +73,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   }.freeze
 
   def self.calculate_power_state(raw_power_state)
-    POWER_STATES[raw_power_state.to_s] || "terminated"
+    POWER_STATES[raw_power_state] || "unknown"
   end
 end
