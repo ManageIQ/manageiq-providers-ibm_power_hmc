@@ -18,7 +18,43 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser < ManageIQ::Providers:
       host.hostname = sys.hostname
       host.ipaddress = sys.ipaddr
       host.power_state = lookup_power_state(sys.state)
+
+      parse_host_operating_system(host, sys)
+      parse_host_hardware(host, sys)
     end
+  end
+
+  def parse_host_operating_system(host, sys)
+    # Damien: PHYP version?
+#    persister.host_operating_systems.build(
+#      :host         => host,
+#    )
+  end
+
+  def parse_host_hardware(host, sys)
+#    hardware = persister.host_hardwares.build(
+#      :host                 => host,
+#      :cpu_type             => sys.xxx,
+#      :manufacturer         => sys.xxx,
+#      :model                => sys.xxx,
+#      :cpu_speed            => sys.xxx,
+#      :memory_mb            => sys.xxx,
+#      :cpu_sockets          => sys.xxx,
+#      :cpu_total_cores      => sys.xxx,
+#      :cpu_cores_per_socket => sys.xxx,
+#      :serial_number        => sys.serial_number,
+#    )
+#
+#    parse_host_guest_devices(hardware, sys)
+  end
+
+  def parse_host_guest_devices(hardware, sys)
+#   persister.host_guest_devices.build(
+#     :hardware        => hardware,
+#     :uid_ems         => sys.xxx,
+#     :device_name     => sys.xxx,
+#     :device_type     => sys.xxx,
+#   )
   end
 
   def parse_vms
@@ -28,15 +64,25 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser < ManageIQ::Providers:
       vm.name = lpar.name
       vm.location = "unknown"
       vm.description = lpar.type
-      vm.vendor = "ibm_power_vc" # Damien: ibm_power_hmc?
-      vm.raw_power_state = lpar.state # Damien: ACTIVE, SHUTOFF, unknown, never?
+      vm.vendor = "ibm_power_vc" # Damien: add ibm_power_hmc to MIQ
+      vm.raw_power_state = lpar.state
       vm.host = persister.hosts.lazy_find(lpar.sys_uuid)
-      #vm.connection_state = nil #lookup_connected_state(lpar.state)
-      #vm.num_cpu =
-      #vm.cpu_total_cores =
-      #vm.ram_size =
+      #vm.connection_state = nil # Damien: rmc_state?
       #vm.ipaddresses = [lpar.rmc_ipaddr] unless lpar.rmc_ipaddr.nil?
+
+      parse_vm_hardware(vm, lpar)
     end
+  end
+
+  def parse_vm_hardware(vm, lpar)
+#    persister.hardwares.build(
+#      :vm_or_template     => vm,
+#      :cpu_total_cores    => lpar.xxx,
+#      :guest_os           => lpar.xxx,
+#      :guest_os_full_name => lpar.xxx,
+#      :memory_mb          => lpar.xxx,
+#      :cpu_type           => lpar.xxx,
+#    )
   end
 
   def lookup_power_state(state)
