@@ -11,7 +11,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       connection.poweron_lpar(ems_ref)
     end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "on") # Damien: "starting"
+    update!(:raw_power_state => "running") # Damien: "starting"
   end
 
   def raw_stop
@@ -21,27 +21,29 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       connection.poweroff_lpar(ems_ref, { "operation" => "shutdown" })
     end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "off")
+    update!(:raw_power_state => "not activated")
   end
 
   def raw_shutdown_guest
+    # Damien: check rmc_status first!
     $log.info("Damien: raw_shutdown_guest ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown" })
     end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "off")
+    update!(:raw_power_state => "not activated")
   end
 
   def raw_reboot_guest
+    # Damien: check rmc_status first!
     $log.info("Damien: raw_reboot_guest ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown", "restart" => "true" })
     end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "off")
+    update!(:raw_power_state => "running")
   end
 
   def raw_reset
@@ -51,7 +53,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       connection.poweroff_lpar(ems_ref, { "operation" => "shutdown", "restart" => "true", "immediate" => "true" })
     end
     # Temporarily update state for quick UI response until refresh comes along
-    update!(:raw_power_state => "off")
+    update!(:raw_power_state => "running")
   end
 
   def raw_destroy
@@ -70,6 +72,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     "open firmware" => "on",
     "not activated" => "off",
     "not available" => "unknown",
+    # Damien: TBD
   }.freeze
 
   def self.calculate_power_state(raw_power_state)
