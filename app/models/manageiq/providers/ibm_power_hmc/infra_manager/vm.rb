@@ -5,7 +5,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_start
-    $log.info("Damien: raw_start ems_ref=#{ems_ref}")
+    $ibm_power_hmc_log.info("raw_start ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweron_lpar(ems_ref)
@@ -15,7 +15,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_stop
-    $log.info("Damien: raw_stop ems_ref=#{ems_ref}")
+    $ibm_power_hmc_log.info("raw_stop ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, { "operation" => "shutdown" })
@@ -26,7 +26,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def raw_shutdown_guest
     # Damien: check rmc_status first!
-    $log.info("Damien: raw_shutdown_guest ems_ref=#{ems_ref}")
+    $ibm_power_hmc_log.info("raw_shutdown_guest ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown" })
@@ -37,7 +37,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def raw_reboot_guest
     # Damien: check rmc_status first!
-    $log.info("Damien: raw_reboot_guest ems_ref=#{ems_ref}")
+    $ibm_power_hmc_log.info("raw_reboot_guest ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown", "restart" => "true" })
@@ -47,7 +47,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_reset
-    $log.info("Damien: raw_reset ems_ref=#{ems_ref}")
+    $ibm_power_hmc_log.info("raw_reset ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, { "operation" => "shutdown", "restart" => "true", "immediate" => "true" })

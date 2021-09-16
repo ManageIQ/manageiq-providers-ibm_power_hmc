@@ -127,8 +127,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.raw_connect(hostname, port, userid, password, validate_ssl, validate)
     require "ibm_power_hmc"
 
-    $log.info("Damien: raw connect #{hostname} #{port} #{userid} #{password} #{validate_ssl} #{validate}")
-
     hc = IbmPowerHmc::Connection.new(host: hostname, port: port, username: userid, password: password, validate_ssl: validate_ssl)
     if validate
       # Do a logon/logoff to verify credentials
