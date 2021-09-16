@@ -1,0 +1,5 @@
+Style/GlobalVars:
+  AllowedVariables:
+
+  # Loggers
+  - $ibm_power_hmc_log
