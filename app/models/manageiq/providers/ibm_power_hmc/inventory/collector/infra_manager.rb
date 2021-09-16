@@ -5,33 +5,33 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def collect!
-    $log.info("Damien: collecting")
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     inventory["hosts"] = connection.managed_systems
     inventory["vms"] = []
     inventory["hosts"].each do |sys|
       inventory["vms"] += connection.lpars(sys.uuid)
       inventory["vms"] += connection.vioses(sys.uuid)
     end
-    $log.info("Damien: end collection")
+    $ibm_power_hmc_log.info("end collection")
   end
 
   def inventory
-    $log.info("Damien: inventory")
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     @inventory ||= collect!
   end
 
   def ems
-    $log.info("Damien: ems")
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     inventory["ems"] || {}
   end
 
   def hosts
-    $log.info("Damien: hosts")
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     inventory["hosts"] || []
   end
 
   def vms
-    $log.info("Damien: vms")
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     inventory["vms"] || []
   end
 
