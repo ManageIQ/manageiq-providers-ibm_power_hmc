@@ -22,9 +22,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
       catch(:stop_polling) do
         begin
           loop do
-            connection.events.each do |activity|
+            connection.next_events.each do |event|
               throw :stop_polling if @stop_polling
-              yield activity.to_h
+              yield event
             end
             sleep @poll_sleep
           end

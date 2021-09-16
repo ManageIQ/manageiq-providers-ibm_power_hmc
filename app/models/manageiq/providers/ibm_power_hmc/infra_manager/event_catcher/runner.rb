@@ -14,7 +14,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Runner < Man
   end
 
   def queue_event(event)
-    _log.info "#{log_prefix} Caught event [#{event[:id]}]"
+    _log.info "#{log_prefix} Caught event [#{event.id}]"
     event_hash = event_to_hash(event, @cfg[:ems_id])
     EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
@@ -22,14 +22,24 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Runner < Man
   private
 
   def event_to_hash(event, ems_id)
-    {
-      :event_type => "IBM_POWER_HMC#{event[:name]}",
+    event_hash = {
+      :event_type => event.type,
       :source     => 'IBM_POWER_HMC',
-      :timestamp  => event[:timestamp],
-      :vm_ems_ref => event[:vm_ems_ref],
+      :ems_ref    => event.id,
+      :timestamp  => event.published,
       :full_data  => event,
       :ems_id     => ems_id
     }
+    case event.type
+    when /.*_URI/
+      uri = URI(event.data)
+      elems = uri.path.split('/')
+      uuid = elems[-1]
+      type = elems[-2]
+      if type == "LogicalPartition"
+        event_hash[:vm_ems_ref] = uuid
+      end
+    end
   end
 
   def event_monitor_handle
