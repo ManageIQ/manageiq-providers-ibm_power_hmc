@@ -1,7 +1,7 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   def provider_object(connection = nil)
-    connection ||= ext_management_system.connect
-    #connection.find_vm(ems_ref)
+    # connection ||= ext_management_system.connect
+    # connection.find_vm(ems_ref)
   end
 
   def raw_start
@@ -18,7 +18,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     $ibm_power_hmc_log.info("raw_stop ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, { "operation" => "shutdown" })
+      connection.poweroff_lpar(ems_ref, {"operation" => "shutdown"})
     end
     # Temporarily update state for quick UI response until refresh comes along
     update!(:raw_power_state => "not activated")
@@ -29,7 +29,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     $ibm_power_hmc_log.info("raw_shutdown_guest ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown" })
+      connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown"})
     end
     # Temporarily update state for quick UI response until refresh comes along
     update!(:raw_power_state => "not activated")
@@ -40,7 +40,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     $ibm_power_hmc_log.info("raw_reboot_guest ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, { "operation" => "osshutdown", "restart" => "true" })
+      connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown", "restart" => "true"})
     end
     # Temporarily update state for quick UI response until refresh comes along
     update!(:raw_power_state => "running")
@@ -50,7 +50,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     $ibm_power_hmc_log.info("raw_reset ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
       # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, { "operation" => "shutdown", "restart" => "true", "immediate" => "true" })
+      connection.poweroff_lpar(ems_ref, {"operation" => "shutdown", "restart" => "true", "immediate" => "true"})
     end
     # Temporarily update state for quick UI response until refresh comes along
     update!(:raw_power_state => "running")

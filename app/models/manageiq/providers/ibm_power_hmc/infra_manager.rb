@@ -97,7 +97,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
     !!raw_connect(hostname, port, userid, password, validate_ssl, true)
   end
 
-  def verify_credentials(auth_type = nil, options = {})
+  def verify_credentials(_auth_type = nil, _options = {})
     begin
       connect(:validate => true)
     rescue => err
@@ -115,7 +115,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
     password = authentication_password(options[:auth_type])
 
     options[:validate] ||= false
- 
+
     self.class.raw_connect(hostname, port, userid, password, validate_ssl, options[:validate])
   end
 
@@ -127,7 +127,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.raw_connect(hostname, port, userid, password, validate_ssl, validate)
     require "ibm_power_hmc"
 
-    hc = IbmPowerHmc::Connection.new(host: hostname, port: port, username: userid, password: password, validate_ssl: validate_ssl)
+    hc = IbmPowerHmc::Connection.new(:host => hostname, :port => port, :username => userid, :password => password, :validate_ssl => validate_ssl)
     if validate
       # Do a logon/logoff to verify credentials
       hc.logon
@@ -144,5 +144,4 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.description
     @description ||= "IBM Power HMC".freeze
   end
-
 end

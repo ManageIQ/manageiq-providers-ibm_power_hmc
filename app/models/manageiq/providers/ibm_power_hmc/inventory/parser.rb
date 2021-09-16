@@ -45,8 +45,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser < ManageIQ::Providers:
       # :cpu_cores_per_socket => sys.cpus,
       :serial_number        => "123456",
     )
-    #
-    # parse_host_guest_devices(hardware, sys)
+
+    parse_host_guest_devices(hardware, sys)
   end
 
   def parse_host_guest_devices(hardware, sys)
