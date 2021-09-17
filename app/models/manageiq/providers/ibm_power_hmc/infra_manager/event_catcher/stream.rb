@@ -22,7 +22,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
       catch(:stop_polling) do
         begin
           loop do
-            connection.next_events.each do |event|
+            $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+
+            connection.next_events(false).each do |event|
               throw :stop_polling if @stop_polling
               yield event
             end

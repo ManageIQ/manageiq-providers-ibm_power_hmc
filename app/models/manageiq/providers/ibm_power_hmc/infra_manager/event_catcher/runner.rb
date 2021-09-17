@@ -22,6 +22,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Runner < Man
   private
 
   def event_to_hash(event, ems_id)
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} #{event.to_s}")
+
     event_hash = {
       :event_type => event.type,
       :source     => 'IBM_POWER_HMC',
