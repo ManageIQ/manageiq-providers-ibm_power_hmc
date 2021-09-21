@@ -147,8 +147,4 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.description
     @description ||= "IBM Power HMC".freeze
   end
-
-  def self.event_monitor_class
-    ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher
-  end
 end
