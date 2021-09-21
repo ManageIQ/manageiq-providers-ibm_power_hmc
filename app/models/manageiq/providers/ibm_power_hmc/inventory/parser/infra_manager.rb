@@ -33,7 +33,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_host_hardware(host, sys)
     hardware = persister.host_hardwares.build(
       :host            => host,
-      # :cpu_type      => sys.xxx,
+      :cpu_type        => "ppc64",
+      :bitness         => 64,
       :manufacturer    => "IBM",
       :model           => "#{sys.mtype}#{sys.model}",
       # :cpu_speed     => 2348, # in MHz
