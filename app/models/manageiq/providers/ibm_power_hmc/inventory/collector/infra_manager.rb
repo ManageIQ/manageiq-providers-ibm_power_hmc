@@ -11,6 +11,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       @vms += connection.lpars(sys.uuid)
       @vms += connection.vioses(sys.uuid)
     end
+    connection.logoff
     $ibm_power_hmc_log.info("end collection")
   end
 
