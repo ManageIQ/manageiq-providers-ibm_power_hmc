@@ -3,6 +3,16 @@
     :blacklisted_event_names: []
     :event_handling:
       :event_groups:
+        :addition:
+          :critical:
+          - ADD_URI
+        :configuration:
+          :critical:
+          - INVALID_URI
+          - MODIFY_URI
+        :deletion:
+          :critical:
+          - DELETE_URI
 :ems_refresh:
   :ibm_power_hmc:
     :refresh_interval: 15.minutes
