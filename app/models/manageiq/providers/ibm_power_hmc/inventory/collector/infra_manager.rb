@@ -8,8 +8,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @hosts = connection.managed_systems
     @vms = []
     @hosts.each do |sys|
-      @vms << connection.lpars(sys.uuid)
-      @vms << connection.vioses(sys.uuid)
+      @vms += connection.lpars(sys.uuid)
+      @vms += connection.vioses(sys.uuid)
     end
     $ibm_power_hmc_log.info("end collection")
   end
