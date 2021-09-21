@@ -7,42 +7,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Runner < Man
     event_monitor_handle.start
     event_monitor_running
     event_monitor_handle.poll do |event|
-      @queue.enq event
+      @queue.enq(event)
     end
   ensure
     stop_event_monitor
   end
 
   def queue_event(event)
-    _log.info "#{log_prefix} Caught event [#{event.id}]"
-    event_hash = event_to_hash(event, @cfg[:ems_id])
+    _log.info("#{log_prefix} Caught event [#{event.id}]")
+    event_hash = ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser.event_to_hash(event, @cfg[:ems_id])
     EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
   private
-
-  def event_to_hash(event, ems_id)
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} #{event.to_s}")
-
-    event_hash = {
-      :event_type => event.type,
-      :source     => 'IBM_POWER_HMC',
-      :ems_ref    => event.id,
-      :timestamp  => event.published,
-      :full_data  => event,
-      :ems_id     => ems_id
-    }
-    case event.type
-    when /.*_URI/
-      uri = URI(event.data)
-      elems = uri.path.split('/')
-      uuid = elems[-1]
-      type = elems[-2]
-      if type == "LogicalPartition"
-        event_hash[:vm_ems_ref] = uuid
-      end
-    end
-  end
 
   def event_monitor_handle
     @event_monitor_handle ||= begin
