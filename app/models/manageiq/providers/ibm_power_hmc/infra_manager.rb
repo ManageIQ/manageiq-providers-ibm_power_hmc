@@ -1,4 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::InfraManager
+  require_nested :EventCatcher
+  require_nested :EventParser
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :Refresher
@@ -143,5 +145,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
 
   def self.description
     @description ||= "IBM Power HMC".freeze
+  end
+
+  def self.event_monitor_class
+    ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher
   end
 end
