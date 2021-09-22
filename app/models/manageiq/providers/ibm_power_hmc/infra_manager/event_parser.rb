@@ -7,7 +7,8 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser
       :source     => 'IBM_POWER_HMC',
       :ems_ref    => event.id,
       :timestamp  => event.published,
-      :full_data  => event,
+      # Serialize IbmPowerHmc::Event
+      :full_data  => {:data => event.data, :detail => event.detail},
       :ems_id     => ems_id
     }
     event_hash
