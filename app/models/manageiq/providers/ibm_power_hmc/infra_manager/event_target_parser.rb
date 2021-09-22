@@ -16,9 +16,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
 
     raw_event = ems_event.full_data
 
-    case raw_event.type
+    case ems_event.type
     when /.*_URI/
-      uri = URI(raw_event.data)
+      uri = URI(raw_event[:data])
       elems = uri.path.split('/')
       uuid = elems[-1]
       type = elems[-2]
