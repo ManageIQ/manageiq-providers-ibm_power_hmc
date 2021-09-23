@@ -15,7 +15,7 @@
           - DELETE_URI
 :ems_refresh:
   :ibm_power_hmc:
-    :refresh_interval: 15.minutes
+    :refresh_interval: 24.hours
     :allow_targeted_refresh: true
 :http_proxy:
   :ibm_power_hmc:
