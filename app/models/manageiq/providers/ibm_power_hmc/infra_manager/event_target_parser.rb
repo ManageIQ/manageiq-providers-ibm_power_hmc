@@ -2,12 +2,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   attr_reader :ems_event
 
   def initialize(ems_event)
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event}")
     @ems_event = ems_event
   end
 
   def parse
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event}")
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event.event_type} #{ems_event.full_data}")
 
     target_collection = InventoryRefresh::TargetCollection.new(
       :manager => ems_event.ext_management_system,
@@ -16,17 +15,20 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
 
     raw_event = ems_event.full_data
 
-    case ems_event.type
+    case ems_event.event_type
     when /.*_URI/
       uri = URI(raw_event[:data])
       elems = uri.path.split('/')
-      uuid = elems[-1]
-      type = elems[-2]
+      type, uuid = elems[-2], elems[-1]
       case type
       when "ManagedSystem"
         $ibm_power_hmc_log.info("#{self.class}##{__method__} managed system uuid #{uuid}")
         target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => uuid})
-      when "LogicalPartition"
+      when "LogicalPartition" #, "VirtualIOServer"
+        # raw_event[:detail] contains information about the properties that
+        # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
+        # This may be used to perform quick property REST API calls to the HMC
+        # instead of querying the full LPAR data.
         $ibm_power_hmc_log.info("#{self.class}##{__method__} LPAR uuid #{uuid}")
         target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => uuid})
       end
