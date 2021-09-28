@@ -16,7 +16,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     raw_event = ems_event.full_data
 
     case ems_event.event_type
-    when /.*_URI/
+    when "MODIFY_URI", "ADD_URI" # Damien: DELETE_URI, INVALID_URI?
       uri = URI(raw_event[:data])
       elems = uri.path.split('/')
       type, uuid = elems[-2], elems[-1]
