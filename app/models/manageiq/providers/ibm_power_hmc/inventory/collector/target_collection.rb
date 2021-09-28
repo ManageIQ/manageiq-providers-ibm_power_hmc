@@ -26,6 +26,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @vms ||= begin
       references(:vms).map do |ems_ref|
         $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_ref}")
+        # Damien: VIOS?
         connection.lpar(ems_ref)
       end
     end

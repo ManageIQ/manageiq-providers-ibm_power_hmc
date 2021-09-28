@@ -24,10 +24,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_operating_system(host, sys)
-    # Damien: PHYP version?
-    # persister.host_operating_systems.build(
-    #   :host => host
-    # )
+    persister.host_operating_systems.build(
+      :host => host,
+      :product_name => "phyp"
+    )
   end
 
   def parse_host_hardware(host, sys)
