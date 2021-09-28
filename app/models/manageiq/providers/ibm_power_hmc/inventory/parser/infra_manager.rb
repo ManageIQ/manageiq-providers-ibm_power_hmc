@@ -80,11 +80,24 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def lookup_power_state(state)
-    # Damien: TBD
-    if state.downcase == "operating"
-      "on"
-    else
-      "off"
+    # See SystemState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
+    case state.downcase
+    when /error.*/                    then "off"
+    when "failed authentication"      then "off"
+    when "incomplete"                 then "off"
+    when "initializing"               then "on"
+    when "no connection"              then "unknown"
+    when "on demand recovery"         then "off"
+    when "operating"                  then "on"
+    when /pending authentication.*/   then "off"
+    when "power off"                  then "off"
+    when "power off in progress"      then "off"
+    when "recovery"                   then "off"
+    when "standby"                    then "off"
+    when "version mismatch"           then "on"
+    when "service processor failover" then "off"
+    when "unknown"                    then "unknown"
+    else                                   "off"
     end
   end
 end

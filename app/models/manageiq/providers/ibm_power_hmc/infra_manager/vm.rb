@@ -55,12 +55,22 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def raw_rename
   end
 
+  # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
   POWER_STATES = {
-    "running"       => "on",
-    "open firmware" => "on",
-    "not activated" => "off",
-    "not available" => "unknown",
-    # Damien: TBD
+    "error"                => "unknown",
+    "not activated"        => "off",
+    "not available"        => "unknown",
+    "open firmware"        => "on",
+    "running"              => "on",
+    "shutting down"        => "on",
+    "starting"             => "on",
+    "migrating not active" => "on",
+    "migrating running"    => "on",
+    "hardware discovery"   => "unknown",
+    "suspended"            => "unknown",
+    "suspending"           => "unknown",
+    "resuming"             => "unknown",
+    "Unknown"              => "unknown"
   }.freeze
 
   def self.calculate_power_state(raw_power_state)
