@@ -124,7 +124,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
 
   def self.hostname_required?
     # TODO: ExtManagementSystem is validating this
-    false
+    true
   end
 
   def self.raw_connect(hostname, port, userid, password, validate_ssl, validate)

@@ -8,6 +8,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager do
   end
 
   it "returns the expected value for the hostname_required? method" do
-    expect(described_class.hostname_required?).to eq(false)
+    expect(described_class.hostname_required?).to eq(true)
   end
 end
