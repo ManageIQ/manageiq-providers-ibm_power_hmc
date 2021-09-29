@@ -16,7 +16,7 @@ module ManageIQ
         end
 
         def self.plugin_name
-          _('Ibm Power Hmc Provider')
+          _('IBM Power HMC Provider')
         end
 
         def self.init_loggers
