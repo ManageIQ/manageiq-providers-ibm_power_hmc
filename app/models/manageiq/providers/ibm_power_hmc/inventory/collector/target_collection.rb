@@ -14,12 +14,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
     @hosts ||= begin
       references(:hosts).map do |ems_ref|
-        begin
-          connection.managed_system(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.info("error querying managed system #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
-          nil
-        end
+        connection.managed_system(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}") unless e.status == 404
+        nil
       end.compact
     end
   end
@@ -30,12 +28,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @vms ||= begin
       references(:vms).map do |ems_ref|
         # Damien: VIOS?
-        begin
-          connection.lpar(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.info("error querying lpar #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
-          nil
-        end
+        connection.lpar(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.info("error querying lpar #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
+        nil
       end.compact
     end
   end

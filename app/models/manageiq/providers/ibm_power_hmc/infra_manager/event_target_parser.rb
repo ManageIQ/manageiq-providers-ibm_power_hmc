@@ -6,8 +6,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   end
 
   def parse
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event.event_type} #{ems_event.full_data}")
-
     target_collection = InventoryRefresh::TargetCollection.new(
       :manager => ems_event.ext_management_system,
       :event   => ems_event
@@ -17,6 +15,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
 
     case ems_event.event_type
     when "MODIFY_URI", "ADD_URI", "DELETE_URI" # Damien: INVALID_URI?
+      $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event.event_type} #{ems_event.full_data}")
       uri = URI(raw_event[:data])
       elems = uri.path.split('/')
       type, uuid = elems[-2], elems[-1]
