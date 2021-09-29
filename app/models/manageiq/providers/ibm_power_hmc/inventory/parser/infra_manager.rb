@@ -10,13 +10,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_hosts
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     collector.hosts.each do |sys|
-      host = persister.hosts.find_or_build(sys.uuid)
-      host.name = sys.name
-      # host.vmm_vendor = "ibm_power_hmc"
-      host.hypervisor_hostname = "#{sys.mtype}#{sys.model}_#{sys.serial}"
-      host.hostname = sys.hostname
-      host.ipaddress = sys.ipaddr
-      host.power_state = lookup_power_state(sys.state)
+      host = persister.hosts.build(
+        :uid_ems             => sys.uuid,
+        :ems_ref             => sys.uuid,
+        :name                => sys.name,
+        :hypervisor_hostname => "#{sys.mtype}#{sys.model}_#{sys.serial}",
+        :hostname            => sys.hostname,
+        :ipaddress           => sys.ipaddr,
+        :power_state         => lookup_power_state(sys.state)
+      )
 
       parse_host_operating_system(host, sys)
       parse_host_hardware(host, sys)
@@ -25,8 +27,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_host_operating_system(host, sys)
     persister.host_operating_systems.build(
-      :host => host,
-      :product_name => "phyp"
+      :host         => host,
+      :product_name => "phyp",
+      :build_number => sys.fwversion
     )
   end
 
@@ -58,15 +61,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_vms
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     collector.vms.each do |lpar|
-      vm = persister.vms.find_or_build(lpar.uuid)
-      vm.name = lpar.name
-      vm.location = "unknown"
-      vm.description = lpar.type
-      vm.vendor = "ibm_power_vc" # Damien: add ibm_power_hmc to MIQ
-      vm.raw_power_state = lpar.state
-      vm.host = persister.hosts.lazy_find(lpar.sys_uuid)
-      # vm.connection_state = nil # Damien: rmc_state?
-      # vm.ipaddresses = [lpar.rmc_ipaddr] unless lpar.rmc_ipaddr.nil?
+      host = persister.hosts.lazy_find(lpar.sys_uuid)
+      vm = persister.vms.build(
+        :uid_ems         => lpar.uuid,
+        :ems_ref         => lpar.uuid,
+        :name            => lpar.name,
+        :location        => "unknown",
+        :description     => lpar.type,
+        :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
+        :raw_power_state => lpar.state,
+        :host            => host
+        # :connection_state => nil, # Damien: lpar.rmc_state?
+        # :ipaddresses      => [lpar.rmc_ipaddr] unless lpar.rmc_ipaddr.nil?
+      )
 
       parse_vm_hardware(vm, lpar)
     end
