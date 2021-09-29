@@ -1,5 +1,6 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'manageiq/providers/ibm_power_hmc/version'
 
@@ -18,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency("ibm_power_hmc", [">= 0.1.0"])
+  spec.add_dependency "ibm_power_hmc", "~> 0.1"
 
   spec.add_development_dependency "manageiq-style"
   spec.add_development_dependency "simplecov"

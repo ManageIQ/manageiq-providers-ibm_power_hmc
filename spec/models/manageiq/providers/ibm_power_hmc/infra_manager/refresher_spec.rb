@@ -5,12 +5,11 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
   context "#refresh" do
     let(:ems) do
-      username     = Rails.application.secrets.ibm_power_hmc[:username]
-      password     = Rails.application.secrets.ibm_power_hmc[:password]
-      hostname     = Rails.application.secrets.ibm_power_hmc[:hostname]
-      validate_ssl = false
+      username = Rails.application.secrets.ibm_power_hmc[:username]
+      password = Rails.application.secrets.ibm_power_hmc[:password]
+      hostname = Rails.application.secrets.ibm_power_hmc[:hostname]
 
-      FactoryBot.create(:ems_ibm_power_hmc_infra, :endpoints => [FactoryBot.create(:endpoint, :role=> "default", :hostname => hostname, :port => 12443)]).tap do |ems|
+      FactoryBot.create(:ems_ibm_power_hmc_infra, :endpoints => [FactoryBot.create(:endpoint, :role => "default", :hostname => hostname, :port => 12_443)]).tap do |ems|
         ems.authentications << FactoryBot.create(:authentication, :userid => username, :password => password)
       end
     end
