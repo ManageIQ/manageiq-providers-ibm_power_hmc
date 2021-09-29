@@ -14,9 +14,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
     @hosts ||= begin
       references(:hosts).map do |ems_ref|
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_ref}")
-        connection.managed_system(ems_ref)
-      end
+        begin
+          connection.managed_system(ems_ref)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.info("error querying managed system #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
+          nil
+        end
+      end.compact
     end
   end
 
@@ -25,10 +29,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
     @vms ||= begin
       references(:vms).map do |ems_ref|
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_ref}")
         # Damien: VIOS?
-        connection.lpar(ems_ref)
-      end
+        begin
+          connection.lpar(ems_ref)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.info("error querying lpar #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
+          nil
+        end
+      end.compact
     end
   end
 
