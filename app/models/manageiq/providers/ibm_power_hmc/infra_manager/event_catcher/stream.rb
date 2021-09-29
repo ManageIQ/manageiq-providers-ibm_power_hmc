@@ -20,19 +20,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
   def poll
     @ems.with_provider_connection do |connection|
       catch(:stop_polling) do
-        begin
-          loop do
-            $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-
-            connection.next_events(false).each do |event|
-              throw :stop_polling if @stop_polling
-              yield event
-            end
-            sleep @poll_sleep
+        loop do
+          connection.next_events(false).each do |event|
+            throw :stop_polling if @stop_polling
+            yield event
           end
-        rescue => exception
-          raise ProviderUnreachable, exception.message
+          sleep @poll_sleep
         end
+      rescue => exception
+        raise ProviderUnreachable, exception.message
       end
     end
   end
