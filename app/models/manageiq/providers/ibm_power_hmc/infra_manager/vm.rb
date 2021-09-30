@@ -7,42 +7,39 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def raw_start
     $ibm_power_hmc_log.info("raw_start ems_ref=#{ems_ref}")
     ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweron_lpar(ems_ref)
+      poweron(connection)
     end
   end
 
   def raw_stop
     $ibm_power_hmc_log.info("raw_stop ems_ref=#{ems_ref}")
+    params = {"operation" => "shutdown"}
     ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "shutdown"})
+      poweroff(connection, params)
     end
   end
 
   def raw_shutdown_guest
-    # Damien: check rmc_status first!
     $ibm_power_hmc_log.info("raw_shutdown_guest ems_ref=#{ems_ref}")
+    params = {"operation" => "osshutdown"}
     ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown"})
+      poweroff(connection, params)
     end
   end
 
   def raw_reboot_guest
-    # Damien: check rmc_status first!
     $ibm_power_hmc_log.info("raw_reboot_guest ems_ref=#{ems_ref}")
+    params = {"operation" => "osshutdown", "restart" => "true"}
     ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown", "restart" => "true"})
+      poweroff(connection, params)
     end
   end
 
   def raw_reset
     $ibm_power_hmc_log.info("raw_reset ems_ref=#{ems_ref}")
+    params = {"operation" => "shutdown", "restart" => "true", "immediate" => "true"}
     ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "shutdown", "restart" => "true", "immediate" => "true"})
+      poweroff(connection, params)
     end
   end
 
@@ -75,5 +72,27 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || "unknown"
+  end
+
+  private
+
+  def poweron(connection, params = {})
+    if description == "Virtual IO Server"
+      connection.poweron_vios(ems_ref, params)
+    else
+      connection.poweron_lpar(ems_ref, params)
+    end
+  rescue IbmPowerHmc::Connection::HttpError => e
+    $ibm_power_hmc_log.error("error powering on #{ems_ref} with params=#{params}: #{e}")
+  end
+
+  def poweroff(connection, params = {})
+    if description == "Virtual IO Server"
+      connection.poweroff_vios(ems_ref, params)
+    else
+      connection.poweroff_lpar(ems_ref, params)
+    end
+  rescue IbmPowerHmc::Connection::HttpError => e
+    $ibm_power_hmc_log.error("error powering off #{ems_ref} with params=#{params}: #{e}")
   end
 end
