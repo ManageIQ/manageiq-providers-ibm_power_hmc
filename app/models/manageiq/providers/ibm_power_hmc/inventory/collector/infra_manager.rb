@@ -17,7 +17,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} reason=#{e.reason} message=#{e.message}")
     end
-    connection.logoff
     $ibm_power_hmc_log.info("end collection")
   rescue IbmPowerHmc::Connection::HttpError => e
     $ibm_power_hmc_log.error("managed systems query failed reason=#{e.reason} message=#{e.message}")

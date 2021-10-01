@@ -10,6 +10,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       # Damien: check VIOS or LPAR from description?
       connection.poweron_lpar(ems_ref)
     end
+  ensure
+    connection.logoff
   end
 
   def raw_stop
@@ -18,6 +20,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, {"operation" => "shutdown"})
     end
+  ensure
+    connection.logoff
   end
 
   def raw_shutdown_guest
@@ -27,6 +31,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown"})
     end
+  ensure
+    connection.logoff
   end
 
   def raw_reboot_guest
@@ -36,6 +42,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown", "restart" => "true"})
     end
+  ensure
+    connection.logoff
   end
 
   def raw_reset
@@ -44,6 +52,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
       # Damien: check VIOS or LPAR from description?
       connection.poweroff_lpar(ems_ref, {"operation" => "shutdown", "restart" => "true", "immediate" => "true"})
     end
+  ensure
+    connection.logoff
   end
 
   def raw_destroy

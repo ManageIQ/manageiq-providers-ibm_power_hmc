@@ -20,6 +20,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         nil
       end.compact
     end
+  ensure
+    connection.logoff
   end
 
   def vms
@@ -34,6 +36,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         nil
       end.compact
     end
+  ensure
+    connection.logoff
   end
 
   private
