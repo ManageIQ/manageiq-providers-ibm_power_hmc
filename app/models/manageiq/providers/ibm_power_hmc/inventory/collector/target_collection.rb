@@ -11,8 +11,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def hosts
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-
-    @hosts ||= begin
+    @hosts ||= manager.with_provider_connection do |connection|
       references(:hosts).map do |ems_ref|
         connection.managed_system(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
@@ -24,8 +23,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def vms
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-
-    @vms ||= begin
+    @vms ||= manager.with_provider_connection do |connection|
       references(:vms).map do |ems_ref|
         # Damien: VIOS?
         connection.lpar(ems_ref)
