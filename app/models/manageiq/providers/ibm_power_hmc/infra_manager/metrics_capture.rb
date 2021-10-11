@@ -59,8 +59,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       _log.log_backtrace(err)
       raise
-    ensure
-      connection.logoff
     end
   end
 end

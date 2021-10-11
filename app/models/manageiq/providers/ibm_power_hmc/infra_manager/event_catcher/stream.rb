@@ -31,7 +31,5 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
         raise ProviderUnreachable, exception.message
       end
     end
-  ensure
-    connection.logoff
   end
 end
