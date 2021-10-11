@@ -1,6 +1,5 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection < ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager
   def initialize(_manager, _target)
-    @ems = _manager
     super
 
     parse_targets!
@@ -12,7 +11,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def hosts
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @ems.with_provider_connection do |connection|
+    manager.with_provider_connection do |connection|
       @hosts ||= begin
         references(:hosts).map do |ems_ref|
           connection.managed_system(ems_ref)
@@ -26,7 +25,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def vms
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @ems.with_provider_connection do |connection|
+    manager.with_provider_connection do |connection|
       @vms ||= begin
         references(:vms).map do |ems_ref|
           # Damien: VIOS?

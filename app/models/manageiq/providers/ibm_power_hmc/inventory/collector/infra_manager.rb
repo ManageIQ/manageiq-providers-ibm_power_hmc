@@ -1,12 +1,11 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < ManageIQ::Providers::IbmPowerHmc::Inventory::Collector
   def initialize(manager, target)
-    @ems = manager
     super
   end
 
   def collect!
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @ems.with_provider_connection do |connection|
+    manager.with_provider_connection do |connection|
       @hosts = connection.managed_systems
       @vms = []
       @hosts.each do |sys|
