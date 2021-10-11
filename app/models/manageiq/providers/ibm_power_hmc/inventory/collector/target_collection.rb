@@ -11,30 +11,26 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def hosts
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @hosts ||= begin
-        references(:hosts).map do |ems_ref|
-          connection.managed_system(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}") unless e.status == 404
-          nil
-        end.compact
-      end
+    @hosts ||= manager.with_provider_connection do |connection|
+      references(:hosts).map do |ems_ref|
+        connection.managed_system(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}") unless e.status == 404
+        nil
+      end.compact
     end
   end
 
   def vms
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @vms ||= begin
-        references(:vms).map do |ems_ref|
-          # Damien: VIOS?
-          connection.lpar(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.info("error querying lpar #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
-          nil
-        end.compact
-      end
+    @vms ||= manager.with_provider_connection do |connection|
+      references(:vms).map do |ems_ref|
+        # Damien: VIOS?
+        connection.lpar(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.info("error querying lpar #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
+        nil
+      end.compact
     end
   end
 
