@@ -122,6 +122,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
     self.class.raw_connect(hostname, port, userid, password, validate_ssl, options[:validate])
   end
 
+  def disconnect(connection)
+    connection.logoff
+  end
+
   def self.hostname_required?
     # TODO: ExtManagementSystem is validating this
     true
