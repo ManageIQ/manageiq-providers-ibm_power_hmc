@@ -9,26 +9,37 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
   end
 
-  def hosts
+  def cecs
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @hosts ||= manager.with_provider_connection do |connection|
+    @cecs ||= manager.with_provider_connection do |connection|
       references(:hosts).map do |ems_ref|
         connection.managed_system(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}") unless e.status == 404
+        $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
         nil
       end.compact
     end
   end
 
-  def vms
+  def lpars
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @vms ||= manager.with_provider_connection do |connection|
+    @lpars ||= manager.with_provider_connection do |connection|
       references(:vms).map do |ems_ref|
-        # Damien: VIOS?
         connection.lpar(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.info("error querying lpar #{ems_ref}: status=#{e.status} reason=#{e.reason} msg=#{e.message}")
+        $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
+        nil
+      end.compact
+    end
+  end
+
+  def vioses
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    @vioses ||= manager.with_provider_connection do |connection|
+      references(:vms).map do |ems_ref|
+        connection.vios(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
         nil
       end.compact
     end
@@ -43,7 +54,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
       case target
       when Host
         add_target(:hosts, target.ems_ref)
-      when Vm
+      when ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios
         add_target(:vms, target.ems_ref)
       end
     end

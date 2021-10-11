@@ -1,36 +1,26 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
-  def provider_object(connection = nil)
-    connection ||= ext_management_system.connect
-    if vios?
-      connection.vios(ems_ref)
-    else
-      connection.lpar(ems_ref)
-    end
+  def provider_object(_connection = nil)
+    raise StandardError, "Must be implemented in a subclass"
   end
 
   def raw_start
-    $ibm_power_hmc_log.info("raw_start ems_ref=#{ems_ref}")
-    power
+    poweron
   end
 
   def raw_stop
-    $ibm_power_hmc_log.info("raw_stop ems_ref=#{ems_ref}")
-    power({"operation" => "shutdown"})
+    poweroff("operation" => "shutdown")
   end
 
   def raw_shutdown_guest
-    $ibm_power_hmc_log.info("raw_shutdown_guest ems_ref=#{ems_ref}")
-    power({"operation" => "osshutdown"})
+    poweroff("operation" => "osshutdown")
   end
 
   def raw_reboot_guest
-    $ibm_power_hmc_log.info("raw_reboot_guest ems_ref=#{ems_ref}")
-    power({"operation" => "osshutdown", "restart" => "true"})
+    poweroff("operation" => "osshutdown", "restart" => "true")
   end
 
   def raw_reset
-    $ibm_power_hmc_log.info("raw_reset ems_ref=#{ems_ref}")
-    power({"operation" => "shutdown", "restart" => "true", "immediate" => "true"})
+    poweroff("operation" => "shutdown", "restart" => "true", "immediate" => "true")
   end
 
   def raw_destroy
@@ -64,27 +54,63 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     POWER_STATES[raw_power_state] || "unknown"
   end
 
-  private
-
-  def vios?
-    description == "Virtual IO Server"
+  def poweron(_params = {})
+    raise StandardError, "Must be implemented in a subclass"
   end
 
-  def power(params = {})
+  def poweroff(_params = {})
+    raise StandardError, "Must be implemented in a subclass"
+  end
+end
+
+# Logical Partition
+class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
+  def provider_object(connection = nil)
+    connection ||= ext_management_system.connect
+    connection.lpar(ems_ref)
+  end
+
+  def poweron(params = {})
     ext_management_system.with_provider_connection do |connection|
-      if params.key?("operation")
-        if vios?
-          connection.poweroff_vios(ems_ref, params)
-        else
-          connection.poweroff_lpar(ems_ref, params)
-        end
-      elsif vios?
-        connection.poweron_vios(ems_ref, params)
-      else
-        connection.poweron_lpar(ems_ref, params)
-      end
+      connection.poweron_lpar(ems_ref, params)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering on LPAR #{ems_ref} with params=#{params}: #{e}")
+      raise
     end
-  rescue IbmPowerHmc::Connection::HttpError => e
-    $ibm_power_hmc_log.error("error changing power state of #{ems_ref} with params=#{params}: #{e}")
+  end
+
+  def poweroff(params = {})
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_lpar(ems_ref, params)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      raise
+    end
+  end
+end
+
+# Virtual I/O Server
+class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
+  def provider_object(connection = nil)
+    connection ||= ext_management_system.connect
+    connection.vios(ems_ref)
+  end
+
+  def poweron(params = {})
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweron_vios(ems_ref, params)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering on VIOS #{ems_ref} with params=#{params}: #{e}")
+      raise
+    end
+  end
+
+  def poweroff(params = {})
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_vios(ems_ref, params)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering off VIOS #{ems_ref} with params=#{params}: #{e}")
+      raise
+    end
   end
 end

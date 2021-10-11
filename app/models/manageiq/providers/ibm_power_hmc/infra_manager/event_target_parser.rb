@@ -23,7 +23,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       when "ManagedSystem"
         $ibm_power_hmc_log.info("#{self.class}##{__method__} managed system uuid #{uuid}")
         target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => uuid})
-      when "LogicalPartition" # Damien: "VirtualIOServer"
+      when "LogicalPartition", "VirtualIOServer"
         # raw_event[:detail] contains information about the properties that
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
