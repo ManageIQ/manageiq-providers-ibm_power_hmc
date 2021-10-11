@@ -1,49 +1,26 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
-  def provider_object(connection = nil)
-    # connection ||= ext_management_system.connect
-    # connection.find_vm(ems_ref)
+  def provider_object(_connection = nil)
+    raise StandardError, "Must be implemented in a subclass"
   end
 
   def raw_start
-    $ibm_power_hmc_log.info("raw_start ems_ref=#{ems_ref}")
-    ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweron_lpar(ems_ref)
-    end
+    poweron
   end
 
   def raw_stop
-    $ibm_power_hmc_log.info("raw_stop ems_ref=#{ems_ref}")
-    ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "shutdown"})
-    end
+    poweroff("operation" => "shutdown")
   end
 
   def raw_shutdown_guest
-    # Damien: check rmc_status first!
-    $ibm_power_hmc_log.info("raw_shutdown_guest ems_ref=#{ems_ref}")
-    ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown"})
-    end
+    poweroff("operation" => "osshutdown")
   end
 
   def raw_reboot_guest
-    # Damien: check rmc_status first!
-    $ibm_power_hmc_log.info("raw_reboot_guest ems_ref=#{ems_ref}")
-    ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "osshutdown", "restart" => "true"})
-    end
+    poweroff("operation" => "osshutdown", "restart" => "true")
   end
 
   def raw_reset
-    $ibm_power_hmc_log.info("raw_reset ems_ref=#{ems_ref}")
-    ext_management_system.with_provider_connection do |connection|
-      # Damien: check VIOS or LPAR from description?
-      connection.poweroff_lpar(ems_ref, {"operation" => "shutdown", "restart" => "true", "immediate" => "true"})
-    end
+    poweroff("operation" => "shutdown", "restart" => "true", "immediate" => "true")
   end
 
   def raw_destroy
@@ -75,5 +52,13 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || "unknown"
+  end
+
+  def poweron(_params = {})
+    raise StandardError, "Must be implemented in a subclass"
+  end
+
+  def poweroff(_params = {})
+    raise StandardError, "Must be implemented in a subclass"
   end
 end

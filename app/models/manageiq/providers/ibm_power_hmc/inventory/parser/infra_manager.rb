@@ -3,13 +3,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     collector.collect!
 
-    parse_hosts
-    parse_vms
+    parse_cecs
+    parse_lpars
+    parse_vioses
   end
 
-  def parse_hosts
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    collector.hosts.each do |sys|
+  def parse_cecs
+    collector.cecs.each do |sys|
       host = persister.hosts.build(
         :uid_ems             => sys.uuid,
         :ems_ref             => sys.uuid,
@@ -58,11 +58,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     # )
   end
 
-  def parse_vms
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    collector.vms.each do |lpar|
+  def parse_lpars
+    collector.lpars.each do |lpar|
       host = persister.hosts.lazy_find(lpar.sys_uuid)
       vm = persister.vms.build(
+        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar",
         :uid_ems         => lpar.uuid,
         :ems_ref         => lpar.uuid,
         :name            => lpar.name,
@@ -71,11 +71,28 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
         :raw_power_state => lpar.state,
         :host            => host
-        # :connection_state => nil, # Damien: lpar.rmc_state?
-        # :ipaddresses      => [lpar.rmc_ipaddr] unless lpar.rmc_ipaddr.nil?
       )
 
       parse_vm_hardware(vm, lpar)
+    end
+  end
+
+  def parse_vioses
+    collector.vioses.each do |vios|
+      host = persister.hosts.lazy_find(vios.sys_uuid)
+      vm = persister.vms.build(
+        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios",
+        :uid_ems         => vios.uuid,
+        :ems_ref         => vios.uuid,
+        :name            => vios.name,
+        :location        => "unknown",
+        :description     => vios.type,
+        :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
+        :raw_power_state => vios.state,
+        :host            => host
+      )
+
+      parse_vm_hardware(vm, vios)
     end
   end
 
