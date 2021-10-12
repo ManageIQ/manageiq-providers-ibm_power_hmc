@@ -15,7 +15,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
       :fields => [
         {
           :component => 'sub-form',
-          :d         => 'endpoints-subform',
+          :id        => 'endpoints-subform',
           :name      => 'endpoints-subform',
           :title     => _('Endpoints'),
           :fields    => [
@@ -98,6 +98,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
     authentication = args.dig("authentications", "default")
     userid, password = authentication&.values_at("userid", "password")
     password = ManageIQ::Password.try_decrypt(password)
+    password ||= find(args["id"]).authentication_password(authtype) if args['id']
 
     !!raw_connect(hostname, port, userid, password, validate_ssl, true)
   end
@@ -126,11 +127,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
 
   def disconnect(connection)
     connection.logoff
-  end
-
-  def self.hostname_required?
-    # TODO: ExtManagementSystem is validating this
-    true
   end
 
   def self.raw_connect(hostname, port, userid, password, validate_ssl, validate)
