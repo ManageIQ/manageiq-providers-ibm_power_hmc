@@ -2,13 +2,13 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :EventTargetParser
-  require_nested :Lpar
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :Refresher
   require_nested :RefreshWorker
-  require_nested :Vios
   require_nested :Vm
+  require_nested :Lpar
+  require_nested :Vios
 
   def self.params_for_create
     @params_for_create ||= {
