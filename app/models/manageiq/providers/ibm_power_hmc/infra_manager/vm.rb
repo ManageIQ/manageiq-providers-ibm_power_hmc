@@ -39,14 +39,14 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     "not available"        => "unknown",
     "open firmware"        => "on",
     "running"              => "on",
-    "shutting down"        => "on",
-    "starting"             => "on",
-    "migrating not active" => "on",
+    "shutting down"        => "powering_down",
+    "starting"             => "powering_up",
+    "migrating not active" => "off",
     "migrating running"    => "on",
-    "hardware discovery"   => "unknown",
-    "suspended"            => "unknown",
-    "suspending"           => "unknown",
-    "resuming"             => "unknown",
+    "hardware discovery"   => "powering_up",
+    "suspended"            => "suspended",
+    "suspending"           => "suspended",
+    "resuming"             => "powering_up",
     "Unknown"              => "unknown"
   }.freeze
 
