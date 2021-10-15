@@ -60,40 +60,33 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      host = persister.hosts.lazy_find(lpar.sys_uuid)
-      vm = persister.vms.build(
-        :type            => ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name,
-        :uid_ems         => lpar.uuid,
-        :ems_ref         => lpar.uuid,
-        :name            => lpar.name,
-        :location        => "unknown",
-        :description     => lpar.type,
-        :vendor          => "ibm_power_vm",
-        :raw_power_state => lpar.state,
-        :host            => host
-      )
-
-      parse_vm_hardware(vm, lpar)
+      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
     end
   end
 
   def parse_vioses
     collector.vioses.each do |vios|
-      host = persister.hosts.lazy_find(vios.sys_uuid)
-      vm = persister.vms.build(
-        :type            => ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name,
-        :uid_ems         => vios.uuid,
-        :ems_ref         => vios.uuid,
-        :name            => vios.name,
-        :location        => "unknown",
-        :description     => vios.type,
-        :vendor          => "ibm_power_vm",
-        :raw_power_state => vios.state,
-        :host            => host
-      )
-
-      parse_vm_hardware(vm, vios)
+      parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
+      # Add VIOS specific parsing code here.
     end
+  end
+
+  def parse_lpar_common(lpar, type)
+    # Common code for LPARs and VIOSes.
+    host = persister.hosts.lazy_find(lpar.sys_uuid)
+    vm = persister.vms.build(
+      :type            => type,
+      :uid_ems         => lpar.uuid,
+      :ems_ref         => lpar.uuid,
+      :name            => lpar.name,
+      :location        => "unknown",
+      :description     => lpar.type,
+      :vendor          => "ibm_power_vm",
+      :raw_power_state => lpar.state,
+      :host            => host
+    )
+    parse_vm_hardware(vm, lpar)
+    vm
   end
 
   def parse_vm_hardware(vm, lpar)
