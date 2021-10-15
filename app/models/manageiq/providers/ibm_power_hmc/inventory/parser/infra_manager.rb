@@ -79,22 +79,22 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_advanced_settings(vm, lpar)
-      persister.vms_and_templates_advanced_settings.build(
-        :resource     => vm,
-        :name         => "partition_id",
-        :display_name => _("Partition ID"),
-        :description  => _("The logical partition number"),
-        :value        => lpar.id.to_i,
-        :read_only    => true
-      )
-      persister.vms_and_templates_advanced_settings.build(
-        :resource     => vm,
-        :name         => "reference_code",
-        :display_name => _("Reference Code"),
-        :description  => _("The logical partition reference code"),
-        :value        => lpar.ref_code,
-        :read_only    => true
-      )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "partition_id",
+      :display_name => _("Partition ID"),
+      :description  => _("The logical partition number"),
+      :value        => lpar.id.to_i,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "reference_code",
+      :display_name => _("Reference Code"),
+      :description  => _("The logical partition reference code"),
+      :value        => lpar.ref_code,
+      :read_only    => true
+    )
   end
 
   def parse_vioses
