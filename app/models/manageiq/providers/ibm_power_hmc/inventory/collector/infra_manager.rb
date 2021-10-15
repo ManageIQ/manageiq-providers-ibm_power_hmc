@@ -56,7 +56,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def cpu_freq(connection, sys)
     # Retrieve the CPU frequency from one of the VIOSes with RMC active.
-    vios = vioses.select { |vios| vios.sys_uuid == sys.uuid && vios.rmc_state == "active" }.first
+    vios = vioses.find { |v| v.sys_uuid == sys.uuid && v.rmc_state == "active" }
     return if vios.nil?
 
     cmd = "lsdev -dev proc0 -attr frequency"
