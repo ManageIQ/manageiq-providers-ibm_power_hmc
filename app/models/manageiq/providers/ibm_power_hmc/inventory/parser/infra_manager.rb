@@ -62,13 +62,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.lpars.each do |lpar|
       host = persister.hosts.lazy_find(lpar.sys_uuid)
       vm = persister.vms.build(
-        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar",
+        :type            => ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name,
         :uid_ems         => lpar.uuid,
         :ems_ref         => lpar.uuid,
         :name            => lpar.name,
         :location        => "unknown",
         :description     => lpar.type,
-        :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
+        :vendor          => "ibm_power_vm",
         :raw_power_state => lpar.state,
         :host            => host
       )
@@ -81,13 +81,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.vioses.each do |vios|
       host = persister.hosts.lazy_find(vios.sys_uuid)
       vm = persister.vms.build(
-        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios",
+        :type            => ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name,
         :uid_ems         => vios.uuid,
         :ems_ref         => vios.uuid,
         :name            => vios.name,
         :location        => "unknown",
         :description     => vios.type,
-        :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
+        :vendor          => "ibm_power_vm",
         :raw_power_state => vios.state,
         :host            => host
       )
