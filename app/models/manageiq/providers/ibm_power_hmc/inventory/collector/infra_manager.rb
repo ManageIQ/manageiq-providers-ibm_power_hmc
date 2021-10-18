@@ -67,6 +67,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     result = job.results["result"]
     return if result.nil?
 
-    result.split("\n").last.to_f / 1000000.0
+    result.split("\n").last.to_f / 1_000_000.0
   end
 end
