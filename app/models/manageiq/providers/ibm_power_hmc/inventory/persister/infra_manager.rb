@@ -6,5 +6,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
     add_collection(infra, :host_hardwares)
     add_collection(infra, :hardwares)
     add_collection(infra, :miq_templates) # required by hardwares.vm_or_template
+    add_collection(infra, :operating_systems)
   end
 end
