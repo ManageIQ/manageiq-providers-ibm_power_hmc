@@ -86,6 +86,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :host            => host
     )
     parse_vm_hardware(vm, lpar)
+    parse_vm_operating_system(vm, lpar)
     parse_vm_advanced_settings(vm, lpar)
     vm
   end
@@ -94,6 +95,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     persister.hardwares.build(
       :vm_or_template => vm,
       :memory_mb      => lpar.memory
+    )
+  end
+
+  def parse_vm_operating_system(vm, lpar)
+    os_info = lpar.os.split
+    persister.operating_systems.build(
+      :vm_or_template => vm,
+      :product_name   => os_info[0],
+      :version        => os_info[1],
+      :build_number   => os_info[2]
     )
   end
 
