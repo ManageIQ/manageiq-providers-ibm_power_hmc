@@ -59,8 +59,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     vios = vioses.find { |v| v.sys_uuid == sys.uuid && v.rmc_state == "active" }
     return if vios.nil?
 
-    cmd = "lsdev -dev proc0 -attr frequency"
-    job = connection.cli_run(@hmc.uuid, "viosvrcmd -m \"#{sys.name}\" -p \"#{vios.name}\" -c \"#{cmd}\"")
+    vioscmd = "lsdev -dev proc0 -attr frequency"
+    cmd = %Q[viosvrcmd -m "#{sys.name}" -p "#{vios.name}" -c "#{vioscmd}"]
+    job = connection.cli_run(@hmc.uuid, cmd)
     ret = job.results["returnCode"]&.to_i
     return if ret != 0
 
