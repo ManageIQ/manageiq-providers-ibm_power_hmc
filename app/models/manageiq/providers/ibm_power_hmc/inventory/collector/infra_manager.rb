@@ -60,7 +60,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     return if vios.nil?
 
     vioscmd = "lsdev -dev proc0 -attr frequency"
-    cmd = %Q[viosvrcmd -m "#{sys.name}" -p "#{vios.name}" -c "#{vioscmd}"]
+    cmd = %(viosvrcmd -m "#{sys.name}" -p "#{vios.name}" -c "#{vioscmd}")
     job = connection.cli_run(@hmc.uuid, cmd)
     ret = job.results["returnCode"]&.to_i
     return if ret != 0
