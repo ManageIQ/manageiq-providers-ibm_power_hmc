@@ -112,14 +112,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_vm_guest_devices(lpar, hardware)
     lpar.net_adap_uuids.map do |uuid|
       next if collector.netadapters[uuid].nil?
+
       mac_addr = collector.netadapters[uuid].macaddr.scan(/\w{2}/).join(':')
       persister.guest_devices.build(
-        :hardware     => hardware,
-        :uid_ems      => uuid,
-        :device_name  => mac_addr,
-        :device_type  => "ethernet",
-        :controller_type => "ethernet",
-        :address      => mac_addr
+        :hardware         => hardware,
+        :uid_ems          => uuid,
+        :device_name      => mac_addr,
+        :device_type      => "ethernet",
+        :controller_type  => "ethernet",
+        :address          => mac_addr
       )
     end
   end
