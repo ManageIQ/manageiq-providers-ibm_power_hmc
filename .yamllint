@@ -2,6 +2,7 @@
 ignore: |
   /vendor/**
   /spec/manageiq/**
+  /spec/vcr_cassettes/**
 
 extends: relaxed
 
