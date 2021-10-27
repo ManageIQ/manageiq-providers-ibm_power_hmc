@@ -45,7 +45,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       $ibm_power_hmc_log.error("managed systems query failed: #{e}")
       []
     end
-  
+
     @cpu_freqs = {}
     @cecs.each do |sys|
       freq = cpu_freq(connection, sys)
