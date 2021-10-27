@@ -23,26 +23,50 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def lpars
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @lpars ||= manager.with_provider_connection do |connection|
-      references(:vms).map do |ems_ref|
+    manager.with_provider_connection do |connection|
+      @lpars ||= references(:vms).map do |ems_ref|
         connection.lpar(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
         $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
         nil
       end.compact
+
+      @netadapters ||= {}
+      @lpars.each do |lpar|
+        lpar.net_adap_uuids.each do |net_adap_uuid|
+          @netadapters[net_adap_uuid] = connection.network_adapter_lpar(lpar.uuid, net_adap_uuid)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("network adapter query failed for #{lpar.uuid}/#{net_adap_uuid}: #{e}")
+        end
+      end
     end
+    @lpars || []
   end
 
   def vioses
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @vioses ||= manager.with_provider_connection do |connection|
-      references(:vms).map do |ems_ref|
+    manager.with_provider_connection do |connection|
+      @vioses ||= references(:vms).map do |ems_ref|
         connection.vios(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
         $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
         nil
       end.compact
+
+      @netadapters ||= {}
+      @vioses.each do |vios|
+        vios.net_adap_uuids.each do |net_adap_uuid|
+          @netadapters[net_adap_uuid] = connection.network_adapter_vios(vios.uuid, net_adap_uuid)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("network adapter query failed for #{vios.uuid}/#{net_adap_uuid}: #{e}")
+        end
+      end
     end
+    @vioses || []
+  end
+
+  def netadapters
+    @netadapters || {}
   end
 
   private

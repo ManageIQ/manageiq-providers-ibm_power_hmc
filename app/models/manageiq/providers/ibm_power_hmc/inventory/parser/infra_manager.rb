@@ -60,46 +60,87 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      host = persister.hosts.lazy_find(lpar.sys_uuid)
-      vm = persister.vms.build(
-        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar",
-        :uid_ems         => lpar.uuid,
-        :ems_ref         => lpar.uuid,
-        :name            => lpar.name,
-        :location        => "unknown",
-        :description     => lpar.type,
-        :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
-        :raw_power_state => lpar.state,
-        :host            => host
-      )
-
-      parse_vm_hardware(vm, lpar)
+      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
     end
   end
 
   def parse_vioses
     collector.vioses.each do |vios|
-      host = persister.hosts.lazy_find(vios.sys_uuid)
-      vm = persister.vms.build(
-        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios",
-        :uid_ems         => vios.uuid,
-        :ems_ref         => vios.uuid,
-        :name            => vios.name,
-        :location        => "unknown",
-        :description     => vios.type,
-        :vendor          => "ibm_power_vc", # Damien: add ibm_power_hmc to MIQ
-        :raw_power_state => vios.state,
-        :host            => host
-      )
-
-      parse_vm_hardware(vm, vios)
+      parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
+      # Add VIOS specific parsing code here.
     end
+  end
+
+  def parse_lpar_common(lpar, type)
+    # Common code for LPARs and VIOSes.
+    host = persister.hosts.lazy_find(lpar.sys_uuid)
+    vm = persister.vms.build(
+      :type            => type,
+      :uid_ems         => lpar.uuid,
+      :ems_ref         => lpar.uuid,
+      :name            => lpar.name,
+      :location        => "unknown",
+      :description     => lpar.type,
+      :vendor          => "ibm_power_vm",
+      :raw_power_state => lpar.state,
+      :host            => host
+    )
+    hardware = parse_vm_hardware(vm, lpar)
+    parse_vm_operating_system(vm, lpar)
+    parse_vm_guest_devices(lpar, hardware)
+    parse_vm_advanced_settings(vm, lpar)
+    vm
   end
 
   def parse_vm_hardware(vm, lpar)
     persister.hardwares.build(
       :vm_or_template => vm,
       :memory_mb      => lpar.memory
+    )
+  end
+
+  def parse_vm_operating_system(vm, lpar)
+    os_info = lpar.os.split
+    persister.operating_systems.build(
+      :vm_or_template => vm,
+      :product_name   => os_info[0],
+      :version        => os_info[1],
+      :build_number   => os_info[2]
+    )
+  end
+
+  def parse_vm_guest_devices(lpar, hardware)
+    lpar.net_adap_uuids.map do |uuid|
+      next if collector.netadapters[uuid].nil?
+
+      mac_addr = collector.netadapters[uuid].macaddr.scan(/\w{2}/).join(':')
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => uuid,
+        :device_name     => mac_addr,
+        :device_type     => "ethernet",
+        :controller_type => "ethernet",
+        :address         => mac_addr
+      )
+    end
+  end
+
+  def parse_vm_advanced_settings(vm, lpar)
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "partition_id",
+      :display_name => _("Partition ID"),
+      :description  => _("The logical partition number"),
+      :value        => lpar.id.to_i,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "reference_code",
+      :display_name => _("Reference Code"),
+      :description  => _("The logical partition reference code"),
+      :value        => lpar.ref_code,
+      :read_only    => true
     )
   end
 

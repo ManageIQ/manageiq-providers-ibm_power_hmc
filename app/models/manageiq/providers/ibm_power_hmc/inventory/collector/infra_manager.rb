@@ -7,35 +7,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
       @hmc = connection.management_console
-
-      @cecs = connection.managed_systems
-
-      @lpars = @cecs.map do |sys|
-        connection.lpars(sys.uuid)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
-        nil
-      end.flatten.compact
-
-      @vioses = @cecs.map do |sys|
-        connection.vioses(sys.uuid)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
-        nil
-      end.flatten.compact
-
-      @cpu_freqs = {}
-      @cecs.each do |sys|
-        freq = cpu_freq(connection, sys)
-        @cpu_freqs[sys.uuid] = freq unless freq.nil?
-      rescue => e
-        $ibm_power_hmc_log.error("cpu freq query failed for #{sys.uuid}: #{e}")
-      end
-
-      $ibm_power_hmc_log.info("end collection")
+      do_cecs(connection)
+      do_lpars(connection)
+      do_vioses(connection)
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("managed systems query failed: #{e}")
+      $ibm_power_hmc_log.error("management console query failed: #{e}")
     end
+    $ibm_power_hmc_log.info("end collection")
   end
 
   def cecs
@@ -52,6 +30,64 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def cpu_freqs
     @cpu_freqs || {}
+  end
+
+  def netadapters
+    @netadapters || {}
+  end
+
+  private
+
+  def do_cecs(connection)
+    @cecs = begin
+      connection.managed_systems
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("managed systems query failed: #{e}")
+      []
+    end
+  
+    @cpu_freqs = {}
+    @cecs.each do |sys|
+      freq = cpu_freq(connection, sys)
+      @cpu_freqs[sys.uuid] = freq unless freq.nil?
+    rescue => e
+      $ibm_power_hmc_log.error("cpu freq query failed for #{sys.uuid}: #{e}")
+    end
+  end
+
+  def do_lpars(connection)
+    @lpars = @cecs.map do |sys|
+      connection.lpars(sys.uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
+      nil
+    end.flatten.compact
+
+    @netadapters = {}
+    @lpars.each do |lpar|
+      lpar.net_adap_uuids.each do |net_adap_uuid|
+        @netadapters[net_adap_uuid] = connection.network_adapter_lpar(lpar.uuid, net_adap_uuid)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("network adapter query failed for #{lpar.uuid}/#{net_adap_uuid}: #{e}")
+      end
+    end
+  end
+
+  def do_vioses(connection)
+    @vioses = @cecs.map do |sys|
+      connection.vioses(sys.uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
+      nil
+    end.flatten.compact
+
+    @vioses.each do |vios|
+      vios.net_adap_uuids.each do |net_adap_uuid|
+        @netadapters[net_adap_uuid] = connection.network_adapter_vios(vios.uuid, net_adap_uuid)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("network adapter query failed for #{vios.uuid}/#{net_adap_uuid}: #{e}")
+      end
+    end
   end
 
   def cpu_freq(connection, sys)
