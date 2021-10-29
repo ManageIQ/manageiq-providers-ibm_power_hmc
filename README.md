@@ -1,6 +1,6 @@
 # ManageIQ::Providers::IbmPowerHmc
 
-[![Build Status](https://travis-ci.com/ManageIQ/manageiq-providers-ibm_power_hmc.svg?branch=master)](https://travis-ci.com/ManageIQ/manageiq-providers-ibm_power_hmc)
+[![Build Status](https://travis-ci.com/ManageIQ/manageiq-providers-ibm_power_hmc.svg?branch=master)](https://travis-ci.com/github/ManageIQ/manageiq-providers-ibm_power_hmc)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a10f4961070bc030e3cd/maintainability)](https://codeclimate.com/github/ManageIQ/manageiq-providers-ibm_power_hmc/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a10f4961070bc030e3cd/test_coverage)](https://codeclimate.com/github/ManageIQ/manageiq-providers-ibm_power_hmc/test_coverage)
 [![Security](https://hakiri.io/github/ManageIQ/manageiq-providers-ibm_power_hmc/master.svg)](https://hakiri.io/github/ManageIQ/manageiq-providers-ibm_power_hmc/master)
