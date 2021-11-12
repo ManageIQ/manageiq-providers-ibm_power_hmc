@@ -60,7 +60,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      vm = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      parse_lpar_guest_devices(lpar, vm)
     end
   end
 
@@ -113,14 +114,52 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.net_adap_uuids.map do |uuid|
       next if collector.netadapters[uuid].nil?
 
-      mac_addr = collector.netadapters[uuid].macaddr.scan(/\w{2}/).join(':')
+      mac_addr = collector.netadapters[uuid].macaddr.downcase.scan(/\w{2}/).join(':')
       persister.guest_devices.build(
         :hardware        => hardware,
         :uid_ems         => uuid,
         :device_name     => mac_addr,
         :device_type     => "ethernet",
-        :controller_type => "ethernet",
-        :address         => mac_addr
+        :controller_type => "client network adapter",
+        :address         => mac_addr,
+        :auto_detect     => true,
+        :location        => collector.netadapters[uuid].location
+      )
+    end
+
+    lpar.sriov_elp_uuids.map do |uuid|
+      next if collector.sriov_elps[uuid].nil?
+
+      mac_addr = collector.sriov_elps[uuid].macaddr.downcase.scan(/\w{2}/).join(':')
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => uuid,
+        :device_name     => mac_addr,
+        :device_type     => "ethernet",
+        :controller_type => "sr-iov",
+        :address         => mac_addr,
+        :auto_detect     => true,
+        :location        => collector.sriov_elps[uuid].location
+      )
+    end
+  end
+
+  def parse_lpar_guest_devices(lpar, vm)
+    hardware = nil
+    lpar.vnic_dedicated_uuids.map do |uuid|
+      next if collector.vnics[uuid].nil?
+
+      hardware ||= persister.hardwares.lazy_find(:vm_or_template => vm)
+      mac_addr = collector.vnics[uuid].macaddr.downcase.scan(/\w{2}/).join(':')
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => uuid,
+        :device_name     => mac_addr,
+        :device_type     => "ethernet",
+        :controller_type => "vnic",
+        :address         => mac_addr,
+        :auto_detect     => true,
+        :location        => collector.vnics[uuid].location
       )
     end
   end

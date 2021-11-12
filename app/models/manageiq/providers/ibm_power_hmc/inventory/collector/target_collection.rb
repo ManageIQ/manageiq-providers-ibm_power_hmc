@@ -32,11 +32,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
       end.compact
 
       @netadapters ||= {}
+      @sriov_elps ||= {}
+      @vnics ||= {}
       @lpars.each do |lpar|
         lpar.net_adap_uuids.each do |net_adap_uuid|
           @netadapters[net_adap_uuid] = connection.network_adapter_lpar(lpar.uuid, net_adap_uuid)
         rescue IbmPowerHmc::Connection::HttpError => e
           $ibm_power_hmc_log.error("network adapter query failed for #{lpar.uuid}/#{net_adap_uuid}: #{e}")
+        end
+        lpar.sriov_elp_uuids.each do |sriov_elp_uuid|
+          @sriov_elps[sriov_elp_uuid] = connection.sriov_elp_lpar(lpar.uuid, sriov_elp_uuid)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("sriov ethernet logical port query failed for #{lpar.uuid}/#{sriov_elp_uuid}: #{e}")
+        end
+        lpar.vnic_dedicated_uuids.each do |vnic_dedicated_uuid|
+          @vnics[vnic_dedicated_uuid] = connection.vnic_dedicated(lpar.uuid, vnic_dedicated_uuid)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("vnic query failed for #{lpar.uuid}/#{vnic_dedicated_uuid}: #{e}")
         end
       end
     end
@@ -54,11 +66,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
       end.compact
 
       @netadapters ||= {}
+      @sriov_elps ||= {}
       @vioses.each do |vios|
         vios.net_adap_uuids.each do |net_adap_uuid|
           @netadapters[net_adap_uuid] = connection.network_adapter_vios(vios.uuid, net_adap_uuid)
         rescue IbmPowerHmc::Connection::HttpError => e
           $ibm_power_hmc_log.error("network adapter query failed for #{vios.uuid}/#{net_adap_uuid}: #{e}")
+        end
+        vios.sriov_elp_uuids.each do |sriov_elp_uuid|
+          @sriov_elps[sriov_elp_uuid] = connection.sriov_elp_vios(vios.uuid, sriov_elp_uuid)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("sriov ethernet logical port query failed for #{vios.uuid}/#{sriov_elp_uuid}: #{e}")
         end
       end
     end
@@ -67,6 +85,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def netadapters
     @netadapters || {}
+  end
+
+  def sriov_elps
+    @sriov_elps || {}
+  end
+
+  def vnics
+    @vnics || {}
   end
 
   private
