@@ -114,7 +114,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.net_adap_uuids.map do |uuid|
       next if collector.netadapters[uuid].nil?
 
-      mac_addr = collector.netadapters[uuid].macaddr.downcase.scan(/\w{2}/).join(':')
+      mac_addr = format_mac(collector.netadapters[uuid].macaddr)
       persister.guest_devices.build(
         :hardware        => hardware,
         :uid_ems         => uuid,
@@ -130,7 +130,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.sriov_elp_uuids.map do |uuid|
       next if collector.sriov_elps[uuid].nil?
 
-      mac_addr = collector.sriov_elps[uuid].macaddr.downcase.scan(/\w{2}/).join(':')
+      mac_addr = format_mac(collector.sriov_elps[uuid].macaddr)
       persister.guest_devices.build(
         :hardware        => hardware,
         :uid_ems         => uuid,
@@ -150,7 +150,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       next if collector.vnics[uuid].nil?
 
       hardware ||= persister.hardwares.lazy_find(:vm_or_template => vm)
-      mac_addr = collector.vnics[uuid].macaddr.downcase.scan(/\w{2}/).join(':')
+      mac_addr = format_mac(collector.vnics[uuid].macaddr)
       persister.guest_devices.build(
         :hardware        => hardware,
         :uid_ems         => uuid,
@@ -203,5 +203,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     when "unknown"                    then "unknown"
     else                                   "off"
     end
+  end
+
+  def format_mac(addr)
+    addr.downcase.scan(/\w{2}/).join(':')
   end
 end
