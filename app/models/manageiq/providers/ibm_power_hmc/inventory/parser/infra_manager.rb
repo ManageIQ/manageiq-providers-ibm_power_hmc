@@ -112,55 +112,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_vm_guest_devices(lpar, hardware)
     lpar.net_adap_uuids.map do |uuid|
-      next if collector.netadapters[uuid].nil?
-
-      mac_addr = format_mac(collector.netadapters[uuid].macaddr)
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => uuid,
-        :device_name     => mac_addr,
-        :device_type     => "ethernet",
-        :controller_type => "client network adapter",
-        :address         => mac_addr,
-        :auto_detect     => true,
-        :location        => collector.netadapters[uuid].location
-      )
+      build_ethernet_dev(collector.netadapters[uuid], hardware, "client network adapter")
     end
 
     lpar.sriov_elp_uuids.map do |uuid|
-      next if collector.sriov_elps[uuid].nil?
-
-      mac_addr = format_mac(collector.sriov_elps[uuid].macaddr)
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => uuid,
-        :device_name     => mac_addr,
-        :device_type     => "ethernet",
-        :controller_type => "sr-iov",
-        :address         => mac_addr,
-        :auto_detect     => true,
-        :location        => collector.sriov_elps[uuid].location
-      )
+      build_ethernet_dev(collector.sriov_elps[uuid], hardware, "sr-iov")
     end
   end
 
   def parse_lpar_guest_devices(lpar, vm)
     hardware = nil
     lpar.vnic_dedicated_uuids.map do |uuid|
-      next if collector.vnics[uuid].nil?
-
       hardware ||= persister.hardwares.lazy_find(:vm_or_template => vm)
-      mac_addr = format_mac(collector.vnics[uuid].macaddr)
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => uuid,
-        :device_name     => mac_addr,
-        :device_type     => "ethernet",
-        :controller_type => "vnic",
-        :address         => mac_addr,
-        :auto_detect     => true,
-        :location        => collector.vnics[uuid].location
-      )
+      build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
   end
 
@@ -205,7 +169,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def format_mac(addr)
-    addr.downcase.scan(/\w{2}/).join(':')
+  def build_ethernet_dev(device, hardware, controller_type)
+    unless device.nil?
+      mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => device.uuid,
+        :device_name     => mac_addr,
+        :device_type     => "ethernet",
+        :controller_type => controller_type,
+        :auto_detect     => true,
+        :address         => mac_addr,
+        :location        => device.location
+      )
+    end
   end
 end
