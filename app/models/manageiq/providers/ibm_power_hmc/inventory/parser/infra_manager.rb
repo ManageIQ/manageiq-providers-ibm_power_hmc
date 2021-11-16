@@ -6,6 +6,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     parse_cecs
     parse_lpars
     parse_vioses
+    parse_templates
   end
 
   def parse_cecs
@@ -176,6 +177,20 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :value        => lpar.ref_code,
       :read_only    => true
     )
+  end
+
+  def parse_templates
+    collector.templates.each do |template|
+      persister.miq_templates.build(
+        :uid_ems             => template.uuid,
+        :ems_ref             => template.uuid,
+        :name                => template.name,
+        :vendor              => "ibm_power_vm",
+        :template            => true,
+        :location            => "unknown",
+        :raw_power_state     => "never"
+      )
+    end
   end
 
   def lookup_power_state(state)
