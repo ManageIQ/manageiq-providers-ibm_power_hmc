@@ -60,7 +60,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      vm = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      parse_lpar_guest_devices(lpar, vm)
     end
   end
 
@@ -111,17 +112,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_vm_guest_devices(lpar, hardware)
     lpar.net_adap_uuids.map do |uuid|
-      next if collector.netadapters[uuid].nil?
+      build_ethernet_dev(collector.netadapters[uuid], hardware, "client network adapter")
+    end
 
-      mac_addr = collector.netadapters[uuid].macaddr.scan(/\w{2}/).join(':')
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => uuid,
-        :device_name     => mac_addr,
-        :device_type     => "ethernet",
-        :controller_type => "ethernet",
-        :address         => mac_addr
-      )
+    lpar.sriov_elp_uuids.map do |uuid|
+      build_ethernet_dev(collector.sriov_elps[uuid], hardware, "sr-iov")
+    end
+  end
+
+  def parse_lpar_guest_devices(lpar, vm)
+    hardware = nil
+    lpar.vnic_dedicated_uuids.map do |uuid|
+      hardware ||= persister.hardwares.lazy_find(:vm_or_template => vm)
+      build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
   end
 
@@ -163,6 +166,22 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     when "service processor failover" then "off"
     when "unknown"                    then "unknown"
     else                                   "off"
+    end
+  end
+
+  def build_ethernet_dev(device, hardware, controller_type)
+    unless device.nil?
+      mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => device.uuid,
+        :device_name     => mac_addr,
+        :device_type     => "ethernet",
+        :controller_type => controller_type,
+        :auto_detect     => true,
+        :address         => mac_addr,
+        :location        => device.location
+      )
     end
   end
 end

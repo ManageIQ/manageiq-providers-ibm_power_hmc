@@ -31,13 +31,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         nil
       end.compact
 
-      @netadapters ||= {}
       @lpars.each do |lpar|
-        lpar.net_adap_uuids.each do |net_adap_uuid|
-          @netadapters[net_adap_uuid] = connection.network_adapter_lpar(lpar.uuid, net_adap_uuid)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("network adapter query failed for #{lpar.uuid}/#{net_adap_uuid}: #{e}")
-        end
+        do_netadapters_lpar(connection, lpar)
+        do_sriov_elps_lpar(connection, lpar)
+        do_vnics(connection, lpar)
       end
     end
     @lpars || []
@@ -53,13 +50,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         nil
       end.compact
 
-      @netadapters ||= {}
       @vioses.each do |vios|
-        vios.net_adap_uuids.each do |net_adap_uuid|
-          @netadapters[net_adap_uuid] = connection.network_adapter_vios(vios.uuid, net_adap_uuid)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("network adapter query failed for #{vios.uuid}/#{net_adap_uuid}: #{e}")
-        end
+        do_netadapters_vios(connection, vios)
+        do_sriov_elps_vios(connection, vios)
       end
     end
     @vioses || []
@@ -67,6 +60,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def netadapters
     @netadapters || {}
+  end
+
+  def sriov_elps
+    @sriov_elps || {}
+  end
+
+  def vnics
+    @vnics || {}
   end
 
   private
