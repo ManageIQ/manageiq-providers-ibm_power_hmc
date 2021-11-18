@@ -57,6 +57,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @templates || []
   end
 
+  def templates
+    @templates || []
+  end
+
   private
 
   # Get all vlans from all managed systems(cecs)
