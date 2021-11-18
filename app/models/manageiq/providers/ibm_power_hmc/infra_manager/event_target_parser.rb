@@ -36,6 +36,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       when "VirtualNetwork"
         $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
         target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+      when "UserTask"
+        $ibm_power_hmc_log.error("#{self.class}##{__method__} usertask uuid #{uuid} #{raw_event[:usertask]["key"]}")
+        #target_collection.process_usertask(raw_event[:test])
       end
     end
 
