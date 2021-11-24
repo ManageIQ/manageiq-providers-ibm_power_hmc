@@ -11,13 +11,22 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def cecs
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    @cecs ||= manager.with_provider_connection do |connection|
-      references(:hosts).map do |ems_ref|
+    manager.with_provider_connection do |connection|
+      @cecs ||= references(:hosts).map do |ems_ref|
         connection.managed_system(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
         $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
         nil
       end.compact
+
+      @vswitches ||= {}
+      @vlans ||= {}
+      @cecs.each do |cec|
+        @vswitches[cec.uuid] = connection.virtual_switches(cec.uuid)
+        @vlans[cec.uuid] = connection.virtual_networks(cec.uuid)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying virtual_switches or virtual_networks for managed system  #{cec.uuid}: #{e}") unless e.status == 404
+      end
     end
   end
 
@@ -62,6 +71,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @netadapters || {}
   end
 
+  def vswitches
+    @vswitches || {}
+  end
+
+  def vlans
+    @vlans || {}
+  end
+
   def sriov_elps
     @sriov_elps || {}
   end
@@ -81,6 +98,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target(:hosts, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios
         add_target(:vms, target.ems_ref)
+      when HostSwitch
+        add_target(:host_virtual_switches, target.ems_ref)
+      when Lan
+        add_target(:lans, target.ems_ref)
+      else
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
       end
     end
   end

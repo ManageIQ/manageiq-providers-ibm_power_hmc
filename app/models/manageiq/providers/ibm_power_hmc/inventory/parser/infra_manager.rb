@@ -22,6 +22,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
       parse_host_operating_system(host, sys)
       parse_host_hardware(host, sys)
+      parse_vswitches(host, sys)
+      parse_vlans(sys)
     end
   end
 
@@ -98,6 +100,31 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :vm_or_template => vm,
       :memory_mb      => lpar.memory
     )
+  end
+
+  def parse_vswitches(host, sys)
+    collector.vswitches[sys.uuid].each do |vswitch|
+      switch = persister.host_virtual_switches.build(
+        :uid_ems => vswitch.uuid,
+        :name    => vswitch.name,
+        :host    => host
+      )
+      persister.host_switches.build(:host => host, :switch => switch)
+    end
+  end
+
+  def parse_vlans(sys)
+    collector.vlans[sys.uuid].each do |vlan|
+      managed_system = persister.hosts.lazy_find(sys.uuid)
+      vswitch = persister.host_virtual_switches.lazy_find(:host => managed_system, :uid_ems => vlan.vswitch_uuid)
+      lan = persister.lans.build(
+        :uid_ems => vlan.uuid,
+        :switch  => vswitch,
+        :tag     => vlan.vlan_id,
+        :name    => vlan.name,
+        :ems_ref => sys.uuid
+      )
+    end
   end
 
   def parse_vm_operating_system(vm, lpar)

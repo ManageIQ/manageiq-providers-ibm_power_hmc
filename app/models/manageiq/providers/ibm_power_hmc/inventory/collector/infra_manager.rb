@@ -12,6 +12,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       @cecs = connection.managed_systems
       do_lpars(connection)
       do_vioses(connection)
+      do_vswitches(connection)
+      do_vlans(connection)
       $ibm_power_hmc_log.info("end collection")
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("managed systems query failed: #{e}")
@@ -24,6 +26,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def lpars
     @lpars || []
+  end
+
+  def vswitches
+    @vswitches || {}
+  end
+
+  def vlans
+    @vlans || {}
   end
 
   def vioses
@@ -43,6 +53,25 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   private
+
+  # Get all vlans from all managed systems(cecs)
+  def do_vlans(connection)
+    @vlans = {}
+    @cecs.each do |sys|
+      @vlans[sys.uuid] = connection.virtual_networks(sys.uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("virtual_networks query failed for #{sys.uuid}: #{e}")
+    end
+  end
+
+  def do_vswitches(connection)
+    @vswitches = {}
+    @cecs.each do |sys|
+      @vswitches[sys.uuid] = connection.virtual_switches(sys.uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("virtual_switches query failed for #{sys.uuid}: #{e}")
+    end
+  end
 
   def do_lpars(connection)
     @lpars = @cecs.map do |sys|
