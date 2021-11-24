@@ -9,13 +9,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def collect!
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
-      @cecs = connection.managed_systems
+      @hmc = connection.management_console
+      do_cecs(connection)
       do_lpars(connection)
       do_vioses(connection)
-      $ibm_power_hmc_log.info("end collection")
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("managed systems query failed: #{e}")
+      $ibm_power_hmc_log.error("management console query failed: #{e}")
     end
+    $ibm_power_hmc_log.info("end collection")
   end
 
   def cecs
@@ -28,6 +29,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def vioses
     @vioses || []
+  end
+
+  def cpu_freqs
+    @cpu_freqs || {}
   end
 
   def netadapters
@@ -43,6 +48,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   private
+
+  def do_cecs(connection)
+    @cecs = begin
+      connection.managed_systems
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("managed systems query failed: #{e}")
+      []
+    end
+
+    @cpu_freqs = {}
+    @cecs.each do |sys|
+      freq = cpu_freq(connection, sys)
+      @cpu_freqs[sys.uuid] = freq unless freq.nil?
+    rescue => e
+      $ibm_power_hmc_log.error("cpu freq query failed for #{sys.uuid}: #{e}")
+    end
+  end
 
   def do_lpars(connection)
     @lpars = @cecs.map do |sys|
@@ -111,5 +133,22 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("vnic query failed for #{lpar.uuid}/#{vnic_dedicated_uuid}: #{e}")
     end
+  end
+
+  def cpu_freq(connection, sys)
+    # Retrieve the CPU frequency from one of the VIOSes with RMC active.
+    vios = vioses.find { |v| v.sys_uuid == sys.uuid && v.rmc_state == "active" }
+    return if vios.nil?
+
+    vioscmd = "lsdev -dev proc0 -attr frequency"
+    cmd = %(viosvrcmd -m "#{sys.name}" -p "#{vios.name}" -c "#{vioscmd}")
+    job = connection.cli_run(@hmc.uuid, cmd)
+    ret = job.results["returnCode"]&.to_i
+    return if ret != 0
+
+    result = job.results["result"]
+    return if result.nil?
+
+    result.split("\n").last.to_f / 1_000_000.0
   end
 end

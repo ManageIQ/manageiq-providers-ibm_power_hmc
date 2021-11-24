@@ -40,7 +40,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :bitness         => 64,
       :manufacturer    => "IBM",
       :model           => "#{sys.mtype}#{sys.model}",
-      # :cpu_speed     => 2348, # in MHz
+      :cpu_speed       => collector.cpu_freqs[sys.uuid],
       :memory_mb       => sys.memory,
       :cpu_total_cores => sys.cpus,
       :serial_number   => sys.serial
