@@ -30,6 +30,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         # instead of querying the full LPAR data.
         $ibm_power_hmc_log.info("#{self.class}##{__method__} LPAR uuid #{uuid}")
         target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => uuid})
+      when "VirtualSwitch"
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualSwitch uuid #{uuid}")
+        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+      when "VirtualNetwork"
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
+        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
       end
     end
 
