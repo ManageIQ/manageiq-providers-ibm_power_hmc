@@ -52,7 +52,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def vnics
     @vnics || {}
   end
-  
+
   def templates
     @templates || []
   end
