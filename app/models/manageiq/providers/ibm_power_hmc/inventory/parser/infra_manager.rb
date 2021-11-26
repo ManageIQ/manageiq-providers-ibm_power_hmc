@@ -182,14 +182,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_templates
     collector.templates.each do |template|
       t = persister.miq_templates.build(
-        :uid_ems             => template.uuid,
-        :ems_ref             => template.uuid,
-        :name                => template.name,
-        :description         => template.description,
-        :vendor              => "ibm_power_vm",
-        :template            => true,
-        :location            => "unknown",
-        :raw_power_state     => "never"
+        :uid_ems         => template.uuid,
+        :ems_ref         => template.uuid,
+        :name            => template.name,
+        :description     => template.description,
+        :vendor          => "ibm_power_vm",
+        :template        => true,
+        :location        => "unknown",
+        :raw_power_state => "never"
       )
       parse_vm_hardware(t, template)
       parse_vm_operating_system(t, template)
