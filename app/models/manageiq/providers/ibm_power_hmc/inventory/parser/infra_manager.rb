@@ -138,12 +138,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_guest_devices(lpar, hardware)
-    lpar.net_adap_uuids.map do |uuid|
+    lpar.net_adap_uuids.each do |uuid|
       build_ethernet_dev(collector.netadapters[uuid], hardware, "client network adapter")
     end
 
-    lpar.sriov_elp_uuids.map do |uuid|
+    lpar.sriov_elp_uuids.each do |uuid|
       build_ethernet_dev(collector.sriov_elps[uuid], hardware, "sr-iov")
+    end
+
+    lpar.lhea_ports.each do |lhea|
+      build_ethernet_dev(lhea, hardware, "host ethernet adapter")
     end
   end
 
@@ -199,9 +203,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def build_ethernet_dev(device, hardware, controller_type)
     unless device.nil?
       mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
+      id = device.respond_to?(:uuid) ? device.uuid : device.macaddr
       persister.guest_devices.build(
         :hardware        => hardware,
-        :uid_ems         => device.uuid,
+        :uid_ems         => id,
         :device_name     => mac_addr,
         :device_type     => "ethernet",
         :controller_type => controller_type,
