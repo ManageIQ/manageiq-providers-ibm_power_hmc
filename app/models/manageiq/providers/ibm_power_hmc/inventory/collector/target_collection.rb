@@ -73,10 +73,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
       @templates ||= references(:templates).map do |ems_ref|
         connection.template(ems_ref)
       rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("template query failed for #{template.uuid} #{e}")
+        $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
         nil
       end.compact
     end
+    @templates || []
   end
 
   def netadapters

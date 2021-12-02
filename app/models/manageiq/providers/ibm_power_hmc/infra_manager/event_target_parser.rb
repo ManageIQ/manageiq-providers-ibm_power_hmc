@@ -37,10 +37,16 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
         target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
       when "UserTask"
-        case raw_event[:usertask]["key"]
-        when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_DELETE"
-          $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{uuid} #{raw_event[:usertask]['key']}")
-          # TODO: trigger refresh for all templates
+        if raw_event[:usertask]["status"].eql?("Completed")
+          case raw_event[:usertask]["key"]
+          when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
+            $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{uuid} #{raw_event[:usertask]['key']} uuid #{raw_event[:usertask]['template_uuid']} name #{raw_event[:usertask]['labelParams'].first}")
+            target_collection.add_target(:association => :templates, :manager_ref => {:ems_ref => raw_event[:usertask]['template_uuid']})
+          when "TEMPLATE_DELETE"
+            template = ManageIQ::Providers::InfraManager::Template.find_by(:name => raw_event[:usertask]['labelParams'])
+            $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{uuid} #{raw_event[:usertask]['key']} uuid #{template.uid_ems} name #{template.name}")
+            target_collection.add_target(:association => :templates, :manager_ref => {:ems_ref => template.uid_ems})
+          end
         end
       end
     end
