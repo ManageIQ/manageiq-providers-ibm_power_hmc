@@ -7,6 +7,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     parse_lpars
     parse_vioses
     parse_templates
+    parse_ssps
   end
 
   def parse_cecs
@@ -25,6 +26,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_host_hardware(host, sys)
       parse_vswitches(host, sys)
       parse_vlans(sys)
+    end
+  end
+
+  def parse_ssps
+    collector.ssps.each do |ssp|
+      storage = persister.storages.build(
+        :name        => ssp.name,
+        :total_space => ssp.capacity.to_f.gigabytes.round, # hmc returns a str in byte
+        :ems_ref     => ssp.uuid,
+        :free_space  => ssp.free_space.to_f.gigabytes.round
+      )
     end
   end
 

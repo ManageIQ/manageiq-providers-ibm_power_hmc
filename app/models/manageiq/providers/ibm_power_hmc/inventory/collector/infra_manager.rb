@@ -4,6 +4,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @netadapters = {}
     @sriov_elps = {}
     @vnics = {}
+    @ssps = {}
   end
 
   def collect!
@@ -15,6 +16,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       do_vswitches(connection)
       do_vlans(connection)
       do_templates(connection)
+      do_ssps(connection)
       $ibm_power_hmc_log.info("end collection")
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("managed systems query failed: #{e}")
@@ -57,7 +59,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @templates || []
   end
 
+  attr_accessor :ssps
+
   private
+
+  def do_ssps(connection)
+    @ssps = connection.ssps
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("ssps query failed : #{e}")
+  end
 
   # Get all vlans from all managed systems(cecs)
   def do_vlans(connection)
