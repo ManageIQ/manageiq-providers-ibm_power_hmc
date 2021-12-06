@@ -58,5 +58,4 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       end
     end
   end
-
 end
