@@ -14,6 +14,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       do_vioses(connection)
       do_vswitches(connection)
       do_vlans(connection)
+      do_templates(connection)
       $ibm_power_hmc_log.info("end collection")
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("managed systems query failed: #{e}")
@@ -50,6 +51,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def vnics
     @vnics || {}
+  end
+
+  def templates
+    @templates || []
   end
 
   private
@@ -140,5 +145,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("vnic query failed for #{lpar.uuid}/#{vnic_dedicated_uuid}: #{e}")
     end
+  end
+
+  def do_templates(connection)
+    @templates = connection.templates_summary.map do |template|
+      connection.template(template.uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("template query failed for #{template.uuid} #{e}")
+      nil
+    end.compact
+  rescue IbmPowerHmc::Connection::HttpError => e
+    $ibm_power_hmc_log.error("template query failed #{e}")
   end
 end

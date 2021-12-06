@@ -67,6 +67,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @vioses || []
   end
 
+  def templates
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    manager.with_provider_connection do |connection|
+      @templates ||= references(:miq_templates).map do |ems_ref|
+        connection.template(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
+        nil
+      end.compact
+    end
+    @templates || []
+  end
+
   def netadapters
     @netadapters || {}
   end
@@ -102,6 +115,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target(:host_virtual_switches, target.ems_ref)
       when Lan
         add_target(:lans, target.ems_ref)
+      when ManageIQ::Providers::InfraManager::Template
+        add_target(:miq_templates, target.ems_ref)
       else
         $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
       end
