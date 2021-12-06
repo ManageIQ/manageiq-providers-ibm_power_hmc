@@ -53,8 +53,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => usertask['template_uuid']})
       when "TEMPLATE_DELETE"
         template = ManageIQ::Providers::InfraManager::Template.find_by(:ems_id => ems_event.ext_management_system.id, :name => usertask['labelParams'])
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{event_uuid} #{usertask['key']} uuid #{template.uid_ems} name #{template.name}")
-        target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => template.uid_ems})
+        unless template.nil?
+          $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{event_uuid} #{usertask['key']} uuid #{template.uid_ems} name #{template.name}")
+          target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => template.uid_ems})
+        end
       end
     end
   end
