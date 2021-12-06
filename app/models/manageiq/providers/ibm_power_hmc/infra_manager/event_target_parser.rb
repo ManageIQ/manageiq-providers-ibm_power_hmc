@@ -50,11 +50,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       case usertask["key"]
       when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
         $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{event_uuid} #{usertask['key']} uuid #{usertask['template_uuid']} name #{usertask['labelParams'].first}")
-        target_collection.add_target(:association => :templates, :manager_ref => {:ems_ref => usertask['template_uuid']})
+        target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => usertask['template_uuid']})
       when "TEMPLATE_DELETE"
         template = ManageIQ::Providers::InfraManager::Template.find_by(:ems_id => ems_event.ext_management_system.id, :name => usertask['labelParams'])
         $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{event_uuid} #{usertask['key']} uuid #{template.uid_ems} name #{template.name}")
-        target_collection.add_target(:association => :templates, :manager_ref => {:ems_ref => template.uid_ems})
+        target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => template.uid_ems})
       end
     end
   end
