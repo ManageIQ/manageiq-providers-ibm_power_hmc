@@ -108,28 +108,18 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     target.targets.each do |target|
       case target
       when Host
-        add_target(:hosts, target.ems_ref)
+        add_target!(:hosts, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios
-        add_target(:vms, target.ems_ref)
+        add_target!(:vms, target.ems_ref)
       when HostSwitch
-        add_target(:host_virtual_switches, target.ems_ref)
+        add_target!(:host_virtual_switches, target.ems_ref)
       when Lan
-        add_target(:lans, target.ems_ref)
+        add_target!(:lans, target.ems_ref)
       when ManageIQ::Providers::InfraManager::Template
-        add_target(:miq_templates, target.ems_ref)
+        add_target!(:miq_templates, target.ems_ref)
       else
         $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
       end
     end
-  end
-
-  def add_target(association, ems_ref)
-    return if ems_ref.blank?
-
-    target.add_target(:association => association, :manager_ref => {:ems_ref => ems_ref})
-  end
-
-  def references(collection)
-    target.manager_refs_by_association&.dig(collection, :ems_ref)&.to_a&.compact || []
   end
 end
