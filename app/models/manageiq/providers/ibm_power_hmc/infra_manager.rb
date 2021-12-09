@@ -4,6 +4,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :EventTargetParser
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
+  require_nested :Provision
+  require_nested :ProvisionWorkflow
   require_nested :Refresher
   require_nested :RefreshWorker
   require_nested :Vm
@@ -11,6 +13,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :Vios
 
   supports :create
+  supports :provisioning
 
   def self.params_for_create
     @params_for_create ||= {

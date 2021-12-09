@@ -61,4 +61,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def poweroff(_params = {})
     raise StandardError, "Must be implemented in a subclass"
   end
+
+  def make_template(clone_options)
+    raise StandardError, "Must be implemented in a subclass"
+  end
 end
