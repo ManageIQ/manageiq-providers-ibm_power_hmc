@@ -35,7 +35,8 @@
           - :validate_vm_name
           - :validate_regex
           :required_regex: !ruby/regexp /\A(?:[A-Za-z0-9-_]+)\Z/
-          :required_regex_fail_details: The name must be composed only of letters (A-Z or a-z), numbers (0-9) or characters '-' and '_'.
+          :required_regex_fail_details: "The name must be composed only of letters (A-Z or a-z), numbers (0-9) or
+            characters '-' and '_'."
           :required: true
           :notes:
           :display: :edit
