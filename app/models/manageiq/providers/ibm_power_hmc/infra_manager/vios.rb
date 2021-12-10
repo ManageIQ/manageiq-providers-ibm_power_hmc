@@ -22,7 +22,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     end
   end
 
-  def make_template(clone_options)
+  def make_template(_clone_options)
     raise StandardError, "Cannot create a template from a VIOS"
   end
 end

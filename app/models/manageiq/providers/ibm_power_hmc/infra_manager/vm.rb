@@ -62,7 +62,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     raise StandardError, "Must be implemented in a subclass"
   end
 
-  def make_template(clone_options)
+  def make_template(_clone_options)
     raise StandardError, "Must be implemented in a subclass"
   end
 end
