@@ -10,6 +10,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :Lpar
   require_nested :Vios
 
+  supports :create
+
   def self.params_for_create
     @params_for_create ||= {
       :fields => [
