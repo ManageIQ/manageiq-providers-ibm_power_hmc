@@ -61,6 +61,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_accessor :ssps
 
+
+  def ssp_lus_by_udid
+    @ssp_lus_by_udid ||= ssps.flat_map(&:lus).index_by(&:udid)
+  end
+
+  def vscsi_lun_mappings
+    @vscsi_lun_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::LogicalUnit) } }
+  end
+
+  def vscsi_lun_mappings_by_uuid
+    @vscsi_lun_mappings_by_uuid ||= vscsi_lun_mappings.group_by(&:lpar_uuid)
+  end
+  
   private
 
   def do_ssps(connection)
