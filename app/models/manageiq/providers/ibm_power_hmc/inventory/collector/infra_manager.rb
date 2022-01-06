@@ -58,7 +58,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
 
   def ssp_lus_by_udid
-    @ssp_lus_by_udid ||= ssps.flat_map(&:lus).index_by(&:udid)
+    @ssp_lus_by_udid ||= {}
+    ssps.each { |ssp| ssp.lus.each { |lu| @ssp_lus_by_udid[lu.udid] = ssp.uuid }}
+    @ssp_lus_by_udid
   end
 
   def vscsi_lun_mappings
