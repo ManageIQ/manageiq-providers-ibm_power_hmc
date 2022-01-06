@@ -4,6 +4,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.collect!
 
     parse_cecs
+    parse_ssps
     parse_lpars
     parse_vioses
     parse_templates
@@ -42,14 +43,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_vm_disks(lpar, hardware)
     collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
-      found_ssp = collector.ssp_lus_by_udid[mapping.storage.udid]
-      
+      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
+
       persister.disks.build(
-        :hardware    => hardware,
-        :device_type => "disk",
-        :storage     => persister.storages.lazy_find(found_ssp),
-        :device_name => mapping.storage.name,
-        :size        => mapping.storage.capacity.to_f.gigabytes.round
+        :device_type     => "disk",
+        :hardware        => hardware,
+        :storage         => persister.storages.lazy_find(found_ssp_uuid),
+        :device_name     => mapping.storage.name,
+        :size            => mapping.storage.capacity.to_f.gigabytes.round
       )
     end
   end
@@ -89,8 +90,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      vm = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
-      # parse_lpar_guest_devices(lpar, vm)
+      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
     end
   end
 
@@ -118,7 +118,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     hardware = parse_vm_hardware(vm, lpar)
     
     if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
-      parse_lpar_guest_devices(lpar, vm, hardware)
+      parse_lpar_guest_devices(lpar, hardware)
     end
 
     parse_vm_operating_system(vm, lpar)
@@ -183,8 +183,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def parse_lpar_guest_devices(lpar, vm, hardware)
-    # hardware ||= persister.hardwares.lazy_find(:vm_or_template => vm)
+  def parse_lpar_guest_devices(lpar, hardware)
     lpar.vnic_dedicated_uuids.map do |uuid|
       build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
