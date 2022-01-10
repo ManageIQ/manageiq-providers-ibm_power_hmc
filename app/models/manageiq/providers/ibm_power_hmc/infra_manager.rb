@@ -2,6 +2,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :EventTargetParser
+  require_nested :Host
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :Refresher
