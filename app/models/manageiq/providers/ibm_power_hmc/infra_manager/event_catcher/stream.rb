@@ -21,11 +21,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
     @ems.with_provider_connection do |connection|
       catch(:stop_polling) do
         loop do
-          connection.next_events(false).each do |event|
+          connection.next_events.each do |event|
             throw :stop_polling if @stop_polling
             yield event
           end
-          sleep @poll_sleep
+          # sleep @poll_sleep
         end
       rescue => exception
         raise ProviderUnreachable, exception.message

@@ -31,11 +31,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_ssps
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     collector.ssps.each do |ssp|
       storage = persister.storages.build(
         :name        => ssp.name,
         :total_space => ssp.capacity.to_f.gigabytes.round, # hmc returns a str in byte
-        :ems_ref     => ssp.uuid,
+        :ems_ref     => ssp.cluster_uuid,
         :free_space  => ssp.free_space.to_f.gigabytes.round 
       )
     end
