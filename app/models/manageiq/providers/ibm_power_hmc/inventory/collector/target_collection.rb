@@ -67,6 +67,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @vioses || []
   end
 
+  def ssps
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    manager.with_provider_connection do |connection|
+      @ssps ||= connection.ssps() # we gather every ssp.
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error querying ssps  #{ems_ref}: #{e}") unless e.status == 404
+      nil
+    end.compact
+  end
+
   def netadapters
     @netadapters || {}
   end
@@ -102,6 +112,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target(:host_virtual_switches, target.ems_ref)
       when Lan
         add_target(:lans, target.ems_ref)
+      when Storage
+        add_target(:storages, target.ems_ref)
       end
     end
   end

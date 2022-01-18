@@ -36,6 +36,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       when "VirtualNetwork"
         $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
         target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+      when "Cluster"
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} Cluster uuid #{uuid}")
+        target_collection.add_target(:association => :storages, :manager_ref => {:ems_ref => elems.last})
       end
     end
 
