@@ -36,9 +36,9 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser
         if elems.length >= 4 && elems[-4] == "ManagedSystem"
           event_hash[:host_ems_ref] = elems[-3]
         end
-      end
       when "Cluster"
         event_hash[:storage_ems_ref] = uuid
+      end
     end
 
     event_hash
