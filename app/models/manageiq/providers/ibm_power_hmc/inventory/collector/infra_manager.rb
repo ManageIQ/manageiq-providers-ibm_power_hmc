@@ -56,10 +56,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_accessor :ssps
 
-
   def ssp_lus_by_udid
     @ssp_lus_by_udid ||= {}
-    ssps.each { |ssp| ssp.lus.each { |lu| @ssp_lus_by_udid[lu.udid] = ssp.cluster_uuid }}
+    ssps.each { |ssp| ssp.lus.each { |lu| @ssp_lus_by_udid[lu.udid] = ssp.cluster_uuid } }
     @ssp_lus_by_udid
   end
 
@@ -70,7 +69,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def vscsi_lun_mappings_by_uuid
     @vscsi_lun_mappings_by_uuid ||= vscsi_lun_mappings.group_by(&:lpar_uuid)
   end
-  
+
   private
 
   def do_ssps(connection)

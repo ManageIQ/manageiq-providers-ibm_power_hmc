@@ -35,7 +35,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :name        => ssp.name,
         :total_space => ssp.capacity.to_f.gigabytes.round, # hmc returns a str in byte
         :ems_ref     => ssp.cluster_uuid,
-        :free_space  => ssp.free_space.to_f.gigabytes.round 
+        :free_space  => ssp.free_space.to_f.gigabytes.round
       )
     end
   end
@@ -45,11 +45,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
 
       persister.disks.build(
-        :device_type     => "disk",
-        :hardware        => hardware,
-        :storage         => persister.storages.lazy_find(found_ssp_uuid),
-        :device_name     => mapping.storage.name,
-        :size            => mapping.storage.capacity.to_f.gigabytes.round
+        :device_type => "disk",
+        :hardware    => hardware,
+        :storage     => persister.storages.lazy_find(found_ssp_uuid),
+        :device_name => mapping.storage.name,
+        :size        => mapping.storage.capacity.to_f.gigabytes.round
       )
     end
   end
@@ -115,7 +115,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :host            => host
     )
     hardware = parse_vm_hardware(vm, lpar)
-    
+ 
     if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
       parse_lpar_guest_devices(lpar, hardware)
     end
