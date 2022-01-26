@@ -115,7 +115,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target!(:host_virtual_switches, target.ems_ref)
       when Lan
         add_target!(:lans, target.ems_ref)
-      when ManageIQ::Providers::InfraManager::Template
+      when ManageIQ::Providers::IbmPowerHmc::InfraManager::Template
         add_target!(:miq_templates, target.ems_ref)
       else
         $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
