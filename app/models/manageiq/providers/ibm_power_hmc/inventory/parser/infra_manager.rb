@@ -4,7 +4,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.collect!
 
     parse_cecs
-    parse_ssps
     parse_lpars
     parse_vioses
     parse_templates
