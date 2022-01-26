@@ -33,7 +33,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_ssps
     $ibm_power_hmc_log.info("#{self.class}##{__method__} : received ssps => #{collector.ssps}")
     collector.ssps.each do |ssp|
-      storage = persister.storages.build(
+      persister.storages.build(
         :name        => ssp.name,
         :total_space => ssp.capacity.to_f.gigabytes.round, # hmc returns a str in byte
         :ems_ref     => ssp.cluster_uuid,
