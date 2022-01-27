@@ -12,6 +12,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
     add_collection(infra, :guest_devices)
     add_collection(infra, :lans)
     add_collection(infra, :host_virtual_lans)
+    add_collection(infra, :storages)
+    add_collection(infra, :disks)
     add_collection(infra, :vms_and_templates_advanced_settings) do |builder|
       builder.add_properties(
         :manager_ref                  => %i[resource name],
