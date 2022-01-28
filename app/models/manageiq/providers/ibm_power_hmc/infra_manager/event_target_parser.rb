@@ -31,11 +31,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         $ibm_power_hmc_log.info("#{self.class}##{__method__} LPAR uuid #{uuid}")
         target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => uuid})
       when "VirtualSwitch"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualSwitch uuid #{uuid}")
-        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+        if elems.length >= 4 && elems[-4] == "ManagedSystem"
+          $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualSwitch uuid #{uuid}")
+          target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+        end
       when "VirtualNetwork"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
-        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+        if elems.length >= 4 && elems[-4] == "ManagedSystem"
+          $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
+          target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+        end
       when "UserTask"
         handle_usertask(uuid, raw_event[:usertask], target_collection)
       when "Cluster"
