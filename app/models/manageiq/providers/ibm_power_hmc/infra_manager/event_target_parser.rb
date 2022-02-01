@@ -5,6 +5,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     @ems_event = ems_event
   end
 
+  def elem(url)
+    uri = URI(url)
+    tokens = uri.path.split('/')
+    elems = {
+      :type => tokens[-2],
+      :uuid => tokens[-1]
+    }
+    if tokens.length >= 4 && tokens[-4] == "ManagedSystem"
+      elems[:manager_uuid] = tokens[-3]
+    end
+    elems
+  end
+
   def parse
     target_collection = InventoryRefresh::TargetCollection.new(
       :manager => ems_event.ext_management_system,
@@ -16,35 +29,28 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     case ems_event.event_type
     when "MODIFY_URI", "ADD_URI", "DELETE_URI" # Damien: INVALID_URI?
       $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event.event_type} #{ems_event.full_data}")
-      uri = URI(raw_event[:data])
-      elems = uri.path.split('/')
-      type, uuid = elems[-2], elems[-1]
-      case type
+      elems = elem(raw_event[:data])
+      case elems[:type]
       when "ManagedSystem"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} managed system uuid #{uuid}")
-        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => uuid})
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} managed system uuid #{elems[:uuid]}")
+        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[:uuid]})
       when "LogicalPartition", "VirtualIOServer"
         # raw_event[:detail] contains information about the properties that
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} LPAR uuid #{uuid}")
-        target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => uuid})
-      when "VirtualSwitch"
-        if elems.length >= 4 && elems[-4] == "ManagedSystem"
-          $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualSwitch uuid #{uuid}")
-          target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
-        end
-      when "VirtualNetwork"
-        if elems.length >= 4 && elems[-4] == "ManagedSystem"
-          $ibm_power_hmc_log.info("#{self.class}##{__method__} VirtualNetwork uuid #{uuid}")
-          target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[-3]})
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} LPAR uuid #{elems[:uuid]}")
+        target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => elems[:uuid]})
+      when "VirtualSwitch", "VirtualNetwork"
+        if elems.has_key?(:manager_uuid)
+          $ibm_power_hmc_log.info("#{self.class}##{__method__} ${elems[:type]} uuid #{elems[:uuid]}")
+          target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[:manager_uuid]})
         end
       when "UserTask"
-        handle_usertask(uuid, raw_event[:usertask], target_collection)
+        handle_usertask(elems[:uuid], raw_event[:usertask], target_collection)
       when "Cluster"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} Cluster uuid #{uuid}")
-        target_collection.add_target(:association => :storages, :manager_ref => {:ems_ref => elems.last})
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} Cluster uuid #{elems[:uuid]}")
+        target_collection.add_target(:association => :storages, :manager_ref => {:ems_ref => elems[:uuid]})
       end
     end
 

@@ -49,7 +49,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       event.data = "https://te.st:12443/rest/api/uom/LogicalPartition/74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
       expect(described_class.event_to_hash(event, nil)).to(
         include(
-          :vm_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
+          :vm_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
         )
       )
     end
@@ -74,7 +74,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       event.data = "https://te.st:12443/rest/api/uom/VirtualIOServer/74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
       expect(described_class.event_to_hash(event, nil)).to(
         include(
-          :vm_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
+          :vm_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
         )
       )
     end
@@ -99,7 +99,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       event.data = "https://te.st:12443/rest/api/uom/VirtualSwitch/74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
       expect(described_class.event_to_hash(event, nil)).to(
         include(
-          :vswitch_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
+          :vswitch_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
         )
       )
     end
@@ -124,7 +124,19 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       event.data = "https://te.st:12443/rest/api/uom/VirtualNetwork/74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
       expect(described_class.event_to_hash(event, nil)).to(
         include(
-          :vlan_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
+          :vlan_ems_ref  => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
+        )
+      )
+    end
+  end
+
+  context "Cluster" do
+    it "#event_to_hash" do
+      event = TestEvent.new
+      event.data = "https://te.st:12443/rest/api/uom/Cluster/c1e50c27-888c-3c4d-8d4a-53a3768ea250"
+      expect(described_class.event_to_hash(event, nil)).to(
+        include(
+          :storage_ems_ref  => "c1e50c27-888c-3c4d-8d4a-53a3768ea250"
         )
       )
     end

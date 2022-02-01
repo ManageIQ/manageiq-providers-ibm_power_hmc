@@ -73,6 +73,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         {"uuid"=>"948b4654-7d09-4869-a065-7d3301588a99", "key"=>"TEMPLATE_DELETE", "localizedLabel"=>"Delete the template named supertest", "labelParams"=>["supertest"], "initiator"=>"hscroot", "timeStarted"=>1643116605280, "timeCompleted"=>1643116605327, "status"=>"Completed", "visible"=>true}
       )
     end
+    it "Cluster" do
+      assert_event_triggers_target(
+        "https://te.st:12443/rest/api/uom/Cluster/c1e50c27-888c-3c4d-8d4a-53a3768ea250",
+        [[:storages, {:ems_ref => 'c1e50c27-888c-3c4d-8d4a-53a3768ea250'}]]
+      )
+    end
   end
 
   def assert_event_triggers_target(event_data, expected_targets, usertask = nil)
