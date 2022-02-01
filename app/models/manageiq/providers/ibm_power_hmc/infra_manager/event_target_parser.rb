@@ -47,7 +47,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
           elems[:ems_ref] = elems[:manager_uuid]
         end
       when "UserTask"
-        elems.merge!(handle_usertask(elems[:uuid], raw_event[:usertask], target_collection))
+        elems.merge!(handle_usertask(raw_event[:usertask]))
       when "Cluster"
         elems[:assoc] = :storages
         elems[:ems_ref] = elems[:uuid]
@@ -66,7 +66,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     target_collection.targets
   end
 
-  def handle_usertask(event_uuid, usertask, target_collection)
+  def handle_usertask(usertask)
     if usertask["status"].eql?("Completed")
       case usertask["key"]
       when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
