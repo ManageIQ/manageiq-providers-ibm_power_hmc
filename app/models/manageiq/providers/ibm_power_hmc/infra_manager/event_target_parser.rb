@@ -32,25 +32,33 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       elems = elem(raw_event[:data])
       case elems[:type]
       when "ManagedSystem"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} managed system uuid #{elems[:uuid]}")
-        target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[:uuid]})
+        elems[:assoc] = :hosts
+        elems[:ems_ref] = elems[:uuid]
       when "LogicalPartition", "VirtualIOServer"
         # raw_event[:detail] contains information about the properties that
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} LPAR uuid #{elems[:uuid]}")
-        target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => elems[:uuid]})
+        elems[:assoc] = :vms
+        elems[:ems_ref] = elems[:uuid]
       when "VirtualSwitch", "VirtualNetwork"
         if elems.has_key?(:manager_uuid)
-          $ibm_power_hmc_log.info("#{self.class}##{__method__} ${elems[:type]} uuid #{elems[:uuid]}")
-          target_collection.add_target(:association => :hosts, :manager_ref => {:ems_ref => elems[:manager_uuid]})
+          elems[:assoc] = :hosts
+          elems[:ems_ref] = elems[:manager_uuid]
         end
       when "UserTask"
-        handle_usertask(elems[:uuid], raw_event[:usertask], target_collection)
+        elems.merge!(handle_usertask(elems[:uuid], raw_event[:usertask], target_collection))
       when "Cluster"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} Cluster uuid #{elems[:uuid]}")
-        target_collection.add_target(:association => :storages, :manager_ref => {:ems_ref => elems[:uuid]})
+        elems[:assoc] = :storages
+        elems[:ems_ref] = elems[:uuid]
+      end
+
+      if elems.has_key?(:assoc)
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{elems[:uuid]}")
+        target_collection.add_target(
+          :association => elems[:assoc],
+          :manager_ref => {:ems_ref => elems[:ems_ref]}
+        )
       end
     end
 
@@ -62,15 +70,14 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     if usertask["status"].eql?("Completed")
       case usertask["key"]
       when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{event_uuid} #{usertask['key']} uuid #{usertask['template_uuid']} name #{usertask['labelParams'].first}")
-        target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => usertask['template_uuid']})
+        r = {:assoc => :miq_templates, :ems_ref => usertask['template_uuid']}
       when "TEMPLATE_DELETE"
         template = ManageIQ::Providers::InfraManager::Template.find_by(:ems_id => ems_event.ext_management_system.id, :name => usertask['labelParams'])
         unless template.nil?
-          $ibm_power_hmc_log.info("#{self.class}##{__method__} usertask uuid #{event_uuid} #{usertask['key']} uuid #{template.uid_ems} name #{template.name}")
-          target_collection.add_target(:association => :miq_templates, :manager_ref => {:ems_ref => template.uid_ems})
+          r = {:assoc => :miq_templates, :ems_ref => template.uid_ems}
         end
       end
     end
+    r || {}
   end
 end
