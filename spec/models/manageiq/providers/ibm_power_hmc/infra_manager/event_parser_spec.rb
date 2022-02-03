@@ -1,5 +1,6 @@
 describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
   let(:event) do
+    require "ibm_power_hmc"
     IbmPowerHmc::FeedParser.new(File.read(File.join(File.dirname(__FILE__), filename))).objects(:Event).first
   end
 

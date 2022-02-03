@@ -107,6 +107,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
   end
 
   def create_ems_event(filename, usertask = nil)
+    require "ibm_power_hmc"
     event = IbmPowerHmc::FeedParser.new(File.read(File.join(File.dirname(__FILE__), filename))).objects(:Event).first
     event.usertask = usertask
     event_hash = ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser.event_to_hash(event, @ems.id)
