@@ -116,7 +116,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :host            => host
     )
     hardware = parse_vm_hardware(vm, lpar)
- 
+
     if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
       parse_lpar_guest_devices(lpar, hardware)
     end
@@ -149,7 +149,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.vlans[sys.uuid].each do |vlan|
       managed_system = persister.hosts.lazy_find(sys.uuid)
       vswitch = persister.host_virtual_switches.lazy_find(:host => managed_system, :uid_ems => vlan.vswitch_uuid)
-      lan = persister.lans.build(
+      persister.lans.build(
         :uid_ems => vlan.uuid,
         :switch  => vswitch,
         :tag     => vlan.vlan_id,

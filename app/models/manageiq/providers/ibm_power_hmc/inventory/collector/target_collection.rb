@@ -12,12 +12,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def cecs
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
-      @cecs ||= references(:hosts).map do |ems_ref|
-        connection.managed_system(ems_ref)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
-        nil
-      end.compact
+      @cecs ||=
+        references(:hosts).map do |ems_ref|
+          connection.managed_system(ems_ref)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
+          nil
+        end.compact
 
       @vswitches ||= {}
       @vlans ||= {}
@@ -33,12 +34,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def lpars
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
-      @lpars ||= references(:vms).map do |ems_ref|
-        connection.lpar(ems_ref)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
-        nil
-      end.compact
+      @lpars ||=
+        references(:vms).map do |ems_ref|
+          connection.lpar(ems_ref)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
+          nil
+        end.compact
 
       @lpars.each do |lpar|
         do_netadapters_lpar(connection, lpar)
@@ -52,12 +54,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def vioses
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
-      @vioses ||= references(:vms).map do |ems_ref|
-        connection.vios(ems_ref)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
-        nil
-      end.compact
+      @vioses ||=
+        references(:vms).map do |ems_ref|
+          connection.vios(ems_ref)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
+          nil
+        end.compact
 
       @vioses.each do |vios|
         do_netadapters_vios(connection, vios)
@@ -70,12 +73,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def templates
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
-      @templates ||= references(:miq_templates).map do |ems_ref|
-        connection.template(ems_ref)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
-        nil
-      end.compact
+      @templates ||=
+        references(:miq_templates).map do |ems_ref|
+          connection.template(ems_ref)
+        rescue IbmPowerHmc::Connection::HttpError => e
+          $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
+          nil
+        end.compact
     end
     @templates || []
   end

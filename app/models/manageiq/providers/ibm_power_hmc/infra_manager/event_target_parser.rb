@@ -42,7 +42,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         elems[:assoc] = :vms
         elems[:ems_ref] = elems[:uuid]
       when "VirtualSwitch", "VirtualNetwork"
-        if elems.has_key?(:manager_uuid)
+        if elems.key?(:manager_uuid)
           elems[:assoc] = :hosts
           elems[:ems_ref] = elems[:manager_uuid]
         end
@@ -53,7 +53,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         elems[:ems_ref] = elems[:uuid]
       end
 
-      if elems.has_key?(:assoc)
+      if elems.key?(:assoc)
         $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{elems[:uuid]}")
         target_collection.add_target(
           :association => elems[:assoc],
