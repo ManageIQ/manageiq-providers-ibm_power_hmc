@@ -1,0 +1,31 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+    <id>19418045-105e-30da-aa92-14877ec2a1e1</id>
+    <updated>2022-02-03T12:35:03.780Z</updated>
+    <link rel="SELF" href="https://te.st:12443/rest/api/uom/Event"/>
+    <link rel="MANAGEMENT_CONSOLE" href="https://te.st:12443/rest/api/uom/ManagementConsole/d2e647dd-8fa4-3979-ac61-898d046e760d"/>
+    <generator>IBM Power Systems Management Console</generator>
+    <entry>
+        <id>8b0f550f-1113-3b79-acbe-5f7825cadcf0</id>
+        <title>Event</title>
+        <published>2022-02-03T12:35:03.782Z</published>
+        <link rel="SELF" href="https://te.st:12443/rest/api/uom/Event/8b0f550f-1113-3b79-acbe-5f7825cadcf0"/>
+        <author>
+            <name>IBM Power Systems Management Console</name>
+        </author>
+        <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-1530293155</etag:etag>
+        <content type="application/vnd.ibm.powervm.uom+xml; type=Event">
+            <Event:Event xmlns:Event="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_6_0">
+    <Metadata>
+        <Atom>
+            <AtomID>8b0f550f-1113-3b79-acbe-5f7825cadcf0</AtomID>
+            <AtomCreated>1643891703780</AtomCreated>
+        </Atom>
+    </Metadata>
+    <EventType kb="ROR" kxe="false">MODIFY_URI</EventType>
+    <EventID kb="ROR" kxe="false">1639561190462</EventID>
+    <EventData kxe="false" kb="ROR">https://te.st:12443/rest/api/uom/UserTask/1d43a4a6-903c-46f8-865d-a356559bb17f</EventData>
+    <EventDetail kxe="false" kb="ROR">Other</EventDetail>
+</Event:Event>
+        </content>
+    </entry>
+</feed>

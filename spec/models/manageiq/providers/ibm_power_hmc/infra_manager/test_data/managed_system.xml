@@ -1,0 +1,26 @@
+<feed>
+    <entry>
+        <id>1afb3833-8a85-369f-977a-bb8741b1a15a</id>
+        <title>Event</title>
+        <published>2022-02-02T15:05:12.772Z</published>
+        <link rel="SELF" href="https://te.st:12443/rest/api/uom/Event/1afb3833-8a85-369f-977a-bb8741b1a15a"/>
+        <author>
+            <name>IBM Power Systems Management Console</name>
+        </author>
+        <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-83524495</etag:etag>
+        <content type="application/vnd.ibm.powervm.uom+xml; type=Event">
+            <Event:Event xmlns:Event="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_6_0">
+    <Metadata>
+        <Atom>
+            <AtomID>1afb3833-8a85-369f-977a-bb8741b1a15a</AtomID>
+            <AtomCreated>1639561179310</AtomCreated>
+        </Atom>
+    </Metadata>
+    <EventType kb="ROR" kxe="false">ADD_URI</EventType>
+    <EventID kb="ROR" kxe="false">1639561179310</EventID>
+    <EventData kxe="false" kb="ROR">https://te.st:12443/rest/api/uom/ManagedSystem/977848c8-3bed-360a-c9d2-ae4b7e46b5d1</EventData>
+    <EventDetail kxe="false" kb="ROR">Other</EventDetail>
+</Event:Event>
+        </content>
+    </entry>
+</feed>

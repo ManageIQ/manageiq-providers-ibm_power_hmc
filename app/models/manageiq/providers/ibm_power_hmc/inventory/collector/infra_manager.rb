@@ -77,8 +77,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def do_ssps(connection)
     @ssps = connection.ssps
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("ssps query failed : #{e}")
+  rescue IbmPowerHmc::Connection::HttpError => e
+    $ibm_power_hmc_log.error("ssps query failed : #{e}")
   end
 
   # Get all vlans from all managed systems(cecs)
@@ -101,12 +101,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def do_lpars(connection)
-    @lpars = @cecs.map do |sys|
-      connection.lpars(sys.uuid)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
-      nil
-    end.flatten.compact
+    @lpars =
+      @cecs.map do |sys|
+        connection.lpars(sys.uuid)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
+        nil
+      end.flatten.compact
 
     @lpars.each do |lpar|
       do_netadapters_lpar(connection, lpar)
@@ -116,12 +117,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def do_vioses(connection)
-    @vioses = @cecs.map do |sys|
-      connection.vioses(sys.uuid)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
-      nil
-    end.flatten.compact
+    @vioses =
+      @cecs.map do |sys|
+        connection.vioses(sys.uuid)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
+        nil
+      end.flatten.compact
 
     @vioses.each do |vios|
       do_netadapters_vios(connection, vios)
@@ -170,12 +172,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def do_templates(connection)
-    @templates = connection.templates_summary.map do |template|
-      connection.template(template.uuid)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("template query failed for #{template.uuid} #{e}")
-      nil
-    end.compact
+    @templates =
+      connection.templates_summary.map do |template|
+        connection.template(template.uuid)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("template query failed for #{template.uuid} #{e}")
+        nil
+      end.compact
   rescue IbmPowerHmc::Connection::HttpError => e
     $ibm_power_hmc_log.error("template query failed #{e}")
   end
