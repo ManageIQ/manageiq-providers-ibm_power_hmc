@@ -2,9 +2,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
   before :each do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems                 = FactoryBot.create(:ems_ibm_power_hmc_infra, :zone => zone)
-
-    allow_any_instance_of(EmsEvent).to receive(:handle_event)
-    allow(EmsEvent).to receive(:create_completed_event)
   end
 
   context "ADD_URI event" do
