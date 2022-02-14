@@ -111,7 +111,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :name            => lpar.name,
       :location        => "unknown",
       :description     => lpar.type,
-      :vendor          => "ibm_power_vm",
+      :vendor          => "ibm_power_hmc",
       :raw_power_state => lpar.state,
       :host            => host
     )
@@ -216,7 +216,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :ems_ref         => template.uuid,
         :name            => template.name,
         :description     => template.description,
-        :vendor          => "ibm_power_vm",
+        :vendor          => "ibm_power_hmc",
         :template        => true,
         :location        => "unknown",
         :raw_power_state => "never"

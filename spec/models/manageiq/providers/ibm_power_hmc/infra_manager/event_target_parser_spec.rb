@@ -59,7 +59,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         :uid_ems         => '12345678',
         :ems_ref         => '12345678',
         :name            => "supertest",
-        :vendor          => "ibm_power_vm",
+        :vendor          => "ibm_power_hmc",
         :template        => true,
         :location        => "unknown",
         :raw_power_state => "never",
