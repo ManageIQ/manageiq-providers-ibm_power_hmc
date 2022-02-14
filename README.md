@@ -1,12 +1,12 @@
 # ManageIQ::Providers::IbmPowerHmc
 
-[![CI](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions/workflows/ci.yaml/badge.svg)](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions/workflows/ci.yaml)
+[![CI](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions/workflows/ci.yaml/badge.svg?branch=najdorf)](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions/workflows/ci.yaml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a10f4961070bc030e3cd/maintainability)](https://codeclimate.com/github/ManageIQ/manageiq-providers-ibm_power_hmc/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a10f4961070bc030e3cd/test_coverage)](https://codeclimate.com/github/ManageIQ/manageiq-providers-ibm_power_hmc/test_coverage)
 
 [![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq-providers-ibm_power_hmc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build history for master branch](https://buildstats.info/github/chart/ManageIQ/manageiq-providers-ibm_power_hmc?branch=master&buildCount=50&includeBuildsFromPullRequest=false&showstats=false)](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions?query=branch%3Amaster)
+[![Build history for najdorf branch](https://buildstats.info/github/chart/ManageIQ/manageiq-providers-ibm_power_hmc?branch=najdorf&buildCount=50&includeBuildsFromPullRequest=false&showstats=false)](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions?query=branch%3Amaster)
 
 ManageIQ plugin for the IBM Power HMC provider.
 
