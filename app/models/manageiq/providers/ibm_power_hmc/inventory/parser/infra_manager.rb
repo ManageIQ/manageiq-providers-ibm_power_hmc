@@ -129,8 +129,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_vm_hardware(vm, lpar)
     persister.hardwares.build(
-      :vm_or_template => vm,
-      :memory_mb      => lpar.memory
+      :vm_or_template  => vm,
+      :memory_mb       => lpar.memory,
+      :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
   end
 
@@ -191,20 +192,46 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_advanced_settings(vm, lpar)
+    if lpar.respond_to?("id")
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => "partition_id",
+        :display_name => _("Partition ID"),
+        :description  => _("The logical partition number"),
+        :value        => lpar.id.to_i,
+        :read_only    => true
+      )
+    end
+
+    if lpar.respond_to?("ref_code")
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => "reference_code",
+        :display_name => _("Reference Code"),
+        :description  => _("The logical partition reference code"),
+        :value        => lpar.ref_code,
+        :read_only    => true
+      )
+    end
+
+    unless lpar.proc_units.nil?
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => 'entitled_processors',
+        :display_name => _('Entitled Processors'),
+        :description  => _('The number of entitled processors assigned to the VM'),
+        :value        => lpar.proc_units,
+        :read_only    => true
+      )
+    end
+
+    proc_type = lpar.dedicated == "true" ? "dedicated" : lpar.sharing_mode
     persister.vms_and_templates_advanced_settings.build(
       :resource     => vm,
-      :name         => "partition_id",
-      :display_name => _("Partition ID"),
-      :description  => _("The logical partition number"),
-      :value        => lpar.id.to_i,
-      :read_only    => true
-    )
-    persister.vms_and_templates_advanced_settings.build(
-      :resource     => vm,
-      :name         => "reference_code",
-      :display_name => _("Reference Code"),
-      :description  => _("The logical partition reference code"),
-      :value        => lpar.ref_code,
+      :name         => 'processor_type',
+      :display_name => _('Processor type'),
+      :description  => _('dedicated: Dedicated, shared: Uncapped shared, capped: Capped shared'),
+      :value        => proc_type,
       :read_only    => true
     )
   end
@@ -223,6 +250,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       )
       parse_vm_hardware(t, template)
       parse_vm_operating_system(t, template)
+      parse_vm_advanced_settings(t, template)
     end
   end
 
