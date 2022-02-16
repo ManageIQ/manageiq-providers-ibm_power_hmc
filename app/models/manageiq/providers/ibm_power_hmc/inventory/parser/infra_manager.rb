@@ -110,8 +110,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :ems_ref         => lpar.uuid,
       :name            => lpar.name,
       :location        => "unknown",
-      :description     => lpar.type,
       :vendor          => "ibm_power_hmc",
+      :description     => lpar.description.to_s,
       :raw_power_state => lpar.state,
       :host            => host
     )
