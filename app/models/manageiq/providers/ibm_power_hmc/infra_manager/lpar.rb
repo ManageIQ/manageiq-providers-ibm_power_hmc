@@ -43,4 +43,66 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
       raise
     end
   end
+
+  def capture_metrics(counters, start_time = nil, end_time = nil)
+    metrics = {}
+    ext_management_system.with_provider_connection do |connection|
+      host_uuid = connection.lpar(ems_ref).sys_uuid
+      samples = connection.lpar_metrics(sys_uuid: host_uuid, lpar_uuid: ems_ref)
+      samples.first["systemUtil"]["utilSamples"].each do |s|
+        ts = Time.parse(s["sampleInfo"]["timeStamp"])
+        metrics[ts] = {}
+        counters.each_key do |key|
+          metrics[ts][key] = case key
+            when "cpu_usage_rate_average"
+              cpu_usage_rate_average(s["lparsUtil"].first["processor"])
+            when "disk_usage_rate_average"
+              disk_usage_rate_average(s["lparsUtil"].first["storage"])
+            when "mem_usage_absolute_average"
+              mem_usage_absolute_average(s["lparsUtil"].first["memory"])
+            when "net_usage_rate_average"
+              net_usage_rate_average(s["lparsUtil"].first["network"])
+            end
+        end
+      end
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error getting performance samples for LPAR #{ems_ref}: #{e}")
+      unless e.status.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+        raise
+      end
+    end
+    metrics
+  end
+
+  private
+
+  SAMPLE_DURATION = 30.0 # seconds
+
+  def cpu_usage_rate_average(sample)
+    100.0 * sample["utilizedProcUnits"].sum / sample["entitledProcUnits"].sum
+  end
+
+  def disk_usage_rate_average(sample)
+    usage = 0.0
+    sample.each do |_adapter_type, adapters|
+      adapters.each do |adapter|
+        usage += adapter["readBytes"].sum + adapter["writeBytes"].sum
+      end
+    end
+    usage / SAMPLE_DURATION / 1.0.kilobyte
+  end
+
+  def mem_usage_absolute_average(sample)
+    100.0 * sample["backedPhysicalMem"].sum / sample["logicalMem"].sum
+  end
+
+  def net_usage_rate_average(sample)
+    usage = 0.0
+    sample.each do |_adapter_type, adapters|
+      adapters.each do |adapter|
+        usage += adapter["sentBytes"].sum + adapter["receivedBytes"].sum
+      end
+    end
+    usage / SAMPLE_DURATION / 1.0.kilobyte
+  end
 end

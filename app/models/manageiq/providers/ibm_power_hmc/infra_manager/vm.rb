@@ -65,4 +65,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def make_template(_clone_options)
     raise StandardError, "Must be implemented in a subclass"
   end
+
+  def capture_metrics(_counters, _start_time = nil, _end_time = nil)
+    raise StandardError, "Must be implemented in a subclass"
+  end
 end

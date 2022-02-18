@@ -1,19 +1,18 @@
-class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
+class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ::Providers::InfraManager::MetricsCapture
   VIM_STYLE_COUNTERS = {
     "cpu_usage_rate_average"     => {
       :counter_key           => "cpu_usage_rate_average",
       :instance              => "",
-      :capture_interval      => "20",
+      :capture_interval      => "30",
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
       :capture_interval_name => "realtime"
     },
-
     "disk_usage_rate_average"    => {
       :counter_key           => "disk_usage_rate_average",
       :instance              => "",
-      :capture_interval      => "20",
+      :capture_interval      => "30",
       :precision             => 2,
       :rollup                => "average",
       :unit_key              => "kilobytespersecond",
@@ -22,7 +21,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     "mem_usage_absolute_average" => {
       :counter_key           => "mem_usage_absolute_average",
       :instance              => "",
-      :capture_interval      => "20",
+      :capture_interval      => "30",
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
@@ -31,7 +30,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     "net_usage_rate_average"     => {
       :counter_key           => "net_usage_rate_average",
       :instance              => "",
-      :capture_interval      => "20",
+      :capture_interval      => "30",
       :precision             => 2,
       :rollup                => "average",
       :unit_key              => "kilobytespersecond",
@@ -43,7 +42,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     raise "No EMS defined" if target.ext_management_system.nil?
 
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
-
+    
     end_time ||= Time.zone.now
     end_time = end_time.utc
     start_time ||= end_time - 4.hours # 4 hours for symmetry with VIM
@@ -51,8 +50,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
 
     begin
       target.ext_management_system.with_provider_connection do |connection|
-        [{target.ems_ref => VIM_STYLE_COUNTERS},
-         {target.ems_ref => connection.metrics(start_time, end_time)}]
+        a = [{target.ems_ref => VIM_STYLE_COUNTERS},
+             {target.ems_ref => target.capture_metrics(VIM_STYLE_COUNTERS, start_time, end_time)}]
+        _log.info("#{log_header} perf: #{a.inspect}")
+        a
       end
     rescue => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
