@@ -1,5 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
-  def capture_metrics(counters, start_time = nil, end_time = nil)
+  def capture_metrics(_counters, _start_time = nil, _end_time = nil)
+    # TO DO: capture host metrics
     {}
   end
 end

@@ -46,12 +46,18 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
   def capture_metrics(counters, start_time = nil, end_time = nil)
     metrics = {}
     ext_management_system.with_provider_connection do |connection|
-      samples = connection.lpar_metrics(sys_uuid: host.ems_ref, lpar_uuid: ems_ref)
+      samples = connection.lpar_metrics(
+        :sys_uuid  => host.ems_ref,
+        :lpar_uuid => ems_ref,
+        :start_ts  => start_time,
+        :end_ts    => end_time
+      )
       samples.first["systemUtil"]["utilSamples"].each do |s|
-        ts = Time.parse(s["sampleInfo"]["timeStamp"])
+        ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
         metrics[ts] = {}
         counters.each_key do |key|
-          metrics[ts][key] = case key
+          metrics[ts][key] =
+            case key
             when "cpu_usage_rate_average"
               cpu_usage_rate_average(s["lparsUtil"].first["processor"])
             when "disk_usage_rate_average"

@@ -16,7 +16,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture do
   let(:vm) do
     FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => ems, :ems_ref => "3F3D399B-DFF3-4977-8881-C194AA47CD3A", :host => host)
   end
-  
+
   context "#perf_collect_metrics" do
     it "collects metrics" do
       cap = described_class.new(vm, ems)

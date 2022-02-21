@@ -42,19 +42,17 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     raise "No EMS defined" if target.ext_management_system.nil?
 
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
-    
+  
     end_time ||= Time.zone.now
     end_time = end_time.utc
     start_time ||= end_time - 4.hours # 4 hours for symmetry with VIM
     start_time   = start_time.utc
 
     begin
-      target.ext_management_system.with_provider_connection do |connection|
-        a = [{target.ems_ref => VIM_STYLE_COUNTERS},
-             {target.ems_ref => target.capture_metrics(VIM_STYLE_COUNTERS, start_time, end_time)}]
-        _log.info("#{log_header} perf: #{a.inspect}")
-        a
-      end
+      [
+        {target.ems_ref => VIM_STYLE_COUNTERS},
+        {target.ems_ref => target.capture_metrics(VIM_STYLE_COUNTERS, start_time, end_time)}
+      ]
     rescue => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")

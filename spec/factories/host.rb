@@ -3,4 +3,4 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/ibm_power_hmc/infra_manager/host"],
           :class   => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Host",
           :parent  => :host
-  end
+end

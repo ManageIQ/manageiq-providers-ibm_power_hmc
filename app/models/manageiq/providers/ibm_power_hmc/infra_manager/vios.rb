@@ -26,7 +26,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     raise StandardError, "Cannot create a template from a VIOS"
   end
 
-  def capture_metrics(counters, start_time = nil, end_time = nil)
+  def capture_metrics(_counters, _start_time = nil, _end_time = nil)
+    # TODO : Retrieve VIOS performance metrics
     {}
   end
 end
