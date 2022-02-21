@@ -42,7 +42,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     raise "No EMS defined" if target.ext_management_system.nil?
 
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
-  
+
     end_time ||= Time.zone.now
     end_time = end_time.utc
     start_time ||= end_time - 4.hours # 4 hours for symmetry with VIM

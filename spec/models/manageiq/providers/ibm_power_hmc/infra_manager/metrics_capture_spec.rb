@@ -20,8 +20,10 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture do
   context "#perf_collect_metrics" do
     it "collects metrics" do
       cap = described_class.new(vm, ems)
+      start_ts = Time.xmlschema("2022-02-21T14:12:45+01:00")
+      end_ts = Time.xmlschema("2022-02-21T18:12:45+01:00")
       VCR.use_cassette(described_class.name.underscore) do
-        cap.perf_collect_metrics("realtime")
+        cap.perf_collect_metrics("realtime", start_ts, end_ts)
       end
     end
   end
