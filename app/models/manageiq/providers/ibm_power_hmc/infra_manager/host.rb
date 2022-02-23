@@ -3,9 +3,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     metrics = {}
     ext_management_system.with_provider_connection do |connection|
       samples = connection.managed_system_metrics(
-        :sys_uuid  => ems_ref,
-        :start_ts  => start_time,
-        :end_ts    => end_time
+        :sys_uuid => ems_ref,
+        :start_ts => start_time,
+        :end_ts   => end_time
       )
       samples.first["systemUtil"]["utilSamples"].each do |s|
         ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
@@ -16,16 +16,16 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
             when "cpu_usage_rate_average"
               cpu_usage_rate_average(s["serverUtil"]["processor"])
             when "disk_usage_rate_average"
-              s["viosUtil"].map do |vios|
+              s["viosUtil"].sum do |vios|
                 disk_usage_rate_average_vios(vios["storage"])
-              end.sum
+              end
             when "mem_usage_absolute_average"
               mem_usage_absolute_average(s["serverUtil"]["memory"])
             when "net_usage_rate_average"
               net_usage_rate_average_server(s["serverUtil"]["network"]) +
-                s["viosUtil"].map do |vios|
-                  net_usage_rate_average_vios(vios["network"])
-                end.sum
+              s["viosUtil"].sum do |vios|
+                net_usage_rate_average_vios(vios["network"])
+              end
             end
         end
       end
@@ -49,7 +49,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   def disk_usage_rate_average_vios(sample)
     usage = 0.0
     sample.each do |_adapter_type, adapters|
-      adapters.select { |a| a.is_a?(Hash) }.each do |adapter|
+      adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
         usage += adapter["transmittedBytes"].sum
       end
     end
@@ -75,7 +75,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   def net_usage_rate_average_vios(sample)
     usage = 0.0
     sample.each do |_adapter_type, adapters|
-      adapters.select { |a| a.is_a?(Hash) }.each do |adapter|
+      adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
         usage += adapter["transferredBytes"].sum
       end
     end
