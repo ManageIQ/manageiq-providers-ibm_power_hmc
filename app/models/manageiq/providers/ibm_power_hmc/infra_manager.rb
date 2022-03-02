@@ -106,7 +106,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
     authentication = args.dig("authentications", "default")
     userid, password = authentication&.values_at("userid", "password")
     password = ManageIQ::Password.try_decrypt(password)
-    password ||= find(args["id"]).authentication_password(authtype) if args['id']
+    password ||= find(args["id"]).authentication_password("default") if args['id']
 
     !!raw_connect(hostname, port, userid, password, validate_ssl, true)
   end
