@@ -1,4 +1,4 @@
-# ManageIQ::Providers::IbmPowerHmc
+# ManageIQ::Providers::IbmPowerHmc Test
 
 [![CI](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions/workflows/ci.yaml/badge.svg)](https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc/actions/workflows/ci.yaml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a10f4961070bc030e3cd/maintainability)](https://codeclimate.com/github/ManageIQ/manageiq-providers-ibm_power_hmc/maintainability)
