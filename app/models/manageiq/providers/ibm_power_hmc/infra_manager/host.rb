@@ -7,26 +7,29 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
         :start_ts => start_time,
         :end_ts   => end_time
       )
+      break if samples.first.nil?
+
       samples.first["systemUtil"]["utilSamples"].each do |s|
         ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
         metrics[ts] = {}
         counters.each_key do |key|
-          metrics[ts][key] =
+          val =
             case key
             when "cpu_usage_rate_average"
-              cpu_usage_rate_average(s["serverUtil"]["processor"])
+              s["serverUtil"]["processor"] ? cpu_usage_rate_average(s["serverUtil"]["processor"]) : nil
             when "disk_usage_rate_average"
               s["viosUtil"].sum do |vios|
-                disk_usage_rate_average_vios(vios["storage"])
+                vios["storage"] ? disk_usage_rate_average_vios(vios["storage"]) : 0.0
               end
             when "mem_usage_absolute_average"
-              mem_usage_absolute_average(s["serverUtil"]["memory"])
+              s["serverUtil"]["memory"] ? mem_usage_absolute_average(s["serverUtil"]["memory"]) : nil
             when "net_usage_rate_average"
               net_usage_rate_average_server(s["serverUtil"]["network"]) +
               s["viosUtil"].sum do |vios|
-                net_usage_rate_average_vios(vios["network"])
+                vios["network"] ? net_usage_rate_average_vios(vios["network"]) : 0.0
               end
             end
+          metrics[ts][key] = val unless val.nil?
         end
       end
     rescue IbmPowerHmc::Connection::HttpError => e

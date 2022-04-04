@@ -52,21 +52,26 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
         :start_ts  => start_time,
         :end_ts    => end_time
       )
+      break if samples.first.nil?
+
       samples.first["systemUtil"]["utilSamples"].each do |s|
+        next unless s["sampleInfo"]["errorInfo"].nil?
+
         ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
         metrics[ts] = {}
         counters.each_key do |key|
-          metrics[ts][key] =
+          val =
             case key
             when "cpu_usage_rate_average"
-              cpu_usage_rate_average(s["lparsUtil"].first["processor"])
+              s["lparsUtil"].first["processor"] ? cpu_usage_rate_average(s["lparsUtil"].first["processor"]) : nil
             when "disk_usage_rate_average"
-              disk_usage_rate_average(s["lparsUtil"].first["storage"])
+              s["lparsUtil"].first["storage"] ? disk_usage_rate_average(s["lparsUtil"].first["storage"]) : nil
             when "mem_usage_absolute_average"
-              mem_usage_absolute_average(s["lparsUtil"].first["memory"])
+              s["lparsUtil"].first["memory"] ? mem_usage_absolute_average(s["lparsUtil"].first["memory"]) : nil
             when "net_usage_rate_average"
-              net_usage_rate_average(s["lparsUtil"].first["network"])
+              s["lparsUtil"].first["network"] ? net_usage_rate_average(s["lparsUtil"].first["network"]) : nil
             end
+          metrics[ts][key] = val unless val.nil?
         end
       end
     rescue IbmPowerHmc::Connection::HttpError => e
