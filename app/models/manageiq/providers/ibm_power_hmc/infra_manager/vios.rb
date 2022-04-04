@@ -37,21 +37,20 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
       samples.first["systemUtil"]["utilSamples"].each do |s|
         ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
         vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
-        unless vios_sample.nil?
-          metrics[ts] = {}
-          counters.each_key do |key|
-            metrics[ts][key] =
-              case key
-              when "cpu_usage_rate_average"
-                cpu_usage_rate_average(vios_sample["processor"])
-              when "disk_usage_rate_average"
-                disk_usage_rate_average_vios(vios_sample["storage"])
-              when "mem_usage_absolute_average"
-                mem_usage_absolute_average(vios_sample["memory"])
-              when "net_usage_rate_average"
-                net_usage_rate_average_vios(vios_sample["network"])
-              end
-          end
+        next if vios_sample.nil?
+        metrics[ts] = {}
+        counters.each_key do |key|
+          metrics[ts][key] =
+            case key
+            when "cpu_usage_rate_average"
+              cpu_usage_rate_average(vios_sample["processor"])
+            when "disk_usage_rate_average"
+              disk_usage_rate_average_vios(vios_sample["storage"])
+            when "mem_usage_absolute_average"
+              mem_usage_absolute_average(vios_sample["memory"])
+            when "net_usage_rate_average"
+              net_usage_rate_average_vios(vios_sample["network"])
+            end
         end
       end
     rescue IbmPowerHmc::Connection::HttpError => e
