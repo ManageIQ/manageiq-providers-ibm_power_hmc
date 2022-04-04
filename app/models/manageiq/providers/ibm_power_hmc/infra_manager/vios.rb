@@ -38,6 +38,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
         ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
         vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
         next if vios_sample.nil?
+
         metrics[ts] = {}
         counters.each_key do |key|
           metrics[ts][key] =
