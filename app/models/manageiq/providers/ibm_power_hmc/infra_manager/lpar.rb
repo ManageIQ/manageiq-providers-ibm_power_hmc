@@ -71,7 +71,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
       end
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error getting performance samples for LPAR #{ems_ref}: #{e}")
-      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+      unless e.msg&.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
         raise
       end
     end
