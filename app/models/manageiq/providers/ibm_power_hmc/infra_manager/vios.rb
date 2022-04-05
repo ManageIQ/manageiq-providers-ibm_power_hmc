@@ -89,15 +89,25 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
   end
 
   def get_sample_value(sample, key)
+    r = nil
     case key
     when "cpu_usage_rate_average"
-      sample["processor"] ? cpu_usage_rate_average(sample["processor"]) : nil
+      if sample["processor"]
+        r = cpu_usage_rate_average(sample["processor"])
+      end
     when "disk_usage_rate_average"
-      sample["storage"] ? disk_usage_rate_average_vios(sample["storage"]) : nil
+      if sample["storage"]
+        r = disk_usage_rate_average_vios(sample["storage"])
+      end
     when "mem_usage_absolute_average"
-      sample["memory"] ? mem_usage_absolute_average_vios(sample["memory"]) : nil
+      if sample["memory"]
+        r = mem_usage_absolute_average_vios(sample["memory"])
+      end
     when "net_usage_rate_average"
-      sample["network"] ? net_usage_rate_average_vios(sample["network"]) : nil
+      if sample["network"]
+        r = net_usage_rate_average_vios(sample["network"])
+      end
     end
+    r
   end
 end
