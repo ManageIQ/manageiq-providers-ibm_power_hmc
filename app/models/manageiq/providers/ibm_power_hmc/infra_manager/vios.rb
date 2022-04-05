@@ -27,35 +27,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
   end
 
   def capture_metrics(counters, start_time = nil, end_time = nil)
-    metrics = {}
-    ext_management_system.with_provider_connection do |connection|
-      samples = connection.managed_system_metrics(
-        :sys_uuid => host.ems_ref,
-        :start_ts => start_time,
-        :end_ts   => end_time
-      )
-      break if samples.first.nil?
-
-      samples.first["systemUtil"]["utilSamples"].each do |s|
-        vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
-        next if vios_sample.nil?
-
-        ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-        metrics[ts] = {}
-        counters.each_key do |key|
-          val = get_sample_value(vios_sample, key)
-          metrics[ts][key] = val unless val.nil?
-        end
-      end
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
-      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
-    end
-    metrics
+    samples = collect_samples(start_time, end_time)
+    process_samples(counters, samples)
   end
-
+  
   private
 
   SAMPLE_DURATION = 30.0 # seconds
@@ -109,5 +84,40 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
       end
     end
     r
+  end
+
+  def collect_samples(start_time, end_time)
+    ext_management_system.with_provider_connection do |connection|
+      connection.managed_system_metrics(
+        :sys_uuid => host.ems_ref,
+        :start_ts => start_time,
+        :end_ts   => end_time
+      )
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
+      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+        raise
+      end
+      []
+    end
+  end
+
+  def process_samples(counters, samples)
+    metrics = {}
+    list = samples.dig(0, "systemUtil", "utilSamples")
+    unless list.nil?
+      list.each do |s|
+        vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
+        next if vios_sample.nil?
+
+        ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
+        metrics[ts] = {}
+        counters.each_key do |key|
+          val = get_sample_value(vios_sample, key)
+          metrics[ts][key] = val unless val.nil?
+        end
+      end
+    end
+    metrics
   end
 end
