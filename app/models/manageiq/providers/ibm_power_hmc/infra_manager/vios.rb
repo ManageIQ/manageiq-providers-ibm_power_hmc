@@ -95,7 +95,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     when "disk_usage_rate_average"
       sample["storage"] ? disk_usage_rate_average_vios(sample["storage"]) : nil
     when "mem_usage_absolute_average"
-      sample["memory"] ? mem_usage_absolute_average(sample["memory"]) : nil
+      sample["memory"] ? mem_usage_absolute_average_vios(sample["memory"]) : nil
     when "net_usage_rate_average"
       sample["network"] ? net_usage_rate_average_vios(sample["network"]) : nil
     end
