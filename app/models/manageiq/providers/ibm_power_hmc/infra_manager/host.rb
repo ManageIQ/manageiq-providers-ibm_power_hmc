@@ -1,44 +1,7 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   def capture_metrics(counters, start_time = nil, end_time = nil)
-    metrics = {}
-    ext_management_system.with_provider_connection do |connection|
-      samples = connection.managed_system_metrics(
-        :sys_uuid => ems_ref,
-        :start_ts => start_time,
-        :end_ts   => end_time
-      )
-      break if samples.first.nil?
-
-      samples.first["systemUtil"]["utilSamples"].each do |s|
-        ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-        metrics[ts] = {}
-        counters.each_key do |key|
-          val =
-            case key
-            when "cpu_usage_rate_average"
-              s["serverUtil"]["processor"] ? cpu_usage_rate_average(s["serverUtil"]["processor"]) : nil
-            when "disk_usage_rate_average"
-              s["viosUtil"].sum do |vios|
-                vios["storage"] ? disk_usage_rate_average_vios(vios["storage"]) : 0.0
-              end
-            when "mem_usage_absolute_average"
-              s["serverUtil"]["memory"] ? mem_usage_absolute_average(s["serverUtil"]["memory"]) : nil
-            when "net_usage_rate_average"
-              net_usage_rate_average_server(s["serverUtil"]["network"]) +
-              s["viosUtil"].sum do |vios|
-                vios["network"] ? net_usage_rate_average_vios(vios["network"]) : 0.0
-              end
-            end
-          metrics[ts][key] = val unless val.nil?
-        end
-      end
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
-      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
-    end
-    metrics
+    samples = collect_samples(start_time, end_time)
+    process_samples(counters, samples)
   end
 
   private
@@ -83,5 +46,69 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
       end
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
+  end
+
+  def get_sample_value(sample, key)
+    r = nil
+    case key
+    when "cpu_usage_rate_average"
+      if sample["serverUtil"]["processor"]
+        r = cpu_usage_rate_average(sample["serverUtil"]["processor"])
+      end
+    when "disk_usage_rate_average"
+      r = sample["viosUtil"].sum do |vios|
+        if vios["storage"]
+          disk_usage_rate_average_vios(vios["storage"])
+        else
+          0.0
+        end
+      end
+    when "mem_usage_absolute_average"
+      if sample["serverUtil"]["memory"]
+        mem_usage_absolute_average(sample["serverUtil"]["memory"])
+      end
+    when "net_usage_rate_average"
+      if sample["serverUtil"]["network"]
+        r = net_usage_rate_average_server(sample["serverUtil"]["network"]) +
+            sample["viosUtil"].sum do |vios|
+              if vios["network"]
+                net_usage_rate_average_vios(vios["network"])
+              else
+                0.0
+              end
+            end
+      end
+    end
+    r
+  end
+
+  def collect_samples(start_time, end_time)
+    ext_management_system.with_provider_connection do |connection|
+      connection.managed_system_metrics(
+        :sys_uuid => ems_ref,
+        :start_ts => start_time,
+        :end_ts   => end_time
+      )
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
+      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+        raise
+      end
+
+      []
+    end
+  end
+
+  def process_samples(counters, samples)
+    metrics = {}
+    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+      ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
+      metrics[ts] = {}
+      counters.each_key do |key|
+        val = get_sample_value(s, key)
+        metrics[ts][key] = val unless val.nil?
+      end
+    end
+    metrics
   end
 end

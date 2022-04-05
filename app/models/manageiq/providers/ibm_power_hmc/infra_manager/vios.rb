@@ -30,7 +30,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     samples = collect_samples(start_time, end_time)
     process_samples(counters, samples)
   end
-  
+
   private
 
   SAMPLE_DURATION = 30.0 # seconds
@@ -98,24 +98,22 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
       unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
         raise
       end
+
       []
     end
   end
 
   def process_samples(counters, samples)
     metrics = {}
-    list = samples.dig(0, "systemUtil", "utilSamples")
-    unless list.nil?
-      list.each do |s|
-        vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
-        next if vios_sample.nil?
+    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+      vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
+      next if vios_sample.nil?
 
-        ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-        metrics[ts] = {}
-        counters.each_key do |key|
-          val = get_sample_value(vios_sample, key)
-          metrics[ts][key] = val unless val.nil?
-        end
+      ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
+      metrics[ts] = {}
+      counters.each_key do |key|
+        val = get_sample_value(vios_sample, key)
+        metrics[ts][key] = val unless val.nil?
       end
     end
     metrics
