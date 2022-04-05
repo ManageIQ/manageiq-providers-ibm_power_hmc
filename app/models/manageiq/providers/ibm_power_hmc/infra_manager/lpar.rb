@@ -44,43 +44,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
   end
 
   def capture_metrics(counters, start_time = nil, end_time = nil)
-    metrics = {}
-    ext_management_system.with_provider_connection do |connection|
-      samples = connection.lpar_metrics(
-        :sys_uuid  => host.ems_ref,
-        :lpar_uuid => ems_ref,
-        :start_ts  => start_time,
-        :end_ts    => end_time
-      )
-      break if samples.first.nil?
-
-      samples.first["systemUtil"]["utilSamples"].each do |s|
-        next unless s["sampleInfo"]["errorInfo"].nil?
-
-        ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-        metrics[ts] = {}
-        counters.each_key do |key|
-          val =
-            case key
-            when "cpu_usage_rate_average"
-              s["lparsUtil"].first["processor"] ? cpu_usage_rate_average(s["lparsUtil"].first["processor"]) : nil
-            when "disk_usage_rate_average"
-              s["lparsUtil"].first["storage"] ? disk_usage_rate_average(s["lparsUtil"].first["storage"]) : nil
-            when "mem_usage_absolute_average"
-              s["lparsUtil"].first["memory"] ? mem_usage_absolute_average(s["lparsUtil"].first["memory"]) : nil
-            when "net_usage_rate_average"
-              s["lparsUtil"].first["network"] ? net_usage_rate_average(s["lparsUtil"].first["network"]) : nil
-            end
-          metrics[ts][key] = val unless val.nil?
-        end
-      end
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error getting performance samples for LPAR #{ems_ref}: #{e}")
-      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
-    end
-    metrics
+    samples = collect_samples(start_time, end_time)
+    process_samples(counters, samples)
   end
 
   private
@@ -113,5 +78,58 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
       end
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
+  end
+
+  def get_sample_value(sample, key)
+    r = nil
+    case key
+    when "cpu_usage_rate_average"
+      if sample["lparsUtil"].first["processor"]
+        cpu_usage_rate_average(sample["lparsUtil"].first["processor"])
+      end
+    when "disk_usage_rate_average"
+      if sample["lparsUtil"].first["storage"]
+        disk_usage_rate_average(sample["lparsUtil"].first["storage"])
+      end
+    when "mem_usage_absolute_average"
+      if sample["lparsUtil"].first["memory"]
+        mem_usage_absolute_average(sample["lparsUtil"].first["memory"])
+      end
+    when "net_usage_rate_average"
+      if sample["lparsUtil"].first["network"]
+        net_usage_rate_average(sample["lparsUtil"].first["network"])
+      end
+    end
+    r
+  end
+
+  def collect_samples(start_time, end_time)
+    ext_management_system.with_provider_connection do |connection|
+      connection.lpar_metrics(
+        :sys_uuid  => host.ems_ref,
+        :lpar_uuid => ems_ref,
+        :start_ts  => start_time,
+        :end_ts    => end_time
+      )
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error getting performance samples for LPAR #{ems_ref}: #{e}")
+      unless e.msg.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+        raise
+      end
+
+      []
+    end
+  end
+
+  def process_samples(counters, samples)
+    metrics = {}
+    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+      ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
+      metrics[ts] = {}
+      counters.each_key do |key|
+        val = get_sample_value(s, key)
+        metrics[ts][key] = val unless val.nil?
+      end
+    end
   end
 end
