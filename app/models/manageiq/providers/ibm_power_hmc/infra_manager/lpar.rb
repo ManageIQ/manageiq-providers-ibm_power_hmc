@@ -43,11 +43,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     end
   end
 
-  def capture_metrics(counters, start_time = nil, end_time = nil)
-    samples = collect_samples(start_time, end_time)
-    process_samples(counters, samples)
-  end
-
   private
 
   SAMPLE_DURATION = 30.0 # seconds
@@ -131,5 +126,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
         metrics[ts][key] = val unless val.nil?
       end
     end
+    metrics
   end
 end

@@ -66,7 +66,18 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     raise StandardError, "Must be implemented in a subclass"
   end
 
-  def capture_metrics(_counters, _start_time = nil, _end_time = nil)
+  def capture_metrics(counters, start_time = nil, end_time = nil)
+    samples = collect_samples(start_time, end_time)
+    process_samples(counters, samples)
+  end
+
+  private
+
+  def collect_samples(start_time, end_time)
+    raise StandardError, "Must be implemented in a subclass"
+  end
+
+  def process_samples(counters, samples)
     raise StandardError, "Must be implemented in a subclass"
   end
 end
