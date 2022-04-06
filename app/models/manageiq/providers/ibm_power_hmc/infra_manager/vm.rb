@@ -73,11 +73,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   private
 
-  def collect_samples(start_time, end_time)
+  def collect_samples(_start_time, _end_time)
     raise StandardError, "Must be implemented in a subclass"
   end
 
-  def process_samples(counters, samples)
+  def process_samples(_counters, _samples)
     raise StandardError, "Must be implemented in a subclass"
   end
 end
