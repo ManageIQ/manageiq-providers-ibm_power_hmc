@@ -26,6 +26,39 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     raise StandardError, "Cannot create a template from a VIOS"
   end
 
+  def collect_samples(start_time, end_time)
+    ext_management_system.with_provider_connection do |connection|
+      connection.managed_system_metrics(
+        :sys_uuid => host.ems_ref,
+        :start_ts => start_time,
+        :end_ts   => end_time
+      )
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
+      unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+        raise
+      end
+
+      []
+    end
+  end
+
+  def process_samples(counters, samples)
+    metrics = {}
+    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+      vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
+      next if vios_sample.nil?
+
+      ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
+      metrics[ts] = {}
+      counters.each_key do |key|
+        val = get_sample_value(vios_sample, key)
+        metrics[ts][key] = val unless val.nil?
+      end
+    end
+    metrics
+  end
+
   private
 
   SAMPLE_DURATION = 30.0 # seconds
@@ -59,58 +92,23 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
   end
 
   def get_sample_value(sample, key)
-    r = nil
     case key
     when "cpu_usage_rate_average"
       if sample["processor"]
-        r = cpu_usage_rate_average(sample["processor"])
+        cpu_usage_rate_average(sample["processor"])
       end
     when "disk_usage_rate_average"
       if sample["storage"]
-        r = disk_usage_rate_average_vios(sample["storage"])
+        disk_usage_rate_average_vios(sample["storage"])
       end
     when "mem_usage_absolute_average"
       if sample["memory"]
-        r = mem_usage_absolute_average_vios(sample["memory"])
+        mem_usage_absolute_average_vios(sample["memory"])
       end
     when "net_usage_rate_average"
       if sample["network"]
-        r = net_usage_rate_average_vios(sample["network"])
+        net_usage_rate_average_vios(sample["network"])
       end
     end
-    r
-  end
-
-  def collect_samples(start_time, end_time)
-    ext_management_system.with_provider_connection do |connection|
-      connection.managed_system_metrics(
-        :sys_uuid => host.ems_ref,
-        :start_ts => start_time,
-        :end_ts   => end_time
-      )
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
-      unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
-
-      []
-    end
-  end
-
-  def process_samples(counters, samples)
-    metrics = {}
-    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
-      vios_sample = s["viosUtil"].find { |vios| vios["uuid"].eql?(ems_ref) }
-      next if vios_sample.nil?
-
-      ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-      metrics[ts] = {}
-      counters.each_key do |key|
-        val = get_sample_value(vios_sample, key)
-        metrics[ts][key] = val unless val.nil?
-      end
-    end
-    metrics
   end
 end
