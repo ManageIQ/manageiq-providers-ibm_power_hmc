@@ -54,7 +54,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   def disk_usage_rate_average_all_vios(sample)
     sample["viosUtil"]&.sum do |vios|
-      if vios.has_key?("storage")
+      if vios.key?("storage")
         disk_usage_rate_average_vios(vios["storage"])
       else
         0.0

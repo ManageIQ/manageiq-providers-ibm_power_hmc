@@ -14,7 +14,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
   end
 
   let(:samples) do
-    JSON.parse(File.read(File.join(File.dirname(__FILE__), filename)))["test_data"]
+    JSON.parse(Pathname.new(__dir__).join(filename).read)["test_data"]
   end
 
   context "host" do
