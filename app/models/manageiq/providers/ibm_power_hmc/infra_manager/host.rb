@@ -46,20 +46,20 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     usage = 0.0
     sample.each do |_adapter_type, adapters|
       adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
-        usage += adapter["transmittedBytes"].sum
+        usage += adapter["transmittedBytes"]&.sum || 0.0
       end
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
   end
 
   def disk_usage_rate_average_all_vios(sample)
-    sample["viosUtil"].sum do |vios|
-      if vios["storage"]
+    sample["viosUtil"]&.sum do |vios|
+      if vios.has_key?("storage")
         disk_usage_rate_average_vios(vios["storage"])
       else
         0.0
       end
-    end
+    end || 0.0
   end
 
   def mem_usage_absolute_average(sample)
@@ -101,18 +101,21 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   def get_sample_value(sample, key)
     case key
     when "cpu_usage_rate_average"
-      if sample["serverUtil"]["processor"]
-        cpu_usage_rate_average(sample["serverUtil"]["processor"])
+      s = sample.dig("serverUtil", "processor")
+      unless s.nil?
+        cpu_usage_rate_average(s)
       end
     when "disk_usage_rate_average"
       disk_usage_rate_average_all_vios(sample)
     when "mem_usage_absolute_average"
-      if sample["serverUtil"]["memory"]
-        mem_usage_absolute_average(sample["serverUtil"]["memory"])
+      s = sample.dig("serverUtil", "memory")
+      unless s.nil?
+        mem_usage_absolute_average(s)
       end
     when "net_usage_rate_average"
-      if sample["serverUtil"]["network"]
-        net_usage_rate_average_server(sample["serverUtil"]["network"]) +
+      s = sample.dig("serverUtil", "network")
+      if s
+        net_usage_rate_average_server(s) +
           net_usage_rate_average_all_vios(sample)
       end
     end
