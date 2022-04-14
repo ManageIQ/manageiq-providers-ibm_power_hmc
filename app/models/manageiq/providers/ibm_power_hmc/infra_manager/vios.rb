@@ -35,9 +35,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
       )
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
-      unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
+      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
 
       []
     end

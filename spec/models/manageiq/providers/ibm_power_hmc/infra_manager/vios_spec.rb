@@ -18,19 +18,22 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios do
   context "vios" do
     let(:filename) { "test_data/metrics_host.json" }
     it "process_samples" do
-      expect(vios.process_samples(ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture::VIM_STYLE_COUNTERS, samples)).to include(
+      allow(vios).to receive(:collect_samples).and_return(samples)
+      expect(vios.perf_collect_metrics("realtime")).to include(
         {
-          Time.new(2022, 4, 7, 10, 30, 0, "+00:00")  => {
-            "cpu_usage_rate_average"     => 1.2,
-            "disk_usage_rate_average"    => 6.774722200520833,
-            "mem_usage_absolute_average" => 72.05078125,
-            "net_usage_rate_average"     => 2.985620703125
-          },
-          Time.new(2022, 4, 7, 10, 30, 30, "+00:00") => {
-            "cpu_usage_rate_average"     => 0.8,
-            "disk_usage_rate_average"    => 12.847795149739584,
-            "mem_usage_absolute_average" => 72.05078125,
-            "net_usage_rate_average"     => 3.2635883463541666
+          vios.ems_ref => {
+            Time.new(2022, 4, 7, 10, 30, 0, "+00:00")  => {
+              "cpu_usage_rate_average"     => 1.2,
+              "disk_usage_rate_average"    => 6.774722200520833,
+              "mem_usage_absolute_average" => 72.05078125,
+              "net_usage_rate_average"     => 2.985620703125
+            },
+            Time.new(2022, 4, 7, 10, 30, 30, "+00:00") => {
+              "cpu_usage_rate_average"     => 0.8,
+              "disk_usage_rate_average"    => 12.847795149739584,
+              "mem_usage_absolute_average" => 72.05078125,
+              "net_usage_rate_average"     => 3.2635883463541666
+            }
           }
         }
       )

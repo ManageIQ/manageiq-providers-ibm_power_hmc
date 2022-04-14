@@ -22,19 +22,22 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
   context "lpar" do
     let(:filename) { "test_data/metrics_lpar.json" }
     it "process_samples" do
-      expect(vm.process_samples(ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture::VIM_STYLE_COUNTERS, samples)).to include(
+      allow(vm).to receive(:collect_samples).and_return(samples)
+      expect(vm.perf_collect_metrics("realtime")).to include(
         {
-          Time.new(2022, 4, 6, 13, 30, 30, "+00:00") => {
-            "cpu_usage_rate_average"     => 16.2,
-            "disk_usage_rate_average"    => 33.217777766927085,
-            "mem_usage_absolute_average" => 100.0,
-            "net_usage_rate_average"     => 0.03468531901041667
-          },
-          Time.new(2022, 4, 6, 13, 31, 0, "+00:00")  => {
-            "cpu_usage_rate_average"     => 9.6,
-            "disk_usage_rate_average"    => 23.58833333333333,
-            "mem_usage_absolute_average" => 100.0,
-            "net_usage_rate_average"     => 0.03778971354166667
+          vm.ems_ref => {
+            Time.new(2022, 4, 6, 13, 30, 30, "+00:00") => {
+              "cpu_usage_rate_average"     => 16.2,
+              "disk_usage_rate_average"    => 33.217777766927085,
+              "mem_usage_absolute_average" => 100.0,
+              "net_usage_rate_average"     => 0.03468531901041667
+            },
+            Time.new(2022, 4, 6, 13, 31, 0, "+00:00")  => {
+              "cpu_usage_rate_average"     => 9.6,
+              "disk_usage_rate_average"    => 23.58833333333333,
+              "mem_usage_absolute_average" => 100.0,
+              "net_usage_rate_average"     => 0.03778971354166667
+            }
           }
         }
       )

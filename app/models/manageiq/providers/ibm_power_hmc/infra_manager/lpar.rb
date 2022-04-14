@@ -53,9 +53,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
       )
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error getting performance samples for LPAR #{ems_ref}: #{e}")
-      unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
+      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
 
       []
     end
@@ -123,7 +121,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     when "net_usage_rate_average"
       if sample["lparsUtil"].first["network"]
         net_usage_rate_average(sample["lparsUtil"].first["network"])
-      end
+      end 
     end
   end
 end

@@ -13,9 +13,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
       )
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error getting performance samples for host #{ems_ref}: #{e}")
-      unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-        raise
-      end
+      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
 
       []
     end
@@ -43,32 +41,25 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   def disk_usage_rate_average_vios(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
-        usage += adapter["transmittedBytes"]&.sum || 0.0
-      end
+    usage = sample.values.sum do |adapters|
+      adapters.select { |a| a.kind_of?(Hash) }.sum { |adapter| adapter["transmittedBytes"]&.sum || 0.0 }
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
   end
 
   def disk_usage_rate_average_all_vios(sample)
-    sample["viosUtil"]&.sum do |vios|
-      if vios.key?("storage")
-        disk_usage_rate_average_vios(vios["storage"])
-      else
-        0.0
-      end
-    end || 0.0
+    sample["viosUtil"]&.sum { |vios| vios.key?("storage") ? disk_usage_rate_average_vios(vios["storage"]) : 0.0 }.to_f
   end
 
   def mem_usage_absolute_average(sample)
-    100.0 * sample["assignedMemToLpars"].sum / sample["configurableMem"].sum
+    a = sample["assignedMemToLpars"].sum
+    c = sample["configurableMem"].sum
+    c == 0.0 ? nil : 100.0 * a / c
   end
 
   def net_usage_rate_average_server(sample)
     usage = 0.0
-    sample.each do |_adapter_type, adapters|
+    sample.values.each do |adapters|
       adapters.each do |adapter|
         adapter["physicalPorts"].each do |phys_port|
           usage += phys_port["transferredBytes"].sum
@@ -80,7 +71,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   def net_usage_rate_average_vios(sample)
     usage = 0.0
-    sample.each do |_adapter_type, adapters|
+    sample.values.each do |adapters|
       adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
         usage += adapter["transferredBytes"].sum
       end
