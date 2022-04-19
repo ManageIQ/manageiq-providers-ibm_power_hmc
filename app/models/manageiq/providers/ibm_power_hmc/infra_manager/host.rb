@@ -17,16 +17,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   def process_samples(counters, samples)
-    metrics = {}
-    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+    samples.dig(0, "systemUtil", "utilSamples")&.each_with_object({}) do |s, metrics|
       ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-      metrics[ts] = {}
-      counters.each_key do |key|
+      metrics[ts] = counters.each_key.map do |key|
         val = get_sample_value(s, key)
-        metrics[ts][key] = val unless val.nil?
-      end
+        next if val.nil?
+
+        [key, val]
+      end.compact.to_h
     end
-    metrics
   end
 
   private

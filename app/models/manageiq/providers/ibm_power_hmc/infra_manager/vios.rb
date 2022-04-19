@@ -42,19 +42,18 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
   end
 
   def process_samples(counters, samples)
-    metrics = {}
-    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+    samples.dig(0, "systemUtil", "utilSamples")&.each_with_object({}) do |s, metrics|
       vios_sample = s["viosUtil"]&.find { |vios| vios["uuid"].eql?(ems_ref) }
       next if vios_sample.nil?
 
       ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-      metrics[ts] = {}
-      counters.each_key do |key|
+      metrics[ts] = counters.each_key.map do |key|
         val = get_sample_value(vios_sample, key)
-        metrics[ts][key] = val unless val.nil?
-      end
+        next if val.nil?
+
+        [key, val]
+      end.compact.to_h
     end
-    metrics
   end
 
   private

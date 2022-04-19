@@ -15,10 +15,9 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
   end
 
   def disk_usage_rate_average(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.each do |adapter|
-        usage += adapter["readBytes"].sum + adapter["writeBytes"].sum
+    usage = sample.values.sum do |adapters|
+      adapters.sum do |adapter|
+        adapter["readBytes"].sum + adapter["writeBytes"].sum
       end
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
@@ -36,39 +35,31 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
   end
 
   def mem_usage_absolute_average(sample)
-    a = sample["backedPhysicalMem"].sum
-    c = sample["logicalMem"].sum
-    c == 0.0 ? nil : 100.0 * a / c
+    safe_rate(sample["backedPhysicalMem"].sum, sample["logicalMem"].sum)
   end
 
   def mem_usage_absolute_average_host(sample)
-    a = sample["assignedMemToLpars"].sum
-    c = sample["configurableMem"].sum
-    c == 0.0 ? nil : 100.0 * a / c
+    safe_rate(sample["assignedMemToLpars"].sum, sample["configurableMem"].sum)
   end
 
   def mem_usage_absolute_average_vios(sample)
-    a = sample["utilizedMem"].sum
-    c = sample["assignedMem"].sum
-    c == 0.0 ? nil : 100.0 * a / c
+    safe_rate(sample["utilizedMem"].sum, sample["assignedMem"].sum)
   end
 
   def net_usage_rate_average(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.each do |adapter|
-        usage += adapter["sentBytes"].sum + adapter["receivedBytes"].sum
+    usage = sample.values.sum do |adapters|
+      adapters.sum do |adapter|
+        adapter["transferredBytes"].sum
       end
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
   end
 
   def net_usage_rate_average_server(sample)
-    usage = 0.0
-    sample.each_value do |adapters|
-      adapters.each do |adapter|
-        adapter["physicalPorts"].each do |phys_port|
-          usage += phys_port["transferredBytes"].sum
+    usage = sample.values.sum do |adapters|
+      adapters.sum do |adapter|
+        adapter["physicalPorts"].sum do |phys_port|
+          phys_port["transferredBytes"].sum
         end
       end
     end
@@ -76,10 +67,9 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
   end
 
   def net_usage_rate_average_vios(sample)
-    usage = 0.0
-    sample.each_value do |adapters|
-      adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
-        usage += adapter["transferredBytes"].sum
+    usage = sample.values.sum do |adapters|
+      adapters.select { |a| a.kind_of?(Hash) }.sum do |adapter|
+        adapter["transferredBytes"].sum
       end
     end
     usage / SAMPLE_DURATION / 1.0.kilobyte
@@ -92,6 +82,12 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
       else
         0.0
       end
+    end
+  end
+
+  def safe_rate(numerator, denominator)
+    unless denominator.to_i == 0
+      100.0 * numerator / denominator
     end
   end
 end

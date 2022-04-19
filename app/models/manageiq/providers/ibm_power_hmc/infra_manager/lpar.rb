@@ -36,7 +36,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
   def make_template(template_name)
     $ibm_power_hmc_log.info("#{self.class}##{__method__} ems_ref #{ems_ref} template_name #{template_name}")
     ext_management_system.with_provider_connection do |connection|
-      connection.capture_lpar(ems_ref, host.ems_ref, template_name)
+      host_uuid = connection.lpar(ems_ref).sys_uuid
+      connection.capture_lpar(ems_ref, host_uuid, template_name)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error creating template #{template_name} from LPAR #{ems_ref}: #{e}")
       raise
@@ -60,16 +61,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
   end
 
   def process_samples(counters, samples)
-    metrics = {}
-    samples.dig(0, "systemUtil", "utilSamples")&.each do |s|
+    samples.dig(0, "systemUtil", "utilSamples")&.each_with_object({}) do |s, metrics|
       ts = Time.xmlschema(s["sampleInfo"]["timeStamp"])
-      metrics[ts] = {}
-      counters.each_key do |key|
+      metrics[ts] = counters.each_key.map do |key|
         val = get_sample_value(s, key)
-        metrics[ts][key] = val unless val.nil?
-      end
+        next if val.nil?
+
+        [key, val]
+      end.compact.to_h
     end
-    metrics
   end
 
   private
