@@ -59,36 +59,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
 
   private
 
-  SAMPLE_DURATION = 30.0 # seconds
-
-  def cpu_usage_rate_average(sample)
-    100.0 * sample["utilizedProcUnits"].sum / sample["entitledProcUnits"].sum
-  end
-
-  def disk_usage_rate_average_vios(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
-        usage += adapter["transmittedBytes"].sum
-      end
-    end
-    usage / SAMPLE_DURATION / 1.0.kilobyte
-  end
-
-  def mem_usage_absolute_average_vios(sample)
-    100.0 * sample["utilizedMem"].sum / sample["assignedMem"].sum
-  end
-
-  def net_usage_rate_average_vios(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.select { |a| a.kind_of?(Hash) }.each do |adapter|
-        usage += adapter["transferredBytes"].sum
-      end
-    end
-    usage / SAMPLE_DURATION / 1.0.kilobyte
-  end
-
   def get_sample_value(sample, key)
     case key
     when "cpu_usage_rate_average"

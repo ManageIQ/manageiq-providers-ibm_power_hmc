@@ -1,4 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
+  include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
+
   def provider_object(_connection = nil)
     raise StandardError, "Must be implemented in a subclass"
   end
@@ -64,11 +66,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def make_template(_clone_options)
     raise StandardError, "Must be implemented in a subclass"
-  end
-
-  def capture_metrics(counters, start_time = nil, end_time = nil)
-    samples = collect_samples(start_time, end_time)
-    process_samples(counters, samples)
   end
 
   def collect_samples(_start_time, _end_time)

@@ -74,36 +74,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
   private
 
-  SAMPLE_DURATION = 30.0 # seconds
-
-  def cpu_usage_rate_average(sample)
-    100.0 * sample["utilizedProcUnits"].sum / sample["entitledProcUnits"].sum
-  end
-
-  def disk_usage_rate_average(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.each do |adapter|
-        usage += adapter["readBytes"].sum + adapter["writeBytes"].sum
-      end
-    end
-    usage / SAMPLE_DURATION / 1.0.kilobyte
-  end
-
-  def mem_usage_absolute_average(sample)
-    100.0 * sample["backedPhysicalMem"].sum / sample["logicalMem"].sum
-  end
-
-  def net_usage_rate_average(sample)
-    usage = 0.0
-    sample.each do |_adapter_type, adapters|
-      adapters.each do |adapter|
-        usage += adapter["sentBytes"].sum + adapter["receivedBytes"].sum
-      end
-    end
-    usage / SAMPLE_DURATION / 1.0.kilobyte
-  end
-
   def get_sample_value(sample, key)
     case key
     when "cpu_usage_rate_average"
@@ -121,7 +91,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     when "net_usage_rate_average"
       if sample["lparsUtil"].first["network"]
         net_usage_rate_average(sample["lparsUtil"].first["network"])
-      end 
+      end
     end
   end
 end
