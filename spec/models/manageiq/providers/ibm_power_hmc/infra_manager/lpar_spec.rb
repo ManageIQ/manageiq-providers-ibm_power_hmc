@@ -32,7 +32,13 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
               "mem_usage_absolute_average" => 100.0,
               "net_usage_rate_average"     => 0.03468531901041667
             },
-            Time.new(2022, 4, 6, 13, 31, 0, "+00:00")  => {
+            Time.new(2022, 4, 6, 13, 30, 50, "+00:00") => {
+              "cpu_usage_rate_average"     => 12.9,
+              "disk_usage_rate_average"    => 28.40305555013021,
+              "mem_usage_absolute_average" => 100.0,
+              "net_usage_rate_average"     => 0.03623751627604167
+            },
+            Time.new(2022, 4, 6, 13, 31, 10, "+00:00") => {
               "cpu_usage_rate_average"     => 9.6,
               "disk_usage_rate_average"    => 23.58833333333333,
               "mem_usage_absolute_average" => 100.0,

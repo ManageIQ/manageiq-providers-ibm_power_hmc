@@ -24,7 +24,13 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
               "mem_usage_absolute_average" => 30.078125,
               "net_usage_rate_average"     => 3.5191873372395834
             },
-            Time.new(2022, 4, 7, 10, 30, 30, "+00:00") => {
+            Time.new(2022, 4, 7, 10, 30, 20, "+00:00") => {
+              "cpu_usage_rate_average"     => 8.1675,
+              "disk_usage_rate_average"    => 50.495846354166666,
+              "mem_usage_absolute_average" => 30.078125,
+              "net_usage_rate_average"     => 3.643533544921875
+            },
+            Time.new(2022, 4, 7, 10, 30, 40, "+00:00") => {
               "cpu_usage_rate_average"     => 7.860000000000001,
               "disk_usage_rate_average"    => 50.44918404947917,
               "mem_usage_absolute_average" => 30.078125,

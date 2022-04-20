@@ -1,9 +1,11 @@
 module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
-  SAMPLE_DURATION = 30.0 # seconds
+  SAMPLE_DURATION     = 30.seconds
+  MIQ_SAMPLE_INTERVAL = 20.seconds
 
   def capture_metrics(counters, start_time = nil, end_time = nil)
     samples = collect_samples(start_time, end_time)
-    process_samples(counters, samples)
+    processed = process_samples(counters, samples)
+    interpolate_samples(processed, SAMPLE_DURATION, MIQ_SAMPLE_INTERVAL)
   end
 
   def cpu_usage_rate_average(sample)
@@ -89,5 +91,27 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     unless denominator.to_i == 0
       100.0 * numerator / denominator
     end
+  end
+
+  def interpolate_samples(processed, old_interval, new_interval)
+    interpolated = {}
+    timestamps = processed.keys.sort
+    t = timestamps.first
+    while t < timestamps.last + old_interval
+      selected = timestamps.select { |ts| ts + old_interval > t && ts < t + new_interval }.map do |ts|
+        if ts < t
+          {:ts => ts, :weight => old_interval - (t - ts)}
+        elsif ts + old_interval > t + new_interval
+          {:ts => ts, :weight => t + new_interval - ts}
+        else
+          {:ts => ts, :weight => old_interval}
+        end
+      end
+      interpolated[t] = selected.map { |s| processed[s[:ts]].keys }.inject(:&).index_with do |counter|
+        selected.map { |s| processed[s[:ts]][counter] * s[:weight] }.sum / new_interval
+      end
+      t += new_interval
+    end
+    interpolated
   end
 end

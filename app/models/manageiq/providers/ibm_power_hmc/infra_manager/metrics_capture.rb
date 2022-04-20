@@ -3,7 +3,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     "cpu_usage_rate_average"     => {
       :counter_key           => "cpu_usage_rate_average",
       :instance              => "",
-      :capture_interval      => "30",
+      :capture_interval      => "20",
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
@@ -12,7 +12,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     "disk_usage_rate_average"    => {
       :counter_key           => "disk_usage_rate_average",
       :instance              => "",
-      :capture_interval      => "30",
+      :capture_interval      => "20",
       :precision             => 2,
       :rollup                => "average",
       :unit_key              => "kilobytespersecond",
@@ -21,7 +21,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     "mem_usage_absolute_average" => {
       :counter_key           => "mem_usage_absolute_average",
       :instance              => "",
-      :capture_interval      => "30",
+      :capture_interval      => "20",
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
@@ -30,7 +30,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     "net_usage_rate_average"     => {
       :counter_key           => "net_usage_rate_average",
       :instance              => "",
-      :capture_interval      => "30",
+      :capture_interval      => "20",
       :precision             => 2,
       :rollup                => "average",
       :unit_key              => "kilobytespersecond",
