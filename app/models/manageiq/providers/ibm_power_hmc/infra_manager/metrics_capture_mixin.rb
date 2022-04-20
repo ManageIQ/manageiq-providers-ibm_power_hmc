@@ -108,7 +108,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
         end
       end
       interpolated[t] = selected.map { |s| processed[s[:ts]].keys }.inject(:&).index_with do |counter|
-        selected.map { |s| processed[s[:ts]][counter] * s[:weight] }.sum / new_interval
+        selected.sum { |s| processed[s[:ts]][counter] * s[:weight] } / new_interval
       end
       t += new_interval
     end
