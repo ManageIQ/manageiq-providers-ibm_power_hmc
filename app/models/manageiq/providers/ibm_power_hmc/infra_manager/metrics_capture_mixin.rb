@@ -5,15 +5,15 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
   def capture_metrics(counters, start_time = nil, end_time = nil)
     samples = collect_samples(start_time, end_time)
     processed = process_samples(counters, samples)
-    interpolate_samples(processed, SAMPLE_DURATION, MIQ_SAMPLE_INTERVAL)
+    interpolate_samples(processed)
   end
 
   def cpu_usage_rate_average(sample)
-    100.0 * sample["utilizedProcUnits"].sum / sample["entitledProcUnits"].sum
+    safe_rate(sample["utilizedProcUnits"].sum, sample["entitledProcUnits"].sum)
   end
 
   def cpu_usage_rate_average_host(sample)
-    100.0 * sample["utilizedProcUnits"].sum / sample["configurableProcUnits"].sum
+    safe_rate(sample["utilizedProcUnits"].sum, sample["configurableProcUnits"].sum)
   end
 
   def disk_usage_rate_average(sample)
@@ -93,24 +93,24 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     end
   end
 
-  def interpolate_samples(processed, old_interval, new_interval)
+  def interpolate_samples(processed)
     interpolated = {}
     timestamps = processed.keys.sort
     t = timestamps.first
-    while t < timestamps.last + old_interval
-      selected = timestamps.select { |ts| ts + old_interval > t && ts < t + new_interval }.map do |ts|
+    while t + MIQ_SAMPLE_INTERVAL <= timestamps.last + SAMPLE_DURATION
+      selected = timestamps.select { |ts| ts + SAMPLE_DURATION > t && ts < t + MIQ_SAMPLE_INTERVAL }.map do |ts|
         if ts < t
-          {:ts => ts, :weight => old_interval - (t - ts)}
-        elsif ts + old_interval > t + new_interval
-          {:ts => ts, :weight => t + new_interval - ts}
+          {:ts => ts, :weight => SAMPLE_DURATION - (t - ts)}
+        elsif ts + SAMPLE_DURATION > t + MIQ_SAMPLE_INTERVAL
+          {:ts => ts, :weight => t + MIQ_SAMPLE_INTERVAL - ts}
         else
-          {:ts => ts, :weight => old_interval}
+          {:ts => ts, :weight => SAMPLE_DURATION}
         end
       end
       interpolated[t] = selected.map { |s| processed[s[:ts]].keys }.inject(:&).index_with do |counter|
-        selected.sum { |s| processed[s[:ts]][counter] * s[:weight] } / new_interval
+        selected.sum { |s| processed[s[:ts]][counter] * s[:weight] } / MIQ_SAMPLE_INTERVAL
       end
-      t += new_interval
+      t += MIQ_SAMPLE_INTERVAL
     end
     interpolated
   end
