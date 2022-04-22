@@ -30,10 +30,10 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture do
   def sanity_check(obj)
     expect(obj.metrics.count).to be > 2
     expect(timestamp_diffs(obj)).to all eq(ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin::MIQ_SAMPLE_INTERVAL)
-    expect(obj.metrics.map { |m| m.cpu_usage_rate_average }).not_to be_nil
-    expect(obj.metrics.map { |m| m.disk_usage_rate_average }).not_to be_nil
-    expect(obj.metrics.map { |m| m.mem_usage_absolute_average }).not_to be_nil
-    expect(obj.metrics.map { |m| m.net_usage_rate_average }).not_to be_nil
+    expect(obj.metrics.map(&:cpu_usage_rate_average)).to all be
+    expect(obj.metrics.map(&:disk_usage_rate_average)).to all be
+    expect(obj.metrics.map(&:mem_usage_absolute_average)).to all be
+    expect(obj.metrics.map(&:net_usage_rate_average)).to all be
   end
 
   context "#perf_collect_metrics" do
