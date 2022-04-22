@@ -74,7 +74,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
       end
     when "net_usage_rate_average"
       if sample["network"]
-        net_usage_rate_average_vios(sample["network"])
+        net_usage_rate_average(sample["network"])
       end
     end
   end

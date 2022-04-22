@@ -50,7 +50,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
   def net_usage_rate_average(sample)
     usage = sample.values.sum do |adapters|
-      adapters.sum do |adapter|
+      adapters.select { |a| a.kind_of?(Hash) }.sum do |adapter|
         adapter["transferredBytes"].sum
       end
     end
@@ -68,19 +68,10 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     usage / SAMPLE_DURATION / 1.0.kilobyte
   end
 
-  def net_usage_rate_average_vios(sample)
-    usage = sample.values.sum do |adapters|
-      adapters.select { |a| a.kind_of?(Hash) }.sum do |adapter|
-        adapter["transferredBytes"].sum
-      end
-    end
-    usage / SAMPLE_DURATION / 1.0.kilobyte
-  end
-
   def net_usage_rate_average_all_vios(sample)
     sample["viosUtil"].sum do |vios|
       if vios["network"]
-        net_usage_rate_average_vios(vios["network"])
+        net_usage_rate_average(vios["network"])
       else
         0.0
       end
