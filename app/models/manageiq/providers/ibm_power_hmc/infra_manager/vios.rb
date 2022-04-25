@@ -53,7 +53,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
 
         [key, val]
       end.compact.to_h
-    end
+    end || {}
   end
 
   private

@@ -88,7 +88,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     interpolated = {}
     timestamps = processed.keys.sort
     t = timestamps.first
-    while t + MIQ_SAMPLE_INTERVAL <= timestamps.last + SAMPLE_DURATION
+    while t && t + MIQ_SAMPLE_INTERVAL <= timestamps.last + SAMPLE_DURATION
       selected = timestamps.select { |ts| ts + SAMPLE_DURATION > t && ts < t + MIQ_SAMPLE_INTERVAL }.map do |ts|
         if ts < t
           {:ts => ts, :weight => SAMPLE_DURATION - (t - ts)}

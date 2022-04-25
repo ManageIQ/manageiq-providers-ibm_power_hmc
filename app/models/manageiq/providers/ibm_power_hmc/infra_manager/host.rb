@@ -25,7 +25,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
         [key, val]
       end.compact.to_h
-    end
+    end || {}
   end
 
   private

@@ -69,7 +69,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
         [key, val]
       end.compact.to_h
-    end
+    end || {}
   end
 
   private
