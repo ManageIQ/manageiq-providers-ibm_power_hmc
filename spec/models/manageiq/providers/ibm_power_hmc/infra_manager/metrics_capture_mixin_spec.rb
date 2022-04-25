@@ -241,4 +241,8 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin do
     expect(i).to include(interpolated_samples.select { |k| k <= ts + described_class::MIQ_SAMPLE_INTERVAL * 3 })
     expect(i.count).to eq(4)
   end
+
+  it "interpolate_samples (empty processed sample set)" do
+    expect(@test_obj.interpolate_samples({})).to be_empty
+  end
 end
