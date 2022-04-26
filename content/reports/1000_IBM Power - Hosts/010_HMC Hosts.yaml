@@ -1,0 +1,58 @@
+---
+  title: PowerHMC Hosts
+  rpt_group: Custom
+  rpt_type: Custom
+  priority:
+  db: Host
+  cols:
+  - ipaddress
+  - v_total_vms
+  - power_state
+  include:
+    ext_management_system:
+      columns:
+      - name
+  col_order:
+  - ext_management_system.name
+  - ipaddress
+  - v_total_vms
+  - power_state
+  headers:
+  - Provider Name
+  - IP Address
+  - Total VMs
+  - Power State
+  conditions:
+  order: Ascending
+  sortby:
+  group:
+  graph:
+  dims:
+  filename:
+  file_mtime:
+  categories: []
+  timeline:
+  template_type: report
+  where_clause:
+  db_options: {}
+  generate_cols:
+  generate_rows:
+  col_formats:
+  -
+  -
+  - :Number (1,234)
+  - :String Truncated to 50 Characters with Elipses (...)
+  tz:
+  time_profile_id:
+  display_filter:
+  col_options: {}
+  rpt_options:
+    :pdf:
+      :page_size: US-Letter
+    :queue_timeout:
+  miq_group_id: 2
+  user_id: 1
+  menu_name: PowerHMC Hosts
+  userid: admin
+  group_description: EvmGroup-super_administrator
+
