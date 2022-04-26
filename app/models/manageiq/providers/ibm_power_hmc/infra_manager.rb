@@ -16,6 +16,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :Storage
 
   supports :create
+  supports :metrics
   supports :provisioning
 
   def self.params_for_create
