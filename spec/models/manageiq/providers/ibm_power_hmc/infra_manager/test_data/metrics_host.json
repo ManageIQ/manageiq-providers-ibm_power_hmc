@@ -1,0 +1,2371 @@
+{
+  "test_data": [
+    {
+      "systemUtil": {
+        "utilInfo": {
+          "version": "1.3.0",
+          "metricType": "Processed",
+          "frequency": 30,
+          "startTimeStamp": "2022-04-07T10:30:00+0000",
+          "endTimeStamp": "2022-04-07T10:31:00+0000",
+          "mtms": "8284-22A*21FD4AV",
+          "name": "pollux",
+          "metricArrayOrder": [
+            "AVG"
+          ],
+          "uuid": "d47a585d-eaa8-3a54-b4dc-93346276ea37"
+        },
+        "utilSamples": [
+          {
+            "sampleType": "ManagedSystem",
+            "systemFirmwareUtil": {
+              "utilizedProcUnits": [
+                0.009
+              ],
+              "assignedMem": [
+                5376.0
+              ]
+            },
+            "serverUtil": {
+              "processor": {
+                "totalProcUnits": [
+                  20.0
+                ],
+                "utilizedProcUnits": [
+                  1.695
+                ],
+                "availableProcUnits": [
+                  14.2
+                ],
+                "configurableProcUnits": [
+                  20.0
+                ]
+              },
+              "memory": {
+                "totalMem": [
+                  262144.0
+                ],
+                "assignedMemToLpars": [
+                  78848.0
+                ],
+                "availableMem": [
+                  177920.0
+                ],
+                "configurableMem": [
+                  262144.0
+                ]
+              },
+              "sharedProcessorPool": [
+                {
+                  "assignedProcUnits": [
+                    20.0
+                  ],
+                  "utilizedProcUnits": [
+                    2.824
+                  ],
+                  "availableProcUnits": [
+                    0.0
+                  ],
+                  "configuredProcUnits": [
+                    5.6
+                  ],
+                  "borrowedProcUnits": [
+                    14.0
+                  ],
+                  "id": 0,
+                  "name": "DefaultPool"
+                },
+                {
+                  "assignedProcUnits": [
+                    1.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.0
+                  ],
+                  "availableProcUnits": [
+                    0.0
+                  ],
+                  "id": 1,
+                  "name": "peter"
+                },
+                {
+                  "assignedProcUnits": [
+                    2.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.0
+                  ],
+                  "availableProcUnits": [
+                    0.0
+                  ],
+                  "id": 2,
+                  "name": "sloane"
+                }
+              ],
+              "network": {
+                "sriovAdapters": [
+                  {
+                    "drcIndex": "553714321",
+                    "physicalPorts": [
+                      {
+                        "transferredBytes": [
+                          0.0
+                        ],
+                        "id": 1,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T2",
+                        "receivedPackets": [
+                          0.0
+                        ],
+                        "sentPackets": [
+                          0.0
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          0.0
+                        ],
+                        "receivedBytes": [
+                          0.0
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      },
+                      {
+                        "transferredBytes": [
+                          0.0
+                        ],
+                        "id": 0,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T1",
+                        "receivedPackets": [
+                          0.0
+                        ],
+                        "sentPackets": [
+                          0.0
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          0.0
+                        ],
+                        "receivedBytes": [
+                          0.0
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      },
+                      {
+                        "transferredBytes": [
+                          0.0
+                        ],
+                        "id": 3,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4",
+                        "receivedPackets": [
+                          0.0
+                        ],
+                        "sentPackets": [
+                          0.0
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          0.0
+                        ],
+                        "receivedBytes": [
+                          0.0
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      },
+                      {
+                        "transferredBytes": [
+                          4259.167
+                        ],
+                        "id": 2,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3",
+                        "receivedPackets": [
+                          4.467
+                        ],
+                        "sentPackets": [
+                          3.467
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          3714.1
+                        ],
+                        "receivedBytes": [
+                          545.067
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "viosUtil": [
+              {
+                "uuid": "0D323064-36E2-455A-AB06-46BD079AD545",
+                "state": "Running",
+                "id": 2,
+                "name": "polluxios",
+                "memory": {
+                  "assignedMem": [
+                    5120.0
+                  ],
+                  "utilizedMem": [
+                    3689.0
+                  ]
+                },
+                "affinityScore": 100,
+                "processor": {
+                  "poolId": 0,
+                  "weight": 128,
+                  "mode": "uncap",
+                  "maxVirtualProcessors": [
+                    4.0
+                  ],
+                  "maxProcUnits": [
+                    4.0
+                  ],
+                  "entitledProcUnits": [
+                    1.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.012
+                  ],
+                  "utilizedCappedProcUnits": [
+                    0.02
+                  ],
+                  "utilizedUncappedProcUnits": [
+                    0.002
+                  ],
+                  "idleProcUnits": [
+                    0.01
+                  ],
+                  "donatedProcUnits": [
+                    0.0
+                  ],
+                  "timeSpentWaitingForDispatch": [
+                    0.0
+                  ],
+                  "timePerInstructionExecution": [
+                    0.0
+                  ]
+                },
+                "network": {
+                  "clientLpars": [
+                    "1F2AF9AA-BF9B-4088-B66C-83F93058A774",
+                    "684292A4-C20D-4AC5-A938-CB409810EF43",
+                    "3200E8AA-2112-4BF9-9686-B3CEE429C2A6",
+                    "3F3D399B-DFF3-4977-8881-C194AA47CD3A",
+                    "256B63BC-868F-4CB8-AB00-94387264B66A"
+                  ],
+                  "genericAdapters": [
+                    {
+                      "transferredBytes": [
+                        18724.134
+                      ],
+                      "type": "physical",
+                      "id": "ent3",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T4",
+                      "receivedPackets": [
+                        26.967
+                      ],
+                      "sentPackets": [
+                        20.833
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        7276.067
+                      ],
+                      "receivedBytes": [
+                        11448.067
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        268.4
+                      ],
+                      "type": "physical",
+                      "id": "ent2",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T3",
+                      "receivedPackets": [
+                        3.933
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        268.4
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent1",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T2",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent0",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T1",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent7",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C9-T1-L2",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        19520.2
+                      ],
+                      "type": "virtual",
+                      "id": "ent4",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C2-T1",
+                      "receivedPackets": [
+                        21.333
+                      ],
+                      "sentPackets": [
+                        27.133
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        12035.5
+                      ],
+                      "receivedBytes": [
+                        7484.7
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent6",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C9-T1-L1",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "ent12",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C34-T1",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "sharedAdapters": [
+                    {
+                      "transferredBytes": [
+                        38244.334
+                      ],
+                      "id": "ent5",
+                      "type": "sea",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C2-T1",
+                      "receivedPackets": [
+                        48.3
+                      ],
+                      "sentPackets": [
+                        47.967
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        19311.567
+                      ],
+                      "receivedBytes": [
+                        18932.767
+                      ],
+                      "bridgedAdapters": [
+                        "ent3",
+                        "ent4"
+                      ]
+                    }
+                  ],
+                  "virtualEthernetAdapters": [
+                    {
+                      "transferredPhysicalBytes": [
+                        0.0
+                      ],
+                      "transferredBytes": [
+                        14961.2
+                      ],
+                      "vlanId": 1,
+                      "vswitchId": 0,
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C2",
+                      "isPortVlanId": true,
+                      "receivedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalPackets": [
+                        0.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPackets": [
+                        16.133
+                      ],
+                      "sentPackets": [
+                        21.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        10300.2
+                      ],
+                      "receivedBytes": [
+                        4661.0
+                      ]
+                    },
+                    {
+                      "transferredPhysicalBytes": [
+                        0.0
+                      ],
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "vlanId": 5,
+                      "vswitchId": 0,
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C34",
+                      "isPortVlanId": false,
+                      "receivedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalPackets": [
+                        0.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "sriovLogicalPorts": [
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327809",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T1-S1",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 0,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327811",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T2-S3",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 1,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327812",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3-S4",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 2,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327813",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4-S5",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 3,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    }
+                  ]
+                },
+                "storage": {
+                  "clientLpars": [
+                    "1F2AF9AA-BF9B-4088-B66C-83F93058A774",
+                    "684292A4-C20D-4AC5-A938-CB409810EF43",
+                    "3200E8AA-2112-4BF9-9686-B3CEE429C2A6",
+                    "3F3D399B-DFF3-4977-8881-C194AA47CD3A",
+                    "256B63BC-868F-4CB8-AB00-94387264B66A"
+                  ],
+                  "genericPhysicalAdapters": [
+                    {
+                      "transmittedBytes": [
+                        22391.467
+                      ],
+                      "type": "sas",
+                      "id": "sissas0",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C14-T1",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        43.733
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        22391.467
+                      ]
+                    }
+                  ],
+                  "fiberChannelAdapters": [
+                    {
+                      "transmittedBytes": [
+                        184021.333
+                      ],
+                      "wwpn": "10000090fa02f60c",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C12-T2",
+                      "numOfPorts": 2,
+                      "runningSpeed": [
+                        17.0
+                      ],
+                      "id": "fcs3",
+                      "numOfReads": [
+                        0.067
+                      ],
+                      "numOfWrites": [
+                        6.367
+                      ],
+                      "readBytes": [
+                        8.533
+                      ],
+                      "writeBytes": [
+                        184012.8
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "wwpn": "10000090fa02f60b",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C12-T1",
+                      "numOfPorts": 0,
+                      "runningSpeed": [
+                        0.0
+                      ],
+                      "id": "fcs2",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "genericVirtualAdapters": [
+                    {
+                      "transmittedBytes": [
+                        1706.666
+                      ],
+                      "type": "virtual",
+                      "id": "vhost32",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C90",
+                      "numOfReads": [
+                        1.667
+                      ],
+                      "numOfWrites": [
+                        1.667
+                      ],
+                      "readBytes": [
+                        853.333
+                      ],
+                      "writeBytes": [
+                        853.333
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost3",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C52",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost0",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C3",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost4",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C4",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost2",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C8",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "uuid": "1ABB7000-4A15-4749-9EAE-CD0A0827CDFE",
+                "state": "Running",
+                "id": 8,
+                "name": "polluxios2",
+                "memory": {
+                  "assignedMem": [
+                    4096.0
+                  ],
+                  "utilizedMem": [
+                    1991.0
+                  ]
+                },
+                "affinityScore": 100,
+                "processor": {
+                  "poolId": 0,
+                  "weight": 128,
+                  "mode": "uncap",
+                  "maxVirtualProcessors": [
+                    4.0
+                  ],
+                  "maxProcUnits": [
+                    1.0
+                  ],
+                  "entitledProcUnits": [
+                    0.2
+                  ],
+                  "utilizedProcUnits": [
+                    0.017
+                  ],
+                  "utilizedCappedProcUnits": [
+                    0.022
+                  ],
+                  "utilizedUncappedProcUnits": [
+                    0.01
+                  ],
+                  "idleProcUnits": [
+                    0.015
+                  ],
+                  "donatedProcUnits": [
+                    0.0
+                  ],
+                  "timeSpentWaitingForDispatch": [
+                    0.0
+                  ],
+                  "timePerInstructionExecution": [
+                    0.0
+                  ]
+                },
+                "network": {
+                  "clientLpars": [
+                    "6B81F3E1-C323-497D-9F91-BA52D09AF91C"
+                  ],
+                  "genericAdapters": [
+                    {
+                      "transferredBytes": [
+                        4800.3
+                      ],
+                      "type": "physical",
+                      "id": "ent0",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3-S2",
+                      "receivedPackets": [
+                        6.067
+                      ],
+                      "sentPackets": [
+                        4.367
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        4004.1
+                      ],
+                      "receivedBytes": [
+                        796.2
+                      ]
+                    }
+                  ],
+                  "sriovLogicalPorts": [
+                    {
+                      "transferredBytes": [
+                        7331.7
+                      ],
+                      "drcIndex": "654327810",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3-S2",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 2,
+                      "receivedPackets": [
+                        3.9
+                      ],
+                      "sentPackets": [
+                        5.567
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        6855.7
+                      ],
+                      "receivedBytes": [
+                        476.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327815",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4-S7",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 3,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "clientPartitionUUID": "6B81F3E1-C323-497D-9F91-BA52D09AF91C",
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327814",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4-S6",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 3,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "clientPartitionUUID": "6B81F3E1-C323-497D-9F91-BA52D09AF91C",
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    }
+                  ]
+                },
+                "storage": {
+                  "clientLpars": [
+                    "684292A4-C20D-4AC5-A938-CB409810EF43",
+                    "3200E8AA-2112-4BF9-9686-B3CEE429C2A6",
+                    "3F3D399B-DFF3-4977-8881-C194AA47CD3A",
+                    "256B63BC-868F-4CB8-AB00-94387264B66A"
+                  ],
+                  "sharedStoragePools": [
+                    {
+                      "transmittedBytes": [
+                        233898.666
+                      ],
+                      "id": "SSP_1",
+                      "totalSpace": [
+                        51072.0
+                      ],
+                      "usedSpace": [
+                        929.0
+                      ],
+                      "numOfReads": [
+                        410.167
+                      ],
+                      "numOfWrites": [
+                        46.667
+                      ],
+                      "readBytes": [
+                        210005.333
+                      ],
+                      "writeBytes": [
+                        23893.333
+                      ]
+                    }
+                  ],
+                  "fiberChannelAdapters": [
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "wwpn": "10000090fa02f603",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C10-T2",
+                      "numOfPorts": 0,
+                      "runningSpeed": [
+                        0.0
+                      ],
+                      "id": "fcs1",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        1110647.734
+                      ],
+                      "wwpn": "10000090fa02f602",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C10-T1",
+                      "numOfPorts": 4,
+                      "runningSpeed": [
+                        17.0
+                      ],
+                      "id": "fcs0",
+                      "numOfReads": [
+                        1.6
+                      ],
+                      "numOfWrites": [
+                        21.567
+                      ],
+                      "readBytes": [
+                        211046.667
+                      ],
+                      "writeBytes": [
+                        899601.067
+                      ]
+                    }
+                  ],
+                  "genericVirtualAdapters": [
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost2",
+                      "physicalLocation": "U8284.22A.21FD4AV-V8-C14",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "sampleInfo": {
+              "timeStamp": "2022-04-07T10:30:00+0000",
+              "status": 0
+            }
+          },
+          {
+            "sampleType": "ManagedSystem",
+            "systemFirmwareUtil": {
+              "utilizedProcUnits": [
+                0.002
+              ],
+              "assignedMem": [
+                5376.0
+              ]
+            },
+            "serverUtil": {
+              "processor": {
+                "totalProcUnits": [
+                  20.0
+                ],
+                "utilizedProcUnits": [
+                  1.572
+                ],
+                "availableProcUnits": [
+                  14.2
+                ],
+                "configurableProcUnits": [
+                  20.0
+                ]
+              },
+              "memory": {
+                "totalMem": [
+                  262144.0
+                ],
+                "assignedMemToLpars": [
+                  78848.0
+                ],
+                "availableMem": [
+                  177920.0
+                ],
+                "configurableMem": [
+                  262144.0
+                ]
+              },
+              "sharedProcessorPool": [
+                {
+                  "assignedProcUnits": [
+                    20.0
+                  ],
+                  "utilizedProcUnits": [
+                    2.56
+                  ],
+                  "availableProcUnits": [
+                    0.0
+                  ],
+                  "configuredProcUnits": [
+                    5.6
+                  ],
+                  "borrowedProcUnits": [
+                    14.0
+                  ],
+                  "id": 0,
+                  "name": "DefaultPool"
+                },
+                {
+                  "assignedProcUnits": [
+                    1.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.0
+                  ],
+                  "availableProcUnits": [
+                    0.0
+                  ],
+                  "id": 1,
+                  "name": "peter"
+                },
+                {
+                  "assignedProcUnits": [
+                    2.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.0
+                  ],
+                  "availableProcUnits": [
+                    0.0
+                  ],
+                  "id": 2,
+                  "name": "sloane"
+                }
+              ],
+              "network": {
+                "sriovAdapters": [
+                  {
+                    "drcIndex": "553714321",
+                    "physicalPorts": [
+                      {
+                        "transferredBytes": [
+                          0.0
+                        ],
+                        "id": 1,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T2",
+                        "receivedPackets": [
+                          0.0
+                        ],
+                        "sentPackets": [
+                          0.0
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          0.0
+                        ],
+                        "receivedBytes": [
+                          0.0
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      },
+                      {
+                        "transferredBytes": [
+                          0.0
+                        ],
+                        "id": 0,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T1",
+                        "receivedPackets": [
+                          0.0
+                        ],
+                        "sentPackets": [
+                          0.0
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          0.0
+                        ],
+                        "receivedBytes": [
+                          0.0
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      },
+                      {
+                        "transferredBytes": [
+                          0.0
+                        ],
+                        "id": 3,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4",
+                        "receivedPackets": [
+                          0.0
+                        ],
+                        "sentPackets": [
+                          0.0
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          0.0
+                        ],
+                        "receivedBytes": [
+                          0.0
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      },
+                      {
+                        "transferredBytes": [
+                          4039.066
+                        ],
+                        "id": 2,
+                        "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3",
+                        "receivedPackets": [
+                          5.7
+                        ],
+                        "sentPackets": [
+                          3.367
+                        ],
+                        "droppedPackets": [
+                          0.0
+                        ],
+                        "sentBytes": [
+                          3515.133
+                        ],
+                        "receivedBytes": [
+                          523.933
+                        ],
+                        "errorIn": [
+                          0.0
+                        ],
+                        "errorOut": [
+                          0.0
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "viosUtil": [
+              {
+                "uuid": "0D323064-36E2-455A-AB06-46BD079AD545",
+                "state": "Running",
+                "id": 2,
+                "name": "polluxios",
+                "memory": {
+                  "assignedMem": [
+                    5120.0
+                  ],
+                  "utilizedMem": [
+                    3689.0
+                  ]
+                },
+                "affinityScore": 100,
+                "processor": {
+                  "poolId": 0,
+                  "weight": 128,
+                  "mode": "uncap",
+                  "maxVirtualProcessors": [
+                    4.0
+                  ],
+                  "maxProcUnits": [
+                    4.0
+                  ],
+                  "entitledProcUnits": [
+                    1.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.008
+                  ],
+                  "utilizedCappedProcUnits": [
+                    0.015
+                  ],
+                  "utilizedUncappedProcUnits": [
+                    0.001
+                  ],
+                  "idleProcUnits": [
+                    0.008
+                  ],
+                  "donatedProcUnits": [
+                    0.0
+                  ],
+                  "timeSpentWaitingForDispatch": [
+                    0.0
+                  ],
+                  "timePerInstructionExecution": [
+                    0.0
+                  ]
+                },
+                "network": {
+                  "clientLpars": [
+                    "1F2AF9AA-BF9B-4088-B66C-83F93058A774",
+                    "684292A4-C20D-4AC5-A938-CB409810EF43",
+                    "3200E8AA-2112-4BF9-9686-B3CEE429C2A6",
+                    "3F3D399B-DFF3-4977-8881-C194AA47CD3A",
+                    "256B63BC-868F-4CB8-AB00-94387264B66A"
+                  ],
+                  "genericAdapters": [
+                    {
+                      "transferredBytes": [
+                        22010.0
+                      ],
+                      "type": "physical",
+                      "id": "ent3",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T4",
+                      "receivedPackets": [
+                        29.567
+                      ],
+                      "sentPackets": [
+                        23.033
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        9833.767
+                      ],
+                      "receivedBytes": [
+                        12176.233
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        171.667
+                      ],
+                      "type": "physical",
+                      "id": "ent2",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T3",
+                      "receivedPackets": [
+                        2.567
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        171.667
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent1",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T2",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent0",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C2-T1",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent7",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C9-T1-L2",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        22484.367
+                      ],
+                      "type": "virtual",
+                      "id": "ent4",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C2-T1",
+                      "receivedPackets": [
+                        22.533
+                      ],
+                      "sentPackets": [
+                        28.733
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        12517.3
+                      ],
+                      "receivedBytes": [
+                        9967.067
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "physical",
+                      "id": "ent6",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C9-T1-L1",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "ent12",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C34-T1",
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "sharedAdapters": [
+                    {
+                      "transferredBytes": [
+                        44494.367
+                      ],
+                      "id": "ent5",
+                      "type": "sea",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C2-T1",
+                      "receivedPackets": [
+                        52.1
+                      ],
+                      "sentPackets": [
+                        51.767
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        22351.067
+                      ],
+                      "receivedBytes": [
+                        22143.3
+                      ],
+                      "bridgedAdapters": [
+                        "ent3",
+                        "ent4"
+                      ]
+                    }
+                  ],
+                  "virtualEthernetAdapters": [
+                    {
+                      "transferredPhysicalBytes": [
+                        0.0
+                      ],
+                      "transferredBytes": [
+                        11097.033
+                      ],
+                      "vlanId": 1,
+                      "vswitchId": 0,
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C2",
+                      "isPortVlanId": true,
+                      "receivedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalPackets": [
+                        0.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPackets": [
+                        12.9
+                      ],
+                      "sentPackets": [
+                        19.333
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        8139.2
+                      ],
+                      "receivedBytes": [
+                        2957.833
+                      ]
+                    },
+                    {
+                      "transferredPhysicalBytes": [
+                        0.0
+                      ],
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "vlanId": 5,
+                      "vswitchId": 0,
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C34",
+                      "isPortVlanId": false,
+                      "receivedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalPackets": [
+                        0.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "sriovLogicalPorts": [
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327809",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T1-S1",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 0,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327811",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T2-S3",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 1,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327812",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3-S4",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 2,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327813",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4-S5",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 3,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    }
+                  ]
+                },
+                "storage": {
+                  "clientLpars": [
+                    "1F2AF9AA-BF9B-4088-B66C-83F93058A774",
+                    "684292A4-C20D-4AC5-A938-CB409810EF43",
+                    "3200E8AA-2112-4BF9-9686-B3CEE429C2A6",
+                    "3F3D399B-DFF3-4977-8881-C194AA47CD3A",
+                    "256B63BC-868F-4CB8-AB00-94387264B66A"
+                  ],
+                  "genericPhysicalAdapters": [
+                    {
+                      "transmittedBytes": [
+                        2457.6
+                      ],
+                      "type": "sas",
+                      "id": "sissas0",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C14-T1",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        4.8
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        2457.6
+                      ]
+                    }
+                  ],
+                  "fiberChannelAdapters": [
+                    {
+                      "transmittedBytes": [
+                        390895.467
+                      ],
+                      "wwpn": "10000090fa02f60c",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C12-T2",
+                      "numOfPorts": 2,
+                      "runningSpeed": [
+                        17.0
+                      ],
+                      "id": "fcs3",
+                      "numOfReads": [
+                        0.2
+                      ],
+                      "numOfWrites": [
+                        8.1
+                      ],
+                      "readBytes": [
+                        17.6
+                      ],
+                      "writeBytes": [
+                        390877.867
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "wwpn": "10000090fa02f60b",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C12-T1",
+                      "numOfPorts": 0,
+                      "runningSpeed": [
+                        0.0
+                      ],
+                      "id": "fcs2",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "genericVirtualAdapters": [
+                    {
+                      "transmittedBytes": [
+                        1331.2
+                      ],
+                      "type": "virtual",
+                      "id": "vhost32",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C90",
+                      "numOfReads": [
+                        1.3
+                      ],
+                      "numOfWrites": [
+                        1.3
+                      ],
+                      "readBytes": [
+                        665.6
+                      ],
+                      "writeBytes": [
+                        665.6
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost3",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C52",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost0",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C3",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost4",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C4",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost2",
+                      "physicalLocation": "U8284.22A.21FD4AV-V2-C8",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "uuid": "1ABB7000-4A15-4749-9EAE-CD0A0827CDFE",
+                "state": "Running",
+                "id": 8,
+                "name": "polluxios2",
+                "memory": {
+                  "assignedMem": [
+                    4096.0
+                  ],
+                  "utilizedMem": [
+                    1992.0
+                  ]
+                },
+                "affinityScore": 100,
+                "processor": {
+                  "poolId": 0,
+                  "weight": 128,
+                  "mode": "uncap",
+                  "maxVirtualProcessors": [
+                    4.0
+                  ],
+                  "maxProcUnits": [
+                    1.0
+                  ],
+                  "entitledProcUnits": [
+                    0.2
+                  ],
+                  "utilizedProcUnits": [
+                    0.016
+                  ],
+                  "utilizedCappedProcUnits": [
+                    0.023
+                  ],
+                  "utilizedUncappedProcUnits": [
+                    0.007
+                  ],
+                  "idleProcUnits": [
+                    0.014
+                  ],
+                  "donatedProcUnits": [
+                    0.0
+                  ],
+                  "timeSpentWaitingForDispatch": [
+                    0.0
+                  ],
+                  "timePerInstructionExecution": [
+                    0.0
+                  ]
+                },
+                "network": {
+                  "clientLpars": [
+                    "6B81F3E1-C323-497D-9F91-BA52D09AF91C"
+                  ],
+                  "genericAdapters": [
+                    {
+                      "transferredBytes": [
+                        4334.166
+                      ],
+                      "type": "physical",
+                      "id": "ent0",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3-S2",
+                      "receivedPackets": [
+                        4.2
+                      ],
+                      "sentPackets": [
+                        3.833
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        3745.433
+                      ],
+                      "receivedBytes": [
+                        588.733
+                      ]
+                    }
+                  ],
+                  "sriovLogicalPorts": [
+                    {
+                      "transferredBytes": [
+                        7118.6
+                      ],
+                      "drcIndex": "654327810",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T3-S2",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 2,
+                      "receivedPackets": [
+                        5.133
+                      ],
+                      "sentPackets": [
+                        5.467
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        6656.733
+                      ],
+                      "receivedBytes": [
+                        461.867
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327815",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4-S7",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 3,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "clientPartitionUUID": "6B81F3E1-C323-497D-9F91-BA52D09AF91C",
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    },
+                    {
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "drcIndex": "654327814",
+                      "physicalLocation": "U78CD.001.FZH8236-P1-C1-T4-S6",
+                      "physicalDrcIndex": "553714321",
+                      "physicalPortId": 3,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "errorIn": [
+                        0.0
+                      ],
+                      "errorOut": [
+                        0.0
+                      ],
+                      "clientPartitionUUID": "6B81F3E1-C323-497D-9F91-BA52D09AF91C",
+                      "vnicDeviceMode": "NonVNIC",
+                      "configurationType": "Ethernet"
+                    }
+                  ]
+                },
+                "storage": {
+                  "clientLpars": [
+                    "684292A4-C20D-4AC5-A938-CB409810EF43",
+                    "3200E8AA-2112-4BF9-9686-B3CEE429C2A6",
+                    "3F3D399B-DFF3-4977-8881-C194AA47CD3A",
+                    "256B63BC-868F-4CB8-AB00-94387264B66A"
+                  ],
+                  "sharedStoragePools": [
+                    {
+                      "transmittedBytes": [
+                        92962.134
+                      ],
+                      "id": "SSP_1",
+                      "totalSpace": [
+                        51072.0
+                      ],
+                      "usedSpace": [
+                        929.0
+                      ],
+                      "numOfReads": [
+                        137.033
+                      ],
+                      "numOfWrites": [
+                        44.533
+                      ],
+                      "readBytes": [
+                        70161.067
+                      ],
+                      "writeBytes": [
+                        22801.067
+                      ]
+                    }
+                  ],
+                  "fiberChannelAdapters": [
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "wwpn": "10000090fa02f603",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C10-T2",
+                      "numOfPorts": 0,
+                      "runningSpeed": [
+                        0.0
+                      ],
+                      "id": "fcs1",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transmittedBytes": [
+                        1062152.533
+                      ],
+                      "wwpn": "10000090fa02f602",
+                      "physicalLocation": "U78CB.001.WZS09SL-P1-C10-T1",
+                      "numOfPorts": 4,
+                      "runningSpeed": [
+                        17.0
+                      ],
+                      "id": "fcs0",
+                      "numOfReads": [
+                        1.2
+                      ],
+                      "numOfWrites": [
+                        19.3
+                      ],
+                      "readBytes": [
+                        71193.6
+                      ],
+                      "writeBytes": [
+                        990958.933
+                      ]
+                    }
+                  ],
+                  "genericVirtualAdapters": [
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "type": "virtual",
+                      "id": "vhost2",
+                      "physicalLocation": "U8284.22A.21FD4AV-V8-C14",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "sampleInfo": {
+              "timeStamp": "2022-04-07T10:30:30+0000",
+              "status": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

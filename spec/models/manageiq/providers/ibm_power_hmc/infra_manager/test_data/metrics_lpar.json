@@ -1,0 +1,427 @@
+{
+  "test_data": [
+    {
+      "systemUtil": {
+        "utilInfo": {
+          "version": "1.3.0",
+          "metricType": "Processed",
+          "frequency": 30,
+          "startTimeStamp": "2022-04-06T13:30:00+0000",
+          "endTimeStamp": "2022-04-06T13:31:00+0000",
+          "mtms": "8284-22A*21FD4AV",
+          "name": "pollux",
+          "metricArrayOrder": [
+            "AVG"
+          ],
+          "uuid": "d47a585d-eaa8-3a54-b4dc-93346276ea37"
+        },
+        "utilSamples": [
+          {
+            "sampleType": "LogicalPartition",
+            "lparsUtil": [
+              {
+                "id": 5,
+                "name": "pollux12-bf3d399b-00000645",
+                "type": "AIX/Linux",
+                "affinityScore": 100,
+                "memory": {
+                  "logicalMem": [
+                    16384.0
+                  ],
+                  "backedPhysicalMem": [
+                    16384.0
+                  ]
+                },
+                "processor": {
+                  "poolId": 0,
+                  "weight": 128,
+                  "mode": "uncap",
+                  "maxVirtualProcessors": [
+                    8.0
+                  ],
+                  "maxProcUnits": [
+                    4.0
+                  ],
+                  "entitledProcUnits": [
+                    1.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.162
+                  ],
+                  "utilizedCappedProcUnits": [
+                    0.254
+                  ],
+                  "utilizedUncappedProcUnits": [
+                    0.036
+                  ],
+                  "idleProcUnits": [
+                    0.128
+                  ],
+                  "donatedProcUnits": [
+                    0.0
+                  ],
+                  "timeSpentWaitingForDispatch": [
+                    0.0
+                  ],
+                  "timePerInstructionExecution": [
+                    0.0
+                  ]
+                },
+                "network": {
+                  "virtualEthernetAdapters": [
+                    {
+                      "transferredPhysicalBytes": [
+                        0.0
+                      ],
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C3",
+                      "vlanId": 4094,
+                      "vswitchId": 2,
+                      "isPortVlanId": true,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalPackets": [
+                        0.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredPhysicalBytes": [
+                        319.667
+                      ],
+                      "transferredBytes": [
+                        1065.533
+                      ],
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C2",
+                      "vlanId": 1,
+                      "vswitchId": 0,
+                      "isPortVlanId": true,
+                      "viosId": 2,
+                      "sharedEthernetAdapterId": "ent5",
+                      "receivedPackets": [
+                        4.933
+                      ],
+                      "sentPackets": [
+                        2.833
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        410.9
+                      ],
+                      "receivedBytes": [
+                        654.633
+                      ],
+                      "receivedPhysicalPackets": [
+                        3.5
+                      ],
+                      "sentPhysicalPackets": [
+                        1.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        92.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        227.667
+                      ]
+                    }
+                  ]
+                },
+                "storage": {
+                  "genericVirtualAdapters": [
+                    {
+                      "transmittedBytes": [
+                        null
+                      ],
+                      "id": "vhost0",
+                      "type": "virtual",
+                      "viosId": 2,
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C5",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "virtualFiberChannelAdapters": [
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "wwpn": "c0507608add54122",
+                      "wwpn2": "c0507608add54123",
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C4",
+                      "viosId": 8,
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        16.867
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        1020450.133
+                      ],
+                      "runningSpeed": [
+                        17.0
+                      ],
+                      "physicalPortWWPN": "10000090fa02f602"
+                    }
+                  ]
+                },
+                "state": "Running",
+                "uuid": "3F3D399B-DFF3-4977-8881-C194AA47CD3A"
+              }
+            ],
+            "sampleInfo": {
+              "timeStamp": "2022-04-06T13:30:30+0000",
+              "status": 0
+            }
+          },
+          {
+            "sampleType": "LogicalPartition",
+            "lparsUtil": [
+              {
+                "id": 5,
+                "name": "pollux12-bf3d399b-00000645",
+                "type": "AIX/Linux",
+                "affinityScore": 100,
+                "memory": {
+                  "logicalMem": [
+                    16384.0
+                  ],
+                  "backedPhysicalMem": [
+                    16384.0
+                  ]
+                },
+                "processor": {
+                  "poolId": 0,
+                  "weight": 128,
+                  "mode": "uncap",
+                  "maxVirtualProcessors": [
+                    8.0
+                  ],
+                  "maxProcUnits": [
+                    4.0
+                  ],
+                  "entitledProcUnits": [
+                    1.0
+                  ],
+                  "utilizedProcUnits": [
+                    0.096
+                  ],
+                  "utilizedCappedProcUnits": [
+                    0.167
+                  ],
+                  "utilizedUncappedProcUnits": [
+                    0.006
+                  ],
+                  "idleProcUnits": [
+                    0.077
+                  ],
+                  "donatedProcUnits": [
+                    0.0
+                  ],
+                  "timeSpentWaitingForDispatch": [
+                    0.0
+                  ],
+                  "timePerInstructionExecution": [
+                    0.0
+                  ]
+                },
+                "network": {
+                  "virtualEthernetAdapters": [
+                    {
+                      "transferredPhysicalBytes": [
+                        0.0
+                      ],
+                      "transferredBytes": [
+                        0.0
+                      ],
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C3",
+                      "vlanId": 4094,
+                      "vswitchId": 2,
+                      "isPortVlanId": true,
+                      "receivedPackets": [
+                        0.0
+                      ],
+                      "sentPackets": [
+                        0.0
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        0.0
+                      ],
+                      "receivedBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalPackets": [
+                        0.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        0.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        0.0
+                      ]
+                    },
+                    {
+                      "transferredPhysicalBytes": [
+                        300.0
+                      ],
+                      "transferredBytes": [
+                        1160.9
+                      ],
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C2",
+                      "vlanId": 1,
+                      "vswitchId": 0,
+                      "isPortVlanId": true,
+                      "viosId": 2,
+                      "sharedEthernetAdapterId": "ent5",
+                      "receivedPackets": [
+                        5.0
+                      ],
+                      "sentPackets": [
+                        2.967
+                      ],
+                      "droppedPackets": [
+                        0.0
+                      ],
+                      "sentBytes": [
+                        419.433
+                      ],
+                      "receivedBytes": [
+                        741.467
+                      ],
+                      "receivedPhysicalPackets": [
+                        3.467
+                      ],
+                      "sentPhysicalPackets": [
+                        1.0
+                      ],
+                      "droppedPhysicalPackets": [
+                        0.0
+                      ],
+                      "sentPhysicalBytes": [
+                        92.0
+                      ],
+                      "receivedPhysicalBytes": [
+                        208.0
+                      ]
+                    }
+                  ]
+                },
+                "storage": {
+                  "genericVirtualAdapters": [
+                    {
+                      "transmittedBytes": [
+                        null
+                      ],
+                      "id": "vhost0",
+                      "type": "virtual",
+                      "viosId": 2,
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C5",
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        0.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        0.0
+                      ]
+                    }
+                  ],
+                  "virtualFiberChannelAdapters": [
+                    {
+                      "transmittedBytes": [
+                        0.0
+                      ],
+                      "wwpn": "c0507608add54122",
+                      "wwpn2": "c0507608add54123",
+                      "physicalLocation": "U8284.22A.21FD4AV-V5-C4",
+                      "viosId": 8,
+                      "numOfReads": [
+                        0.0
+                      ],
+                      "numOfWrites": [
+                        13.0
+                      ],
+                      "readBytes": [
+                        0.0
+                      ],
+                      "writeBytes": [
+                        724633.6
+                      ],
+                      "runningSpeed": [
+                        17.0
+                      ],
+                      "physicalPortWWPN": "10000090fa02f602"
+                    }
+                  ]
+                },
+                "state": "Running",
+                "uuid": "3F3D399B-DFF3-4977-8881-C194AA47CD3A"
+              }
+            ],
+            "sampleInfo": {
+              "timeStamp": "2022-04-06T13:31:00+0000",
+              "status": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

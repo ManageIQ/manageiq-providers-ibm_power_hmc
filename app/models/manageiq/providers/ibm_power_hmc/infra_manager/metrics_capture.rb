@@ -1,4 +1,4 @@
-class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
+class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ::Providers::InfraManager::MetricsCapture
   VIM_STYLE_COUNTERS = {
     "cpu_usage_rate_average"     => {
       :counter_key           => "cpu_usage_rate_average",
@@ -9,7 +9,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
       :unit_key              => "percent",
       :capture_interval_name => "realtime"
     },
-
     "disk_usage_rate_average"    => {
       :counter_key           => "disk_usage_rate_average",
       :instance              => "",
@@ -50,10 +49,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCapture < ManageIQ:
     start_time   = start_time.utc
 
     begin
-      target.ext_management_system.with_provider_connection do |connection|
-        [{target.ems_ref => VIM_STYLE_COUNTERS},
-         {target.ems_ref => connection.metrics(start_time, end_time)}]
-      end
+      [
+        {target.ems_ref => VIM_STYLE_COUNTERS},
+        {target.ems_ref => target.capture_metrics(VIM_STYLE_COUNTERS, start_time, end_time)}
+      ]
     rescue => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
