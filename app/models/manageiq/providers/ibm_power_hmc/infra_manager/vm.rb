@@ -75,4 +75,13 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def process_samples(_counters, _samples)
     raise StandardError, "Must be implemented in a subclass"
   end
+
+  # Override base class values to display performance data that's available
+  def cpu_mhz_available?
+    false
+  end
+
+  def cpu_percent_available?
+    true
+  end
 end
