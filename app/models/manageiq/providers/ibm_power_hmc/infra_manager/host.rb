@@ -118,5 +118,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
           net_usage_rate_average_all_vios(sample)
       end
     end
+
+  def start
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+  end
+
+  def stop
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
   end
 end
