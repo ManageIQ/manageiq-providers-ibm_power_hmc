@@ -5,6 +5,16 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless pcm_enabled
   end
 
+  supports :stop
+
+  def start
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+  end
+
+  def stop
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+  end
+
   def collect_samples(start_time, end_time)
     ext_management_system.with_provider_connection do |connection|
       connection.managed_system_metrics(
