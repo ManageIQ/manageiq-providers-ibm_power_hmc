@@ -6,6 +6,22 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   supports :stop
+  supports :shutdown
+
+  def shutdown
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_managed_system(
+        :sys_uuid => ems_ref
+      )
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error sending request to power off  #{ems_ref}: #{e}")
+      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
+
+      []
+    end
+
+  end
 
   def start
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
