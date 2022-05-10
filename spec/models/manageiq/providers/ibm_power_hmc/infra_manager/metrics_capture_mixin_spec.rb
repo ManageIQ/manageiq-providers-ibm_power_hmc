@@ -242,6 +242,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin do
     expect(i.count).to eq(4)
   end
 
+  it "interpolate_samples (gap in samples)" do
+    i = @test_obj.interpolate_samples(processed_samples.reject { |k| k == ts + described_class::SAMPLE_DURATION })
+    expect(i).to include(interpolated_samples.reject { |k| k > ts && k < ts + described_class::SAMPLE_DURATION * 2 })
+    expect(i.count).to eq(4)
+  end
+
   it "interpolate_samples (empty processed sample set)" do
     expect(@test_obj.interpolate_samples({})).to be_empty
   end

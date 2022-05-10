@@ -91,15 +91,21 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     while t && t + MIQ_SAMPLE_INTERVAL <= timestamps.last + SAMPLE_DURATION
       selected = timestamps.select { |ts| ts + SAMPLE_DURATION > t && ts < t + MIQ_SAMPLE_INTERVAL }.map do |ts|
         if ts < t
+          # Actual sample starts before interpolated sample
           {:ts => ts, :weight => SAMPLE_DURATION - (t - ts)}
         elsif ts + SAMPLE_DURATION > t + MIQ_SAMPLE_INTERVAL
+          # Actual sample ends after interpolated sample
           {:ts => ts, :weight => t + MIQ_SAMPLE_INTERVAL - ts}
         else
+          # Actual sample within interpolated sample time slice
           {:ts => ts, :weight => SAMPLE_DURATION}
         end
       end
-      interpolated[t] = selected.map { |s| processed[s[:ts]].keys }.inject(:&).index_with do |counter|
-        selected.sum { |s| processed[s[:ts]][counter] * s[:weight] } / MIQ_SAMPLE_INTERVAL
+      # Interpolated sample time slice must be fully covered by actual samples
+      if selected.sum { |ts| ts[:weight] } == MIQ_SAMPLE_INTERVAL
+        interpolated[t] = selected.map { |s| processed[s[:ts]].keys }.inject(:&).index_with do |counter|
+          selected.sum { |s| processed[s[:ts]][counter] * s[:weight] } / MIQ_SAMPLE_INTERVAL
+        end
       end
       t += MIQ_SAMPLE_INTERVAL
     end
