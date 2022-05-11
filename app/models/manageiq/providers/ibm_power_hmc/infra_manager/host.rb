@@ -15,10 +15,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
         :sys_uuid => ems_ref
       )
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error sending request to power off  #{ems_ref}: #{e}")
-      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-
-      []
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      raise
     end
 
   end
@@ -31,10 +29,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
         :params   => {"operation" => on}
       )
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error sending request to start  #{ems_ref}: #{e}")
-      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-
-      []
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
     end
   end
 
@@ -46,10 +41,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
         :params   => {"immediate" => true}
       )
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error sending request to power off  #{ems_ref}: #{e}")
-      raise unless e.message.eql?("403 Forbidden") # TO DO - Capture should be disabled at Host level if PCM is not enabled
-
-      []
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
     end
   end
 

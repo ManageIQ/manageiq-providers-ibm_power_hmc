@@ -55,4 +55,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
       expect(host.supports?(:capture)).to be true
     end
   end
+
+  context "power_operation" do
+    it "stop" do
+      VCR.use_cassette("#{described_class.name.underscore}_stop") do
+        host.stop
+      end
+    end
+
+    it "start" do
+      VCR.use_cassette("#{described_class.name.underscore}_start") do
+        host.start
+      end
+    end
+  end
 end
