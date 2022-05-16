@@ -25,7 +25,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     ext_management_system.with_provider_connection do |connection|
       connection.poweroff_managed_system(ems_ref)
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref}:  #{e}")
+      $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
       raise
     end
   end
@@ -35,7 +35,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     ext_management_system.with_provider_connection do |connection|
       connection.poweron_managed_system(ems_ref, {"operation" => "on"})
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref}:  #{e}")
+      $ibm_power_hmc_log.error("error starting managed system #{ems_ref}:  #{e}")
     end
   end
 
@@ -44,7 +44,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     ext_management_system.with_provider_connection do |connection|
       connection.poweroff_managed_system(ems_ref, {"immediate" => true})
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref}:  #{e}")
+      $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
     end
   end
 
