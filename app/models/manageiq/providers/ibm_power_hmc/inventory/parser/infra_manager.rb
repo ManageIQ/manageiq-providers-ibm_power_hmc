@@ -20,8 +20,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :hostname            => sys.hostname,
         :ipaddress           => sys.ipaddr,
         :power_state         => lookup_power_state(sys.state),
-        :vmm_vendor          => "ibm_power_hmc",
-        :type                => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.name
+        :vmm_vendor          => "ibm_power_hmc"
       )
 
       parse_host_operating_system(host, sys)

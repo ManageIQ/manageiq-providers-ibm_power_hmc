@@ -8,40 +8,43 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   supports :stop
   supports :shutdown
 
+  def validate_stop
+    {:available => true, :message => nil}
+  end
+
+  def validate_shutdown
+    {:available => true, :message => nil}
+  end
+
+  def validate_start
+    {:available => true, :message => nil}
+  end
+
   def shutdown
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     ext_management_system.with_provider_connection do |connection|
-      connection.poweroff_managed_system(
-        :sys_uuid => ems_ref
-      )
+      connection.poweroff_managed_system(ems_ref)
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref}:  #{e}")
       raise
     end
-
   end
 
   def start
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     ext_management_system.with_provider_connection do |connection|
-      connection.poweron_managed_system(
-        :sys_uuid => ems_ref,
-        :params   => {"operation" => on}
-      )
+      connection.poweron_managed_system(ems_ref, {"operation" => "on"})
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref}:  #{e}")
     end
   end
 
   def stop
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     ext_management_system.with_provider_connection do |connection|
-      connection.poweroff_managed_system(
-        :sys_uuid => ems_ref,
-        :params   => {"immediate" => true}
-      )
+      connection.poweroff_managed_system(ems_ref, {"immediate" => true})
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref}:  #{e}")
     end
   end
 
