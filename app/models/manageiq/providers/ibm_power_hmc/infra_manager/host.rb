@@ -42,7 +42,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   def stop
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     ext_management_system.with_provider_connection do |connection|
-      connection.poweroff_managed_system(ems_ref, {"immediate" => true})
+      connection.poweroff_managed_system(ems_ref, {"immediate" => "true"})
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
     end

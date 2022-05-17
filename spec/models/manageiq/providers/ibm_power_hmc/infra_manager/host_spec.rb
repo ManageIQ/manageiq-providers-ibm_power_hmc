@@ -68,5 +68,11 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
         host.start
       end
     end
+
+    it "shutdown" do
+      VCR.use_cassette("#{described_class.name.underscore}_shutdown") do
+        host.shutdown
+      end
+    end
   end
 end
