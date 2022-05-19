@@ -28,6 +28,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
       rescue IbmPowerHmc::Connection::HttpError => e
         $ibm_power_hmc_log.error("error querying virtual_switches or virtual_networks for managed system  #{cec.uuid}: #{e}") unless e.status == 404
       end
+
       do_pcm_preferences(connection)
     end
     @cecs || []

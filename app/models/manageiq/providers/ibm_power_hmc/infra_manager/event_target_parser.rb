@@ -65,25 +65,39 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   end
 
   def handle_usertask(usertask)
-    r = []
     if usertask["status"].eql?("Completed")
       case usertask["key"]
       when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
-        r << {:assoc => :miq_templates, :ems_ref => usertask['template_uuid']}
+        handle_usertask_template_save(usertask)
       when "TEMPLATE_DELETE"
-        template = ManageIQ::Providers::InfraManager::Template.find_by(:ems_id => ems_event.ext_management_system.id, :name => usertask['labelParams'])
-        unless template.nil?
-          r << {:assoc => :miq_templates, :ems_ref => template.uid_ems}
-        end
+        handle_usertask_template_delete(usertask)
       when "PCM_PREFERENCE_UPDATE"
-        usertask['labelParams'].first.tr("[] ", "").split(",").each do |hostname|
-          host = ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.find_by(:ems_id => ems_event.ext_management_system.id, :name => hostname)
-          unless host.nil?
-            r << {:assoc => :hosts, :ems_ref => host.ems_ref}
-          end
-        end
+        handle_usertask_pcm_preference(usertask)
+      else
+        []
       end
     end
-    r
+  end
+
+  def handle_usertask_template_save(usertask)
+    [{:assoc => :miq_templates, :ems_ref => usertask['template_uuid']}]
+  end
+
+  def handle_usertask_template_delete(usertask)
+    template = ManageIQ::Providers::InfraManager::Template.find_by(:ems_id => ems_event.ext_management_system.id, :name => usertask['labelParams'])
+    if template.nil?
+      []
+    else
+      [{:assoc => :miq_templates, :ems_ref => template.uid_ems}]
+    end
+  end
+
+  def handle_usertask_pcm_preference(usertask)
+    usertask['labelParams'].first.tr("[] ", "").split(",").each_with_object([]) do |hostname, array|
+      host = ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.find_by(:ems_id => ems_event.ext_management_system.id, :name => hostname)
+      unless host.nil?
+        array << {:assoc => :hosts, :ems_ref => host.ems_ref}
+      end
+    end
   end
 end
