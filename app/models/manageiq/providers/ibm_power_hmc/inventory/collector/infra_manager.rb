@@ -5,6 +5,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @sriov_elps = {}
     @vnics = {}
     @ssps = {}
+    @pcm_enabled = {}
   end
 
   def collect!
@@ -17,6 +18,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       do_vlans(connection)
       do_templates(connection)
       do_ssps(connection)
+      do_pcm_preferences(connection)
       $ibm_power_hmc_log.info("end collection")
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("managed systems query failed: #{e}")
@@ -60,7 +62,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @templates || []
   end
 
-  attr_accessor :ssps
+  attr_accessor :ssps, :pcm_enabled
 
   def ssp_lus_by_udid
     @ssp_lus_by_udid ||= ssps.flat_map { |ssp| ssp.lus.map { |lu| [lu.udid, ssp.cluster_uuid] } }.to_h
@@ -130,6 +132,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       do_netadapters_vios(connection, vios)
       do_sriov_elps_vios(connection, vios)
     end
+  end
+
+  def do_pcm_preferences(connection)
+    @pcm_enabled = connection.pcm_preferences.first.managed_system_preferences.each_with_object({}) { |v, h| h[v.id] = v }
+  rescue IbmPowerHmc::Connection::HttpError => e
+    $ibm_power_hmc_log.error("pcm preferences query failed: #{e}")
   end
 
   def do_netadapters_lpar(connection, lpar)

@@ -1,6 +1,10 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
+  supports :capture do
+    unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless advanced_settings.find { |s| s.name.eql?("pcm_enabled") }&.value.eql?("true")
+  end
+
   def collect_samples(start_time, end_time)
     ext_management_system.with_provider_connection do |connection|
       connection.managed_system_metrics(

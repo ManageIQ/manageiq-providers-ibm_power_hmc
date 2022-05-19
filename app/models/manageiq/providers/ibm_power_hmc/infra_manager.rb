@@ -19,6 +19,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   supports :metrics
   supports :provisioning
 
+  has_many :hosts_advanced_settings, :through => :hosts, :source => :advanced_settings
+
   def self.params_for_create
     @params_for_create ||= {
       :fields => [
