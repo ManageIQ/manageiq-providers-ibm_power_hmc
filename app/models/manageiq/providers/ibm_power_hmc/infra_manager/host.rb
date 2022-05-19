@@ -13,7 +13,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   def validate_shutdown
-    {:available => true, :message => nil}
+    {:available => self.vms_off, :message => nil}
   end
 
   def validate_start
@@ -85,6 +85,25 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   virtual_column :pcm_enabled, :type => :boolean, :uses => :advanced_settings
+  
+  def vms_off
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    
+    @lpars ||= {}
+    @vioses ||= {}
+
+    ext_management_system.with_provider_connection do |connection|
+      @lpars[ems_ref] = connection.lpars(ems_ref)
+      @vioses[ems_ref] = connection.vioses(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error requesting lpars and vioses from #{ems_ref}:  #{e}")
+    end
+
+    @lpars[ems_ref].each { |lpar| return false if lpar.state.eql?("running") }
+    @vioses[ems_ref].each { |vios| return false if vios.state.eql?("running") }
+
+    return true
+  end
 
   private
 
