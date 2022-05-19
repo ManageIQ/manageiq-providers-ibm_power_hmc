@@ -20,15 +20,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
           nil
         end.compact
 
-      @vswitches ||= {}
-      @vlans ||= {}
-      @cecs.each do |cec|
-        @vswitches[cec.uuid] = connection.virtual_switches(cec.uuid)
-        @vlans[cec.uuid] = connection.virtual_networks(cec.uuid)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error querying virtual_switches or virtual_networks for managed system  #{cec.uuid}: #{e}") unless e.status == 404
-      end
-
+      do_vswitches(connection)
+      do_vlans(connection)
       do_pcm_preferences(connection)
     end
     @cecs || []
