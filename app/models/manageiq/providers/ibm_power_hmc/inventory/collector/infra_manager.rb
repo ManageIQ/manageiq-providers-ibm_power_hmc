@@ -135,7 +135,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def do_pcm_preferences(connection)
-    @pcm_enabled = connection.pcm_preferences.first.managed_system_preferences.each_with_object({}) { |v, h| h[v.id] = v }
+    @pcm_enabled = connection.pcm_preferences.first.managed_system_preferences.index_by(&:id)
   rescue IbmPowerHmc::Connection::HttpError => e
     $ibm_power_hmc_log.error("pcm preferences query failed: #{e}")
   end

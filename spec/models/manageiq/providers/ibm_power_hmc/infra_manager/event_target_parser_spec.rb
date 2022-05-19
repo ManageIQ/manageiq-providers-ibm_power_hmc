@@ -111,7 +111,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
     end
   end
 
-
   def assert_event_triggers_target(filename, expected_targets, usertask = nil)
     ems_event      = create_ems_event(filename, usertask)
     parsed_targets = described_class.new(ems_event).parse
