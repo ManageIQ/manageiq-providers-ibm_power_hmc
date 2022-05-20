@@ -46,12 +46,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
     end
 
     it "supports metrics capture (false)" do
-      FactoryBot.create(:ibm_power_hmc_advanced_setting, :name => "pcm_enabled", :resource => host, :value => "false")
+      FactoryBot.create(:advanced_settings, :name => "pcm_enabled", :resource => host, :value => "false")
       expect(host.supports?(:capture)).to be false
     end
 
     it "supports metrics capture (true)" do
-      FactoryBot.create(:ibm_power_hmc_advanced_setting, :name => "pcm_enabled", :resource => host, :value => "true")
+      FactoryBot.create(:advanced_settings, :name => "pcm_enabled", :resource => host, :value => "true")
       expect(host.supports?(:capture)).to be true
     end
   end
