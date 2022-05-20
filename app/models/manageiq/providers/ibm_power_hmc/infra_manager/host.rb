@@ -9,7 +9,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   supports :shutdown
 
   def validate_stop
-    {:available => true, :message => nil}
+    message = _("Cannot shutdown a host that is powered off") if power_state == "off"
+
+    {:available => message.nil?, :message => message}
   end
 
   def validate_shutdown
@@ -20,7 +22,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   def validate_start
-    {:available => true, :message => nil}
+    message = _("Cannot start a host that is already powered on") if power_state == "on"
+
+    {:available => message.nil?, :message => message}
   end
 
   def shutdown
