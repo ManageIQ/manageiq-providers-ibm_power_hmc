@@ -13,7 +13,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   def validate_shutdown
-    {:available => self.vms_off, :message => nil}
+    message = _("Cannot shutdown a host that is powered off") if power_state == "off"
+    message = _("Cannot shutdown a host with running vms")    if vms.where(:power_state => "on").any?
+
+    {:available => message.nil?, :message => message}
   end
 
   def validate_start
@@ -88,11 +91,13 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   
   def vms_off
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+  # def vms_off
+  #   $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     
-    vms.each { |vm| return false unless vm.power_state.eql?("off") }
+  #   vms.each { |vm| return false unless vm.power_state.eql?("off") }
 
-    return true
-  end
+  #   return true
+  # end
 
   private
 
