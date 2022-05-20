@@ -2,6 +2,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
   before :each do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems                 = FactoryBot.create(:ems_ibm_power_hmc_infra, :zone => zone)
+    User.seed
   end
 
   context "ADD_URI event" do
@@ -85,6 +86,28 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
       assert_event_triggers_target(
         "test_data/cluster.xml",
         [[:storages, {:ems_ref => 'c1e50c27-888c-3c4d-8d4a-53a3768ea250'}]]
+      )
+    end
+    it "PcmPreferences" do
+      aramis = FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => @ems, :ems_ref => "aaaaaaaa-eaa8-3a54-b4dc-93346276ea37", :name => "aramis")
+      porthos = FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => @ems, :ems_ref => "bbbbbbbb-eaa8-3a54-b4dc-93346276ea37", :name => "porthos")
+      assert_event_triggers_target(
+        "test_data/pcm_preferences.xml",
+        [
+          [:hosts, {:ems_ref => aramis.ems_ref}],
+          [:hosts, {:ems_ref => porthos.ems_ref}]
+        ],
+        {
+          "uuid"           => "99630d72-36b7-4fa6-8307-b70aef13b0b0",
+          "key"            => "PCM_PREFERENCE_UPDATE",
+          "localizedLabel" => "Update performance monitoring settings",
+          "labelParams"    => ["[aramis, porthos]"],
+          "initiator"      => "hscroot",
+          "timeStarted"    => 1_652_866_657_499,
+          "timeCompleted"  => 1_652_866_657_594,
+          "status"         => "Completed",
+          "visible"        => true
+        }
       )
     end
   end

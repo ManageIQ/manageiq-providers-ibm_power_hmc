@@ -1,6 +1,10 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
+  supports :capture do
+    unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless pcm_enabled
+  end
+
   def collect_samples(start_time, end_time)
     ext_management_system.with_provider_connection do |connection|
       connection.managed_system_metrics(
@@ -27,6 +31,17 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
       end.compact.to_h
     end || {}
   end
+
+  def pcm_enabled
+    as = advanced_settings.detect { |s| s.name == "pcm_enabled" }
+    if as.nil?
+      false
+    else
+      ActiveRecord::Type::Boolean.new.cast(as.value)
+    end
+  end
+
+  virtual_column :pcm_enabled, :type => :boolean, :uses => :advanced_settings
 
   private
 

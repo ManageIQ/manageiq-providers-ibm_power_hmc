@@ -25,6 +25,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
       parse_host_operating_system(host, sys)
       parse_host_hardware(host, sys)
+      parse_host_advanced_settings(host, sys)
       parse_vswitches(host, sys)
       parse_vlans(sys)
     end
@@ -87,6 +88,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     #   :device_name => sys.xxx,
     #   :device_type => sys.xxx
     # )
+  end
+
+  def parse_host_advanced_settings(host, sys)
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "pcm_enabled",
+      :display_name => _("PCM-enabled"),
+      :description  => _("Performance and Capacity Monitoring data collection enabled"),
+      :value        => collector.pcm_enabled[sys.uuid].aggregation,
+      :read_only    => true
+    )
   end
 
   def parse_lpars
