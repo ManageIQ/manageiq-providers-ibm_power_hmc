@@ -84,7 +84,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   end
 
   def handle_usertask_template_delete(usertask)
-    template = ManageIQ::Providers::InfraManager::Template.find_by(:ems_id => ems_event.ext_management_system.id, :name => usertask['labelParams'])
+    template = ManageIQ::Providers::InfraManager::Template.find_by(:ext_management_system => ems_event.ext_management_system, :name => usertask['labelParams'])
     if template.nil?
       []
     else
@@ -93,11 +93,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   end
 
   def handle_usertask_pcm_preference(usertask)
-    usertask['labelParams'].first.tr("[] ", "").split(",").each_with_object([]) do |hostname, array|
-      host = ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.find_by(:ext_management_system => ems_event.ext_management_system, :name => hostname)
-      unless host.nil?
-        array << {:assoc => :hosts, :ems_ref => host.ems_ref}
-      end
-    end
+    hostnames     = usertask['labelParams'].first.tr("[] ", "").split(",")
+    host_ems_refs = ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.where(:ext_management_system => ems_event.ext_management_system, :name => hostnames).pluck(:ems_ref)
+    host_ems_refs.map { |ems_ref| {:assoc => :hosts, :ems_ref => ems_ref} }
   end
 end
