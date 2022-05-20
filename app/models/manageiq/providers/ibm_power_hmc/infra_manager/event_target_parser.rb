@@ -94,7 +94,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
 
   def handle_usertask_pcm_preference(usertask)
     usertask['labelParams'].first.tr("[] ", "").split(",").each_with_object([]) do |hostname, array|
-      host = ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.find_by(:ems_id => ems_event.ext_management_system.id, :name => hostname)
+      host = ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.find_by(:ext_management_system => ems_event.ext_management_system, :name => hostname)
       unless host.nil?
         array << {:assoc => :hosts, :ems_ref => host.ems_ref}
       end
