@@ -97,7 +97,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
   # def vms_off
   #   $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    
+
   #   vms.each { |vm| return false unless vm.power_state.eql?("off") }
 
   #   return true
