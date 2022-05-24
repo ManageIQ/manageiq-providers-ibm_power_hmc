@@ -102,6 +102,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   #   return true
   # end
+  end
 
   private
 

@@ -74,11 +74,5 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
         host.shutdown
       end
     end
-
-    it "vms_off" do
-      VCR.use_cassette("#{described_class.name.underscore}_vms_off") do
-        host.vms_off
-      end
-    end
   end
 end
