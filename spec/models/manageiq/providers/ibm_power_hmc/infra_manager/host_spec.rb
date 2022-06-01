@@ -4,7 +4,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
   end
 
   let(:host) do
-    FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "d47a585d-eaa8-3a54-b4dc-93346276ea37")
+    FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "12345", :power_state => "on")
   end
 
   let(:samples) do
@@ -57,22 +57,24 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
   end
 
   context "power_operation" do
-    it "stop" do
-      VCR.use_cassette("#{described_class.name.underscore}_stop") do
-        host.stop
-      end
-    end
+    let(:conn) { double("IbmPowerHmc") }
+    before { allow(ems).to receive(:with_provider_connection).and_yield(conn) }
 
     it "start" do
-      VCR.use_cassette("#{described_class.name.underscore}_start") do
-        host.start
-      end
+      expect(conn).to receive(:poweron_managed_system).with(host.ems_ref, {"operation"=>"on"})
+      host.start
     end
 
+    # "stop" test checks if the host does not stop when it is already "off"
+    it "stop" do
+      expect(conn).to receive(:poweroff_managed_system).with(host.ems_ref, {"immediate" => "true"})
+      host.stop
+    end
+
+    # "shutdown" test checks if the host does not shutdown when it is already "off"
     it "shutdown" do
-      VCR.use_cassette("#{described_class.name.underscore}_shutdown") do
-        host.shutdown
-      end
+      expect(conn).to receive(:poweroff_managed_system).with(host.ems_ref)
+      host.shutdown
     end
   end
 end
