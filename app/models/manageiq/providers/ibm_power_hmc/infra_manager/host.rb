@@ -5,59 +5,44 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless pcm_enabled
   end
 
-  supports :stop
-  supports :shutdown
-
-  def validate_stop
-    message = _("Cannot shutdown a host that is powered off") unless power_state == "on"
-
-    {:available => message.nil?, :message => message}
+  supports :stop do
+    unsupported_reason_add(:stop, _("Cannot shutdown a host that is powered off")) unless power_state="on"
   end
 
-  def validate_shutdown
-    message = _("Cannot shutdown a host that is powered off") unless power_state == "on"
-    message = _("Cannot shutdown a host with running vms")    if vms.where(:power_state => "on").any?
-
-    {:available => message.nil?, :message => message}
+  supports :shutdown do
+    unsupported_reason_add(:shutdown, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
+    unsupported_reason_add(:shutdown, _("Cannot shutdown a host with running vms")) if vms.where(:power_state => "on").any?
   end
 
-  def validate_start
-    message = _("Cannot start a host that is already powered on") unless power_state == "off"
-
-    {:available => message.nil?, :message => message}
+  supports :start do
+    unsupported_reason_add(:start, _("Cannot start a host that is already powered on")) unless power_state == "off"
   end
 
   def shutdown
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    if validate_shutdown[:available]
-      ext_management_system.with_provider_connection do |connection|
-        connection.poweroff_managed_system(ems_ref)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
-        raise
-      end
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_managed_system(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
+      raise
     end
   end
 
   def start
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    if validate_start[:available]
-      ext_management_system.with_provider_connection do |connection|
-        connection.poweron_managed_system(ems_ref, {"operation" => "on"})
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error starting managed system #{ems_ref}:  #{e}")
-      end
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweron_managed_system(ems_ref, {"operation" => "on"})
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error starting managed system #{ems_ref}:  #{e}")
     end
   end
 
   def stop
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    if validate_stop[:available]
-      ext_management_system.with_provider_connection do |connection|
-        connection.poweroff_managed_system(ems_ref, {"immediate" => "true"})
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
-      end
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_managed_system(ems_ref, {"immediate" => "true"})
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
     end
   end
 
