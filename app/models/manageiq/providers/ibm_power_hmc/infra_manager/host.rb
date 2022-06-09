@@ -5,6 +5,47 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless pcm_enabled
   end
 
+  supports :stop do
+    unsupported_reason_add(:stop, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
+  end
+
+  supports :shutdown do
+    unsupported_reason_add(:shutdown, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
+    unsupported_reason_add(:shutdown, _("Cannot shutdown a host with running vms")) if vms.where(:power_state => "on").any?
+  end
+
+  supports :start do
+    unsupported_reason_add(:start, _("Cannot start a host that is already powered on")) unless power_state == "off"
+  end
+
+  def shutdown
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_managed_system(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
+      raise
+    end
+  end
+
+  def start
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweron_managed_system(ems_ref, {"operation" => "on"})
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error starting managed system #{ems_ref}:  #{e}")
+    end
+  end
+
+  def stop
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    ext_management_system.with_provider_connection do |connection|
+      connection.poweroff_managed_system(ems_ref, {"immediate" => "true"})
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error powering off managed system #{ems_ref}:  #{e}")
+    end
+  end
+
   def collect_samples(start_time, end_time)
     ext_management_system.with_provider_connection do |connection|
       connection.managed_system_metrics(
