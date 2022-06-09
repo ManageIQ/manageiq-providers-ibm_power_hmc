@@ -6,7 +6,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   supports :stop do
-    unsupported_reason_add(:stop, _("Cannot shutdown a host that is powered off")) unless power_state="on"
+    unsupported_reason_add(:stop, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
   end
 
   supports :shutdown do
@@ -118,12 +118,5 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
           net_usage_rate_average_all_vios(sample)
       end
     end
-
-  def start
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-  end
-
-  def stop
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
   end
 end
