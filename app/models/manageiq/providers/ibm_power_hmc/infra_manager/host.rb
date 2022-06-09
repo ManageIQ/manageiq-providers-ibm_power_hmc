@@ -83,17 +83,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   virtual_column :pcm_enabled, :type => :boolean, :uses => :advanced_settings
-  
-  def vms_off
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-  # def vms_off
-  #   $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-
-  #   vms.each { |vm| return false unless vm.power_state.eql?("off") }
-
-  #   return true
-  # end
-  end
 
   private
 
