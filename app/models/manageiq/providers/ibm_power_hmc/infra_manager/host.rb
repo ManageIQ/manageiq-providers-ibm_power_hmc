@@ -84,6 +84,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   virtual_column :pcm_enabled, :type => :boolean, :uses => :advanced_settings
 
+  # Display or hide certain performance charts
+  def cpu_mhz_available?
+    false
+  end
+
+  def cpu_ready_available?
+    false
+  end
+
+  def cpu_percent_available?
+    true
+  end
+
   private
 
   def get_sample_value(sample, key)
