@@ -56,6 +56,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :size        => mapping.storage.capacity.to_f.gigabytes.round
       )
     end
+
+    collector.vscsi_pvs_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
+
+      persister.disks.build(
+        :device_type => "physical_volume",
+        :hardware    => hardware,
+        :device_name => mapping.storage.name,
+        :size        => mapping.storage.capacity.to_f.gigabytes.round
+      )
+    end
   end
 
   def parse_host_operating_system(host, sys)

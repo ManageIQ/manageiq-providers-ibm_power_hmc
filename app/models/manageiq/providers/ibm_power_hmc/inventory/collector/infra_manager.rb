@@ -64,6 +64,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_accessor :ssps, :pcm_enabled
 
+  def vscsi_pvs_mappings
+    @vscsi_pvs_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::PhysicalVolume) } }
+  end
+
+  def vscsi_pvs_mappings_by_uuid
+    @vscsi_pvs_mappings_by_uuid ||= vscsi_pvs_mappings.group_by(&:lpar_uuid)
+  end
+
   def ssp_lus_by_udid
     @ssp_lus_by_udid ||= ssps.flat_map { |ssp| ssp.lus.map { |lu| [lu.udid, ssp.cluster_uuid] } }.to_h
   end
