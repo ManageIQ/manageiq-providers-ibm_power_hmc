@@ -64,6 +64,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_accessor :ssps, :pcm_enabled
 
+  def vscsi_virtual_optical_medias_mappings
+    @vscsi_virtual_optical_medias_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) } }
+  end
+
+  def vscsi_virtual_optical_medias_mappings_by_uuid
+    @vscsi_virtual_optical_medias_mappings_by_uuid ||= vscsi_virtual_optical_medias_mappings.group_by(&:lpar_uuid)
+  end
+
   def vscsi_pvs_mappings
     @vscsi_pvs_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::PhysicalVolume) } }
   end
