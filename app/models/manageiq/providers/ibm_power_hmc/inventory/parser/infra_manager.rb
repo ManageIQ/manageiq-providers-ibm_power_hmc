@@ -70,7 +70,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       persister.disks.build(
         :device_type => "virtual_optical_media",
         :hardware    => hardware,
-        :size        => mapping.storage.size
+        :size        => mapping.storage.size,
+        :device_name => mapping.storage.name
       )
     end
   end
