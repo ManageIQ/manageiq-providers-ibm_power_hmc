@@ -17,7 +17,7 @@
           :default: 1
           :data_type: :integer
         :vm_prefix:
-          :description: Template Name Prefix/Suffix
+          :description: LPAR Name Prefix/Suffix
           :required_method: :validate_vm_name
           :required: false
           :display: :hide
@@ -30,7 +30,7 @@
           :data_type: :integer
           :notes_display: :show
         :vm_name:
-          :description: Template Name
+          :description: LPAR Name
           :required_method:
           - :validate_vm_name
           - :validate_regex
@@ -45,5 +45,65 @@
           :min_length: 1
           :max_length: 31
       :display: :show
+    :environment:
+      :description: Environment
+      :fields:
+        :placement_cluster_name:
+          :values_from:
+            :method: :allowed_clusters
+          :auto_select_single: true
+          :description: Name
+          :required: true
+          :required_method: :validate_placement
+          :required_description: Cluster Name
+          :display: :show
+          :data_type: :integer
+        :cluster_filter:
+          :values_from:
+            :options:
+              :category: :EmsCluster
+            :method: :allowed_filters
+          :auto_select_single: false
+          :description: Filter
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_auto:
+          :values:
+            false: 0
+            true: 1
+          :description: Choose Automatically
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
+        :placement_dc_name:
+          :values_from:
+            :method: :allowed_datacenters
+          :auto_select_single: true
+          :description: Name
+          :required: false
+          :display: :show
+          :data_type: :integer
+        :placement_host_name:
+          :values_from:
+            :method: :allowed_hosts
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+          :required_description: Host Name
+        :placement_ds_name:
+          :values_from:
+            :method: :allowed_storages
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+          :required_description: Datastore Name
+      :display: :show
   :dialog_order:
   - :service
+  - :environment

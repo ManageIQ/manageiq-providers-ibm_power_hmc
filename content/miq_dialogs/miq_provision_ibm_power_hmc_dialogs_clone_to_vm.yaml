@@ -1,0 +1,58 @@
+---
+:name: miq_provision_ibm_power_hmc_dialogs_clone_to_vm
+:description: IBM Power HMC Logical Partition Clone to VM Dialog
+:dialog_type: MiqProvisionWorkflow
+:content:
+  :buttons:
+  - :submit
+  - :cancel
+  :dialogs:
+    :service:
+      :description: Catalog
+      :fields:
+        :number_of_vms:
+          :description: Count
+          :required: false
+          :display: :hide
+          :default: 1
+          :data_type: :integer
+        :vm_prefix:
+          :description: LPAR Name Prefix/Suffix
+          :required_method: :validate_vm_name
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :src_vm_id:
+          :description: Name
+          :required: true
+          :notes:
+          :display: :edit
+          :data_type: :integer
+          :notes_display: :show
+        :vm_name:
+          :description: LPAR Name
+          :required_method:
+          - :validate_vm_name
+          - :validate_regex
+          :required_regex: !ruby/regexp /\A(?:[A-Za-z0-9-_]+)\Z/
+          :required_regex_fail_details: "The name must be composed only of letters (A-Z or a-z), numbers (0-9) or
+            characters '-' and '_'."
+          :required: true
+          :notes:
+          :display: :edit
+          :data_type: :string
+          :notes_display: :show
+          :min_length: 1
+          :max_length: 31
+        :placement_host_name:
+          :values_from:
+            :method: :allowed_hosts
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+          :required_description: Host Name
+      :display: :show
+  :dialog_order:
+  - :service

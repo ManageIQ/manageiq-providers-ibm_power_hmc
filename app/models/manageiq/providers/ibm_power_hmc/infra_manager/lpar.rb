@@ -36,7 +36,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
   def make_template(template_name)
     $ibm_power_hmc_log.info("#{self.class}##{__method__} ems_ref #{ems_ref} template_name #{template_name}")
     ext_management_system.with_provider_connection do |connection|
-      connection.capture_lpar(ems_ref, host.ems_ref, template_name)
+      connection.capture_lpar(ems_ref, host.ems_ref, template_name).results['CapturedTemplateUuid']
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error creating template #{template_name} from LPAR #{ems_ref}: #{e}")
       raise

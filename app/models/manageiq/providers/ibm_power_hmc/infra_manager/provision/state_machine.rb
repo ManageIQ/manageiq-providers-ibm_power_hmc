@@ -14,8 +14,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::StateMachine
     update_and_notify_parent(:message => "Starting Clone of #{clone_direction}")
 
     log_clone_options(phase_context[:clone_options])
-    job = start_clone(phase_context[:clone_options])
-    phase_context[:new_vm_ems_ref] = job.results['CapturedTemplateUuid']
+    phase_context[:new_vm_ems_ref] = start_clone(phase_context[:clone_options])
     phase_context.delete(:clone_options)
 
     signal :poll_clone_complete
