@@ -133,6 +133,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
     if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
       parse_lpar_guest_devices(lpar, hardware)
+    else
+      parse_mappings(lpar, hardware) # lpar is a vios in this condition
     end
 
     parse_vm_operating_system(vm, lpar)
@@ -267,6 +269,18 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_vm_hardware(t, template)
       parse_vm_operating_system(t, template)
       parse_vm_advanced_settings(t, template)
+    end
+  end
+
+  def parse_mappings(vios, hardware)
+    collector.vscsi_mappings_with_storage_by_vios(vios).each do |mapping|
+      persister.guest_devices.build(
+        :name        => mapping.storage.name,
+        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
+        :uid_ems     => vios.uuid,
+        :device_type => mapping.storage.class.name,
+        :hardware    => hardware
+      )
     end
   end
 
