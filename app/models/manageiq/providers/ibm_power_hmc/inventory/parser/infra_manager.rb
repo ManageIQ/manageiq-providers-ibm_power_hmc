@@ -175,13 +175,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_operating_system(vm, lpar)
-    os_info = lpar.os.split
-    persister.operating_systems.build(
-      :vm_or_template => vm,
-      :product_name   => os_info[0],
-      :version        => os_info[1],
-      :build_number   => os_info[2]
-    )
+    os_info = lpar.os&.split
+    if os_info
+      persister.operating_systems.build(
+        :vm_or_template => vm,
+        :product_name   => os_info[0],
+        :version        => os_info[1],
+        :build_number   => os_info[2]
+      )
+    end
   end
 
   def parse_vm_guest_devices(lpar, hardware)
