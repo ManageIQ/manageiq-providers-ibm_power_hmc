@@ -3,11 +3,12 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     raise MiqException::MiqProvisionError, "VM capture to template failed" if phase_context[:new_vm_ems_ref].nil?
 
-    if source.template?
-      association = :vms
-    else
-      association = :miq_templates
-    end
+    association =
+      if source.template?
+        :vms
+      else
+        :miq_templates
+      end
     target = InventoryRefresh::Target.new(:manager     => source.ext_management_system,
                                           :association => association,
                                           :manager_ref => {:ems_ref => phase_context[:new_vm_ems_ref]})

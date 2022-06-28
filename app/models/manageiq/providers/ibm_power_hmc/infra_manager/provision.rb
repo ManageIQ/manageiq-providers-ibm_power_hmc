@@ -9,7 +9,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision < MiqProvision
     case request_type
     when 'template', 'clone_to_vm' then "Vm"
     when 'clone_to_template'       then "Template"
-    else                                 ""
+    else ""
     end
   end
 end
