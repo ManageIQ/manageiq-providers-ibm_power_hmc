@@ -62,6 +62,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @templates || []
   end
 
+  def vscsi_mappings_with_storage
+    @vscsi_mappings_with_storage || {}
+  end
+
   attr_accessor :ssps, :pcm_enabled
 
   def ssp_lus_by_udid
@@ -75,18 +79,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def vscsi_lun_mappings_by_uuid
     @vscsi_lun_mappings_by_uuid ||= vscsi_lun_mappings.group_by(&:lpar_uuid)
   end
-
-  # select only mappings with a storage different to nil.
-  def vscsi_mappings_with_storage
-    @vscsi_mappings_with_storage ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.exists? } }
-  end
-
+  
   def vscsi_mappings_with_storage_by_vios(vios)
-    @vscsi_mappings_with_storage_by_vios ||= vios.vscsi_mappings.select { |mapping| mapping.storage.exists? }
-  end
-
-  def vscsi_mappings_with_storage_by_uuid
-    @vscsi_mappings_with_storage_by_uuid ||= vscsi_mappings_with_storage.group_by(&:lpar_uuid)
+    # $ibm_power_hmc_log.info("#{self.class}##{__method__} - vios :  #{vios}")
+    @vscsi_mappings_with_storage[vios.name] = vios.vscsi_mappings.reject { |map| map.storage.nil? }
+    @vscsi_mappings_with_storage[vios.name].each { |mapping| $ibm_power_hmc_log.info("#{self.class}##{__method__} - vscsi_mappings_with_storage for vios #{vios.name} :  #{mapping.storage}") }
   end
 
   private
@@ -141,9 +138,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
         nil
       end.flatten.compact
 
+    @vscsi_mappings_with_storage = {}
+
     @vioses.each do |vios|
       do_netadapters_vios(connection, vios)
       do_sriov_elps_vios(connection, vios)
+      vscsi_mappings_with_storage_by_vios(vios)
     end
   end
 

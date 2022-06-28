@@ -134,6 +134,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
       parse_lpar_guest_devices(lpar, hardware)
     else
+      $ibm_power_hmc_log.info("#{self.class}##{__method__} we are in vios case #{lpar.name}")
       parse_mappings(lpar, hardware) # lpar is a vios in this condition
     end
 
@@ -273,11 +274,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_mappings(vios, hardware)
-    collector.vscsi_mappings_with_storage_by_vios(vios).each do |mapping|
+    # $ibm_power_hmc_log.info("#{self.class}##{__method__} VIOS to analyze : #{vios}")
+    collector.vscsi_mappings_with_storage[vios.name].each do |mapping|
+      $ibm_power_hmc_log.info("#{self.class}##{__method__} this mapping from vios #{vios.name} will be added : #{mapping.storage}")
       persister.guest_devices.build(
         :name        => mapping.storage.name,
         :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
-        :uid_ems     => vios.uuid,
+        :uid_ems     => vios.id,
         :device_type => mapping.storage.class.name,
         :hardware    => hardware
       )
