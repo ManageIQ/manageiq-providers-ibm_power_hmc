@@ -277,12 +277,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     # $ibm_power_hmc_log.info("#{self.class}##{__method__} VIOS to analyze : #{vios}")
     collector.vscsi_mappings_with_storage[vios.name].each do |mapping|
       $ibm_power_hmc_log.info("#{self.class}##{__method__} this mapping from vios #{vios.name} will be added : #{mapping.storage}")
+      $ibm_power_hmc_log.info("#{self.class}##{__method__} hardware for this mapping : #{hardware}")
       persister.guest_devices.build(
         :name        => mapping.storage.name,
-        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
-        :uid_ems     => vios.id,
+        :uid_ems     => vios.name + mapping.storage.udid,
         :device_type => mapping.storage.class.name,
-        :hardware    => hardware
+        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
+        :hardware    => persister.hardwares.lazy_find(hardware)
       )
     end
   end
