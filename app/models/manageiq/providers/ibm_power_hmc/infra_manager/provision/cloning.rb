@@ -23,7 +23,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   def prepare_for_clone_task
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     if source.template?
-      {:name => dest_name, :target_sys_uuid => "d47a585d-eaa8-3a54-b4dc-93346276ea37"}
+      {:name => dest_name, :target_sys_uuid => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.where(:ems_id => ems_id).first!.uid_ems }
     else
       {:name => dest_name}
     end
