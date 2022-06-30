@@ -75,7 +75,7 @@
           :description: Choose Automatically
           :required: false
           :display: :edit
-          :default: false
+          :default: true
           :data_type: :boolean
         :placement_dc_name:
           :values_from:
