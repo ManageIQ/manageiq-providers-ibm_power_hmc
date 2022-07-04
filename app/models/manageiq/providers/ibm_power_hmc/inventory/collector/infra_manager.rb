@@ -79,7 +79,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def vscsi_lun_mappings_by_uuid
     @vscsi_lun_mappings_by_uuid ||= vscsi_lun_mappings.group_by(&:lpar_uuid)
   end
-  
+ 
   def vscsi_mappings_with_storage_by_vios(vios)
     # $ibm_power_hmc_log.info("#{self.class}##{__method__} - vios :  #{vios}")
     @vscsi_mappings_with_storage[vios.name] = vios.vscsi_mappings.reject { |map| map.storage.nil? }
