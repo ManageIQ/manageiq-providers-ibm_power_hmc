@@ -280,7 +280,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       $ibm_power_hmc_log.info("#{self.class}##{__method__} hardware for this mapping : #{hardware}")
       persister.guest_devices.build(
         :name        => mapping.storage.name,
-        :uid_ems     => vios.name + '-' + mapping.device.udid,
+        :uid_ems     => "#{vios.name}-#{mapping.device.udid}",
         :location    => mapping.storage.udid,
         :device_type => mapping.storage.class.name,
         :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
