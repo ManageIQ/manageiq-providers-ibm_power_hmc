@@ -2,7 +2,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
   include Spec::Support::WorkflowHelper
 
   let(:admin)    { FactoryBot.create(:user_with_group) }
-  let(:template) { FactoryBot.create(:ibm_power_hmc_template) }
+  let(:template) { FactoryBot.create(:ibm_power_hmc_template, :ext_management_system => ems) }
   let(:ems)      { FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication) }
   let(:host)     { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "d47a585d-eaa8-3a54-b4dc-93346276ea37") }
 
@@ -13,7 +13,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
 
       @host1  = FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "12345", :power_state => "on")
       @host2  = FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "67890", :power_state => "on")
-      @src_vm = FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => ems, :ems_ref => "3F3D399B-DFF3-4977-8881-C194AA47CD3A", :host => host)
+      @src_vm = FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => ems, :ems_ref => "3F3D399B-DFF3-4977-8881-C194AA47CD3A", :host => @host1)
       stub_dialog(:get_dialogs)
       workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id)
       workflow.instance_variable_set(:@target_resource, nil)
@@ -31,18 +31,25 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
   end
 
   context '#allowed_hosts_obj_no_stubs' do
-    let(:workflow) { described_class.new({}, admin.userid) }
+    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
 
     before do
       stub_dialog(:get_dialogs)
-      workflow.instance_variable_set(:@values, :src_vm_id => template.id)
+      #workflow.instance_variable_set(:@values, :src_vm_id => template.id)
     end
 
     it 'finds all hosts with no selected network' do
+      host
+      expect(workflow.allowed_hosts).to match_array([host])
+    end
+
+    it 'finds all hosts with no selected network obj' do
+      host
       expect(workflow.allowed_hosts_obj).to match_array([host])
     end
 
     it "find_all_ems_of_type" do
+      host
       expect(workflow.find_all_ems_of_type(Host)).to match_array([host])
     end
   end
