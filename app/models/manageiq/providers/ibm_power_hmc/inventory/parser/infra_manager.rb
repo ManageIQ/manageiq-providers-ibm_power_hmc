@@ -276,15 +276,20 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_mappings(vios, hardware)
     # $ibm_power_hmc_log.info("#{self.class}##{__method__} VIOS to analyze : #{vios}")
     collector.vscsi_mappings_with_storage[vios.name].each do |mapping|
-      $ibm_power_hmc_log.info("#{self.class}##{__method__} this mapping from vios #{vios.name} will be added : #{mapping.storage}")
-      $ibm_power_hmc_log.info("#{self.class}##{__method__} hardware for this mapping : #{hardware}")
-      persister.guest_devices.build(
-        :name        => mapping.storage.name,
-        :uid_ems     => "#{vios.name}-#{mapping.device.udid}",
-        :location    => mapping.storage.udid,
-        :device_type => mapping.storage.class.name,
-        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
-        :hardware    => persister.hardwares.lazy_find(hardware)
+      guest_device = persister.guest_devices.build(
+        :uid_ems  => "#{vios.name}-#{mapping.device.udid}",
+        :hardware => persister.hardwares.lazy_find(hardware)
+      )
+      scsi_target = persister.miq_scsi_targets.build(
+        :guest_device => guest_device,
+        :uid_ems      => mapping.device.udid
+      )
+      persister.miq_scsi_luns.build(
+        :miq_scsi_target => scsi_target,
+        :uid_ems         => mapping.device.lun,
+        :capacity        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
+        :device_type     => mapping.storage.class.name,
+        :device_name     => mapping.storage.name
       )
     end
   end
