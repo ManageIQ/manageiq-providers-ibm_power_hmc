@@ -6,7 +6,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Provi
   end
 
   def get_vlan(host, vlan_name)
-    Lan.find_by(ems_ref: host.ems_ref, name: vlan_name)
+    Lan.find_by(:ems_ref => host.ems_ref, :name => vlan_name)
   end
 
   def provision_lpar(options)

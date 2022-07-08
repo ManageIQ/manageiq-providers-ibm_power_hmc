@@ -24,9 +24,9 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     if source.template?
       {
-        :name                => dest_name,
-        :host_id             => get_option(:placement_host_name),
-        :vlan                => get_option(:vlan)
+        :name    => dest_name,
+        :host_id => get_option(:placement_host_name),
+        :vlan    => get_option(:vlan)
       }
     else
       {

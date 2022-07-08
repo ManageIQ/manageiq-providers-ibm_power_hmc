@@ -35,22 +35,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
 
     before do
       stub_dialog(:get_dialogs)
-      #workflow.instance_variable_set(:@values, :src_vm_id => template.id)
     end
 
     it 'finds all hosts with no selected network' do
       host
-      expect(workflow.allowed_hosts).to match_array([host])
+      expect(workflow.allowed_hosts).to match_array([workflow.host_to_hash_struct(host)])
     end
 
     it 'finds all hosts with no selected network obj' do
       host
       expect(workflow.allowed_hosts_obj).to match_array([host])
-    end
-
-    it "find_all_ems_of_type" do
-      host
-      expect(workflow.find_all_ems_of_type(Host)).to match_array([host])
     end
   end
 end
