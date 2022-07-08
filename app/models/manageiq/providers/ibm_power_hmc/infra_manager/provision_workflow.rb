@@ -26,4 +26,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow < Manage
     rails_logger('allowed_hosts_obj', 1)
     allowed_hosts_obj_cache
   end
+
+  def allowed_hosts(_options = {})
+    allowed_hosts_obj.map do |h|
+      host_to_hash_struct(h)
+    end
+  end
 end

@@ -23,15 +23,25 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   def prepare_for_clone_task
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     if source.template?
-      {:name => dest_name, :target_sys_uuid => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.where(:ems_id => source.ems_id).first!.uid_ems}
+      {
+        :name                => dest_name,
+        :host_id             => get_option(:placement_host_name),
+        :vlan                => get_option(:vlan)
+      }
     else
-      {:name => dest_name}
+      {
+        :name => dest_name
+      }
     end
   end
 
-  def log_clone_options(_clone_options)
+  def log_clone_options(clone_options)
     if source.template?
-      $ibm_power_hmc_log.info("Deploying template [#{source.name}] to LPAR [#{dest_name}] on host [#{dest_host}]")
+      $ibm_power_hmc_log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
+      $ibm_power_hmc_log.info("Source Template:            [#{source.name}]")
+      $ibm_power_hmc_log.info("Destination VM Name:        [#{clone_options[:name]}]")
+      $ibm_power_hmc_log.info("Destination Host:           [#{clone_options[:host_id]}]")
+      $ibm_power_hmc_log.info("Destination Vlan:           [#{clone_options[:vlan]}]")
     else
       $ibm_power_hmc_log.info("Capturing LPAR [#{source.name}] to template [#{dest_name}]")
     end

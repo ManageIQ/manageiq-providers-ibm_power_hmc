@@ -48,26 +48,6 @@
     :environment:
       :description: Environment
       :fields:
-        :placement_cluster_name:
-          :values_from:
-            :method: :allowed_clusters
-          :auto_select_single: true
-          :description: Name
-          :required: true
-          :required_method: :validate_placement
-          :required_description: Cluster Name
-          :display: :show
-          :data_type: :integer
-        :cluster_filter:
-          :values_from:
-            :options:
-              :category: :EmsCluster
-            :method: :allowed_filters
-          :auto_select_single: false
-          :description: Filter
-          :required: false
-          :display: :edit
-          :data_type: :integer
         :placement_auto:
           :values:
             false: 0
@@ -77,14 +57,6 @@
           :display: :edit
           :default: true
           :data_type: :boolean
-        :placement_dc_name:
-          :values_from:
-            :method: :allowed_datacenters
-          :auto_select_single: true
-          :description: Name
-          :required: false
-          :display: :show
-          :data_type: :integer
         :placement_host_name:
           :values_from:
             :method: :allowed_hosts
@@ -94,16 +66,29 @@
           :display: :edit
           :data_type: :integer
           :required_description: Host Name
-        :placement_ds_name:
+      :display: :show
+    :network:
+      :description: Network
+      :fields:
+        :vlan:
           :values_from:
-            :method: :allowed_storages
-          :auto_select_single: false
-          :description: Name
-          :required: false
+            :options:
+              :dvs: true
+              :vlans: true
+            :method: :allowed_vlans
+          :description: Network
+          :required_description: Virtual NIC Profile ID or Profile Name (Network Name)
+          :required: true
           :display: :edit
-          :data_type: :integer
-          :required_description: Datastore Name
+          :default: <Template>
+          :data_type: :string
+        :mac_address:
+          :description: MAC Address
+          :required: false
+          :display: :hide
+          :data_type: :string
       :display: :show
   :dialog_order:
   - :service
   - :environment
+  - :network
