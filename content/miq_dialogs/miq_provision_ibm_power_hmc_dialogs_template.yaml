@@ -54,15 +54,15 @@
             true: 1
           :description: Choose Automatically
           :required: false
-          :display: :edit
-          :default: true
+          :display: :hide
+          :default: false
           :data_type: :boolean
         :placement_host_name:
           :values_from:
             :method: :allowed_hosts
           :auto_select_single: false
           :description: Name
-          :required: false
+          :required: true
           :display: :edit
           :data_type: :integer
           :required_description: Host Name
@@ -80,7 +80,6 @@
           :required_description: Virtual NIC Profile ID or Profile Name (Network Name)
           :required: true
           :display: :edit
-          :default: <Template>
           :data_type: :string
         :mac_address:
           :description: MAC Address
