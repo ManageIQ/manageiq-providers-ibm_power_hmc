@@ -14,9 +14,9 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   def find_destination_in_vmdb(ems_ref)
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     if source.template?
-      source.ext_management_system.vms.find(source.id)
+      source.ext_management_system.vms.find_by(:ems_ref => ems_ref)
     else
-      source.ext_management_system.miq_templates.find(source.id)
+      source.ext_management_system.miq_templates.find_by(:ems_ref => ems_ref)
     end
   end
 
