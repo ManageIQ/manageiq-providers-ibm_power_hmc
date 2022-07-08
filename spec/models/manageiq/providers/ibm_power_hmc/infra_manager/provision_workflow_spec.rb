@@ -4,7 +4,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
   let(:admin)    { FactoryBot.create(:user_with_group) }
   let(:template) { FactoryBot.create(:ibm_power_hmc_template, :ext_management_system => ems) }
   let(:ems)      { FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication) }
-  let(:host)     { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "d47a585d-eaa8-3a54-b4dc-93346276ea37") }
 
   context '#allowed_hosts_obj' do
     let(:workflow) { described_class.new({}, admin.userid) }
@@ -32,18 +31,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
 
   context '#allowed_hosts_obj_no_stubs' do
     let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
+    let!(:host)    { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "d47a585d-eaa8-3a54-b4dc-93346276ea37") }
 
     before do
       stub_dialog(:get_dialogs)
     end
 
     it 'finds all hosts with no selected network' do
-      host
       expect(workflow.allowed_hosts).to match_array([workflow.host_to_hash_struct(host)])
     end
 
     it 'finds all hosts with no selected network obj' do
-      host
       expect(workflow.allowed_hosts_obj).to match_array([host])
     end
   end
