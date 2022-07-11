@@ -4,45 +4,36 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
   let(:admin)    { FactoryBot.create(:user_with_group) }
   let(:template) { FactoryBot.create(:ibm_power_hmc_template, :ext_management_system => ems) }
   let(:ems)      { FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication) }
+  let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
+  let(:switch1)  { FactoryBot.create(:switch, :name => "A") }
+  let(:switch2)  { FactoryBot.create(:switch, :name => "B") }
+  let!(:host1)   { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST1", :switches => [switch1]) }
+  let!(:host2)   { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST2", :switches => [switch2]) }
+  let!(:vlan1)   { FactoryBot.create(:lan, :name => "lan_A", :switch_id => switch1.id, :ems_ref => host1.ems_ref) }
+  let!(:vlan2)   { FactoryBot.create(:lan, :name => "lan_B", :switch_id => switch2.id, :ems_ref => host2.ems_ref) }
 
-  context '#allowed_hosts_obj' do
-    let(:workflow) { described_class.new({}, admin.userid) }
-    before do
-      EvmSpecHelper.local_miq_server
+  before do
+    stub_dialog(:get_dialogs)
+  end
 
-      @host1  = FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "12345", :power_state => "on")
-      @host2  = FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "67890", :power_state => "on")
-      @src_vm = FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => ems, :ems_ref => "3F3D399B-DFF3-4977-8881-C194AA47CD3A", :host => @host1)
-      stub_dialog(:get_dialogs)
-      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id)
-      workflow.instance_variable_set(:@target_resource, nil)
-
-      allow(workflow).to receive(:find_all_ems_of_type).and_return([@host1, @host2])
-      allow(Rbac).to receive(:search) do |hash|
-        [Array.wrap(hash[:targets])]
-      end
+  context '#allowed_hosts' do
+    it 'finds all hosts with allowed_hosts and no selected network' do
+      expect(workflow.allowed_hosts).to match_array([host1, host2].map { |h| workflow.host_to_hash_struct(h) })
     end
 
     it 'finds all hosts with no selected network' do
-      workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id)
-      expect(workflow.allowed_hosts_obj).to match_array([@host1, @host2])
+      expect(workflow.allowed_hosts_obj).to match_array([host1, host2])
     end
   end
 
-  context '#allowed_hosts_obj_no_stubs' do
-    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
-    let!(:host)    { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "d47a585d-eaa8-3a54-b4dc-93346276ea37") }
-
-    before do
-      stub_dialog(:get_dialogs)
+  context "#allowed_vlans" do
+    it 'finds all vlans with no selected host' do
+      expect(workflow.allowed_vlans).to match_array([[vlan1.name, vlan1.name], [vlan2.name, vlan2.name]])
     end
 
-    it 'finds all hosts with no selected network' do
-      expect(workflow.allowed_hosts).to match_array([workflow.host_to_hash_struct(host)])
-    end
-
-    it 'finds all hosts with no selected network obj' do
-      expect(workflow.allowed_hosts_obj).to match_array([host])
+    it 'finds all vlans with a selected host' do
+      allow(workflow).to receive(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(host1)])
+      expect(workflow.allowed_vlans).to match_array([[vlan1.name, vlan1.name]])
     end
   end
 end
