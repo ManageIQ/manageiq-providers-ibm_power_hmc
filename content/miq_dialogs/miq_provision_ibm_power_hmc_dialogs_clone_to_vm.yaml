@@ -1,6 +1,6 @@
 ---
-:name: miq_provision_ibm_power_hmc_dialogs_template
-:description: IBM Power HMC Provisioning Dialog
+:name: miq_provision_ibm_power_hmc_dialogs_clone_to_vm
+:description: IBM Power HMC Logical Partition Clone to VM Dialog
 :dialog_type: MiqProvisionWorkflow
 :content:
   :buttons:
@@ -44,50 +44,15 @@
           :notes_display: :show
           :min_length: 1
           :max_length: 31
-      :display: :show
-    :environment:
-      :description: Environment
-      :fields:
-        :placement_auto:
-          :values:
-            false: 0
-            true: 1
-          :description: Choose Automatically
-          :required: false
-          :display: :hide
-          :default: false
-          :data_type: :boolean
         :placement_host_name:
           :values_from:
             :method: :allowed_hosts
           :auto_select_single: false
           :description: Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :integer
           :required_description: Host Name
       :display: :show
-    :network:
-      :description: Network
-      :fields:
-        :vlan:
-          :values_from:
-            :options:
-              :dvs: true
-              :vlans: true
-            :method: :allowed_vlans
-          :description: Network
-          :required_description: Virtual NIC Profile ID or Profile Name (Network Name)
-          :required: true
-          :display: :edit
-          :data_type: :string
-        :mac_address:
-          :description: MAC Address
-          :required: false
-          :display: :hide
-          :data_type: :string
-      :display: :show
   :dialog_order:
   - :service
-  - :environment
-  - :network
