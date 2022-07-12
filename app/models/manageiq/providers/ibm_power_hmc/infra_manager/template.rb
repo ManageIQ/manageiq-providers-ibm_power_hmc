@@ -20,4 +20,14 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Provi
       raise
     end
   end
+
+  def make_clone(options)
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} template_name #{name} copy name #{options[:name]}")
+    ext_management_system.with_provider_connection do |connection|
+      connection.template_copy(ems_ref, options[:name]).uuid
+    rescue IbmPowerHmc::Connection::HttpError, IbmPowerHmc::HmcJob::JobFailed => e
+      $ibm_power_hmc_log.error("error copying template #{options[:name]} to #{name}: #{e}")
+      raise
+    end
+  end
 end

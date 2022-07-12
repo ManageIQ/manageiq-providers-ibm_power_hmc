@@ -7,8 +7,14 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision < MiqProvision
 
   def destination_type
     case request_type
-    when 'template', 'clone_to_vm' then "Vm"
-    when 'clone_to_template'       then "Template"
+    when 'template'          then "Vm"
+    when 'clone_to_template' then "Template"
+    when 'clone_to_vm'
+      if source.template?
+        "Template"
+      else
+        "Vm"
+      end
     else ""
     end
   end
