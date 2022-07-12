@@ -20,8 +20,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   supports :provisioning
 
   has_many :hosts_advanced_settings, :through => :hosts, :source => :advanced_settings
-  has_many :miq_scsi_targets, -> { distinct }, :through => :guest_devices
-  has_many :miq_scsi_luns, -> { distinct }, :through => :miq_scsi_targets
 
   def self.params_for_create
     {
