@@ -207,7 +207,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.vnic_dedicated_uuids.map do |uuid|
       build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
-    parse_vm_disks(lpar, hardware)
+    # parse_vm_disks(lpar, hardware)
   end
 
   def parse_vm_advanced_settings(vm, lpar)
@@ -276,9 +276,20 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_mappings(vios, hardware)
     # $ibm_power_hmc_log.info("#{self.class}##{__method__} VIOS to analyze : #{vios}")
     collector.vscsi_mappings_with_storage[vios.name].each do |mapping|
+      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
+
+      persister.disks.build(
+        :device_type => mapping.storage.class.name,
+        :hardware    => hardware,
+        :storage     => persister.storages.lazy_find(found_ssp_uuid),
+        :device_name => mapping.storage.name,
+        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
+      )
       guest_device = persister.guest_devices.build(
-        :uid_ems  => "#{vios.name}-#{mapping.device.udid}",
-        :hardware => persister.hardwares.lazy_find(hardware)
+        :uid_ems     => "#{vios.name}-#{mapping.device.udid}",
+        :hardware    => persister.hardwares.lazy_find(hardware),
+        :filename    => mapping.storage.udid,
+        :device_type => "VSCSI_Mappings"
       )
       scsi_target = persister.miq_scsi_targets.build(
         :guest_device => guest_device,
