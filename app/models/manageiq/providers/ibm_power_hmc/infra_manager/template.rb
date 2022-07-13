@@ -1,5 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Providers::InfraManager::Template
   supports :provisioning
+  supports :clone
 
   def provision_lpar(options)
     $ibm_power_hmc_log.info("#{self.class}##{__method__} template_name #{name} lpar name #{options[:name]}")
