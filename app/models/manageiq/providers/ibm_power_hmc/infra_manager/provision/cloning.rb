@@ -1,11 +1,10 @@
 module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   def log_clone_options(clone_options)
-    send "#{request_type}_log_clone_options", clone_options
+    send("#{request_type}_log_clone_options", clone_options)
   end
 
   def start_clone(clone_options)
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    send "#{request_type}_start_clone", clone_options
+    send("#{request_type}_start_clone", clone_options)
   end
 
   def clone_complete?
@@ -58,7 +57,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   end
 
   def clone_to_vm_log_clone_options(clone_options)
-    $ibm_power_hmc_log.info("Cloning #{destination_type} [#{source.name}] to [#{dest_name}]")
+    $ibm_power_hmc_log.info("Cloning #{destination_type} [#{source.name}] to [#{clone_options[:name]}]")
   end
 
   def clone_to_vm_start_clone(clone_options)
@@ -67,7 +66,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   end
 
   def clone_to_template_log_clone_options(clone_options)
-    $ibm_power_hmc_log.info("Capturing LPAR [#{source.name}] to template [#{dest_name}]")
+    $ibm_power_hmc_log.info("Capturing LPAR [#{source.name}] to template [#{clone_options[:name]}]")
   end
 
   def clone_to_template_start_clone(clone_options)
