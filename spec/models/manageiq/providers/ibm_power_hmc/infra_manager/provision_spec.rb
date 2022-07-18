@@ -10,16 +10,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
       FactoryBot.create(:miq_provision_request, :requester => admin, :src_vm_id => template.id)
     end
     let(:prov) do
-        FactoryBot.create(
-          :ibm_power_hmc_miq_provision,
-          :userid       => admin.userid,
-          :miq_request  => pr,
-          :source       => template,
-          :request_type => 'template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => {:src_vm_id => [template.id, template.name]}
-        )
+      FactoryBot.create(
+        :ibm_power_hmc_miq_provision,
+        :userid       => admin.userid,
+        :miq_request  => pr,
+        :source       => template,
+        :request_type => 'template',
+        :state        => 'pending',
+        :status       => 'Ok',
+        :options      => {:src_vm_id => [template.id, template.name]}
+      )
     end
 
     it "destination_type" do
@@ -35,16 +35,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
       FactoryBot.create(:miq_provision_request, :requester => admin, :src_vm_id => vm.id)
     end
     let(:prov) do
-        FactoryBot.create(
-          :ibm_power_hmc_miq_provision,
-          :userid       => admin.userid,
-          :miq_request  => pr,
-          :source       => vm,
-          :request_type => 'clone_to_template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => {:src_vm_id => [vm.id, vm.name]}
-        )
+      FactoryBot.create(
+        :ibm_power_hmc_miq_provision,
+        :userid       => admin.userid,
+        :miq_request  => pr,
+        :source       => vm,
+        :request_type => 'clone_to_template',
+        :state        => 'pending',
+        :status       => 'Ok',
+        :options      => {:src_vm_id => [vm.id, vm.name]}
+      )
     end
 
     it "destination_type" do
@@ -60,16 +60,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
       FactoryBot.create(:miq_provision_request, :requester => admin, :src_vm_id => template.id)
     end
     let(:prov) do
-        FactoryBot.create(
-          :ibm_power_hmc_miq_provision,
-          :userid       => admin.userid,
-          :miq_request  => pr,
-          :source       => template,
-          :request_type => 'clone_to_vm',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => {:src_vm_id => [template.id, template.name]}
-        )
+      FactoryBot.create(
+        :ibm_power_hmc_miq_provision,
+        :userid       => admin.userid,
+        :miq_request  => pr,
+        :source       => template,
+        :request_type => 'clone_to_vm',
+        :state        => 'pending',
+        :status       => 'Ok',
+        :options      => {:src_vm_id => [template.id, template.name]}
+      )
     end
 
     it "destination_type" do
