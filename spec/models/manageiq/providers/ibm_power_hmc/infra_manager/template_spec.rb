@@ -4,7 +4,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Template do
       expect(described_class.supports?(:clone)).to be true
     end
     it "supports provisioning" do
-      expect(described_class.supports?(:clone)).to be true
+      expect(described_class.supports?(:provisioning)).to be true
     end
   end
 end
