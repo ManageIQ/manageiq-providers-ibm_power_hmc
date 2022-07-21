@@ -273,7 +273,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_mappings(vios, hardware)
-    # $ibm_power_hmc_log.info("#{self.class}##{__method__} VIOS to analyze : #{vios}")
+    parse_vscsi_mappings(vios, hardware)
+    parse_vfc_mappings(vios)
+  end
+
+  def parse_vscsi_mappings(vios, hardware)
     vios.vscsi_mappings.each do |mapping|
       if mapping.client
         guest_device = persister.guest_devices.build(
@@ -281,9 +285,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
           :uid_ems         => mapping.client.location,
           :ems_ref         => mapping.client.location,
           :device_type     => "storage",
-          :controller_type => "client vscsi storage adapter", # : "client vfc storage adapter"
+          :controller_type => "client vscsi storage adapter",
           :auto_detect     => true,
-          #:address         => mapping.client.respond_to?(:wwpns) ? mapping.client.wwpns.join(",") : nil,
           :location        => mapping.client.location,
           :filename        => mapping.server.location
         )
@@ -310,6 +313,25 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
             :uid_ems         => mapping.storage.udid,
           )
         end
+      end
+    end
+  end
+
+  def parse_vfc_mappings(vios)
+    vios.vfc_mappings.each do |mapping|
+      if mapping.client
+        persister.guest_devices.build(
+          :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
+          :uid_ems         => mapping.client.location,
+          :ems_ref         => mapping.client.location,
+          :device_type     => "storage",
+          :controller_type => "client vfc storage adapter",
+          :auto_detect     => true,
+          :address         => mapping.client.respond_to?(:wwpns) ? mapping.client.wwpns.join(",") : nil,
+          :location        => mapping.client.location,
+          :filename        => mapping.server.location,
+          :address         => mapping&.port&.name
+        )
       end
     end
   end
