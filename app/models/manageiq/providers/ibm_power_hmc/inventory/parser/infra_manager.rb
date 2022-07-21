@@ -274,28 +274,28 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :location        => mapping.client.location,
         :filename        => mapping.server.location
       )
-      if mapping.storage
-        persister.disks.build(
-          :device_type => mapping.storage.class.name,
-          :hardware    => hardware,
-          :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
-          :device_name => mapping.storage.name,
-          :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
-        )
-        scsi_target = persister.miq_scsi_targets.build(
-          :guest_device => guest_device,
-          :iscsi_name   => mapping.device.target,
-          :uid_ems      => mapping.device.udid
-        )
-        persister.miq_scsi_luns.build(
-          :miq_scsi_target => scsi_target,
-          :canonical_name  => mapping.device.lun,
-          :device_name     => mapping.storage.name,
-          :device_type     => mapping.storage.class.name,
-          :capacity        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
-          :uid_ems         => mapping.storage.udid,
-        )
-      end
+      next if mapping.storage.nil?
+
+      persister.disks.build(
+        :device_type => mapping.storage.class.name,
+        :hardware    => hardware,
+        :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
+        :device_name => mapping.storage.name,
+        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
+      )
+      scsi_target = persister.miq_scsi_targets.build(
+        :guest_device => guest_device,
+        :iscsi_name   => mapping.device.target,
+        :uid_ems      => mapping.device.udid
+      )
+      persister.miq_scsi_luns.build(
+        :miq_scsi_target => scsi_target,
+        :canonical_name  => mapping.device.lun,
+        :device_name     => mapping.storage.name,
+        :device_type     => mapping.storage.class.name,
+        :capacity        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
+        :uid_ems         => mapping.storage.udid
+      )
     end
   end
 
