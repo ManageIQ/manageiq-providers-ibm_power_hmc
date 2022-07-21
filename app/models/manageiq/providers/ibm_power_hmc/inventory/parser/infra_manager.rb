@@ -278,61 +278,57 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vscsi_mappings(vios, hardware)
-    vios.vscsi_mappings.each do |mapping|
-      if mapping.client
-        guest_device = persister.guest_devices.build(
-          :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
-          :uid_ems         => mapping.client.location,
-          :ems_ref         => mapping.client.location,
-          :device_type     => "storage",
-          :controller_type => "client vscsi storage adapter",
-          :auto_detect     => true,
-          :location        => mapping.client.location,
-          :filename        => mapping.server.location
+    vios.vscsi_mappings.select(&:client).each do |mapping|
+      guest_device = persister.guest_devices.build(
+        :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
+        :uid_ems         => mapping.client.location,
+        :ems_ref         => mapping.client.location,
+        :device_type     => "storage",
+        :controller_type => "client vscsi storage adapter",
+        :auto_detect     => true,
+        :location        => mapping.client.location,
+        :filename        => mapping.server.location
+      )
+      if mapping.storage
+        found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
+        persister.disks.build(
+          :device_type => mapping.storage.class.name,
+          :hardware    => hardware,
+          :storage     => persister.storages.lazy_find(found_ssp_uuid),
+          :device_name => mapping.storage.name,
+          :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
         )
-        if mapping.storage
-          found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
-          persister.disks.build(
-            :device_type => mapping.storage.class.name,
-            :hardware    => hardware,
-            :storage     => persister.storages.lazy_find(found_ssp_uuid),
-            :device_name => mapping.storage.name,
-            :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
-          )
-          scsi_target = persister.miq_scsi_targets.build(
-            :guest_device => guest_device,
-            :iscsi_name   => mapping.device.target,
-            :uid_ems      => mapping.device.udid
-          )
-          persister.miq_scsi_luns.build(
-            :miq_scsi_target => scsi_target,
-            :canonical_name  => mapping.device.lun,
-            :device_name     => mapping.storage.name,
-            :device_type     => mapping.storage.class.name,
-            :capacity        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
-            :uid_ems         => mapping.storage.udid,
-          )
-        end
+        scsi_target = persister.miq_scsi_targets.build(
+          :guest_device => guest_device,
+          :iscsi_name   => mapping.device.target,
+          :uid_ems      => mapping.device.udid
+        )
+        persister.miq_scsi_luns.build(
+          :miq_scsi_target => scsi_target,
+          :canonical_name  => mapping.device.lun,
+          :device_name     => mapping.storage.name,
+          :device_type     => mapping.storage.class.name,
+          :capacity        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
+          :uid_ems         => mapping.storage.udid,
+        )
       end
     end
   end
 
   def parse_vfc_mappings(vios)
-    vios.vfc_mappings.each do |mapping|
-      if mapping.client
-        persister.guest_devices.build(
-          :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
-          :uid_ems         => mapping.client.location,
-          :ems_ref         => mapping.client.location,
-          :device_type     => "storage",
-          :controller_type => "client vfc storage adapter",
-          :auto_detect     => true,
-          :address         => mapping.client.respond_to?(:wwpns) ? mapping.client.wwpns.join(",") : nil,
-          :location        => mapping.client.location,
-          :filename        => mapping.server.location,
-          :address         => mapping&.port&.name
-        )
-      end
+    vios.vfc_mappings.select(&:client).each do |mapping|
+      persister.guest_devices.build(
+        :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
+        :uid_ems         => mapping.client.location,
+        :ems_ref         => mapping.client.location,
+        :device_type     => "storage",
+        :controller_type => "client vfc storage adapter",
+        :auto_detect     => true,
+        :address         => mapping.client.respond_to?(:wwpns) ? mapping.client.wwpns.join(",") : nil,
+        :location        => mapping.client.location,
+        :filename        => mapping.server.location,
+        :model           => mapping&.port&.name
+      )
     end
   end
 
