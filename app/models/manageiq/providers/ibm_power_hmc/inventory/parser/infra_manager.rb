@@ -44,20 +44,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def parse_vm_disks(lpar, hardware)
-    collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
-      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
-
-      persister.disks.build(
-        :device_type => "disk",
-        :hardware    => hardware,
-        :storage     => persister.storages.lazy_find(found_ssp_uuid),
-        :device_name => mapping.storage.name,
-        :size        => mapping.storage.capacity.to_f.gigabytes.round
-      )
-    end
-  end
-
   def parse_host_operating_system(host, sys)
     persister.host_operating_systems.build(
       :host         => host,
@@ -206,7 +192,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.vnic_dedicated_uuids.map do |uuid|
       build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
-    # parse_vm_disks(lpar, hardware)
   end
 
   def parse_vm_advanced_settings(vm, lpar)
@@ -290,11 +275,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :filename        => mapping.server.location
       )
       if mapping.storage
-        found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
         persister.disks.build(
           :device_type => mapping.storage.class.name,
           :hardware    => hardware,
-          :storage     => persister.storages.lazy_find(found_ssp_uuid),
+          :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
           :device_name => mapping.storage.name,
           :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
         )
