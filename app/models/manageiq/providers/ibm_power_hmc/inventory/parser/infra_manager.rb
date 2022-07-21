@@ -49,11 +49,38 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
 
       persister.disks.build(
-        :device_type => "disk",
+        :device_type => "logical_unit",
         :hardware    => hardware,
         :storage     => persister.storages.lazy_find(found_ssp_uuid),
         :device_name => mapping.storage.name,
         :size        => mapping.storage.capacity.to_f.gigabytes.round
+      )
+    end
+
+    collector.vscsi_pvs_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
+      persister.disks.build(
+        :device_type => "physical_volume",
+        :hardware    => hardware,
+        :device_name => mapping.storage.name,
+        :size        => mapping.storage.capacity.to_f.gigabytes.round
+      )
+    end
+
+    collector.vscsi_virtual_optical_medias_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
+      persister.disks.build(
+        :device_type => "virtual_optical_media",
+        :hardware    => hardware,
+        :size        => mapping.storage.size.to_f.gigabytes.round,
+        :device_name => mapping.storage.name
+      )
+    end
+
+    collector.vscsi_virtual_disk_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
+      persister.disks.build(
+        :device_type => "virtual_disk",
+        :hardware    => hardware,
+        :size        => mapping.storage.capacity.to_f.gigabytes.round,
+        :device_name => mapping.storage.name
       )
     end
   end

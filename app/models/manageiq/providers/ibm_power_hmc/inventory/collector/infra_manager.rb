@@ -64,6 +64,30 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_accessor :ssps, :pcm_enabled
 
+  def vscsi_virtual_disk_mappings
+    @vscsi_virtual_disk_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::VirtualDisk) } }
+  end
+
+  def vscsi_virtual_disk_mappings_by_uuid
+    @vscsi_virtual_disk_mappings_by_uuid ||= vscsi_virtual_disk_mappings.group_by(&:lpar_uuid)
+  end
+
+  def vscsi_virtual_optical_medias_mappings
+    @vscsi_virtual_optical_medias_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) } }
+  end
+
+  def vscsi_virtual_optical_medias_mappings_by_uuid
+    @vscsi_virtual_optical_medias_mappings_by_uuid ||= vscsi_virtual_optical_medias_mappings.group_by(&:lpar_uuid)
+  end
+
+  def vscsi_pvs_mappings
+    @vscsi_pvs_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::PhysicalVolume) } }
+  end
+
+  def vscsi_pvs_mappings_by_uuid
+    @vscsi_pvs_mappings_by_uuid ||= vscsi_pvs_mappings.group_by(&:lpar_uuid)
+  end
+
   def ssp_lus_by_udid
     @ssp_lus_by_udid ||= ssps.flat_map { |ssp| ssp.lus.map { |lu| [lu.udid, ssp.cluster_uuid] } }.to_h
   end
