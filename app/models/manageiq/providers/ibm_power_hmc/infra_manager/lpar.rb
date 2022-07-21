@@ -1,5 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
   supports :rename
+  supports :publish
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
@@ -33,12 +34,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     end
   end
 
-  def make_template(template_name)
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} ems_ref #{ems_ref} template_name #{template_name}")
+  def make_template(options)
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} ems_ref #{ems_ref} template_name #{options[:name]}")
     ext_management_system.with_provider_connection do |connection|
-      connection.capture_lpar(ems_ref, host.ems_ref, template_name).results['CapturedTemplateUuid']
+      connection.capture_lpar(ems_ref, host.ems_ref, options[:name]).results['CapturedTemplateUuid']
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error creating template #{template_name} from LPAR #{ems_ref}: #{e}")
+      $ibm_power_hmc_log.error("error creating template #{options[:name]} from LPAR #{ems_ref}: #{e}")
       raise
     end
   end

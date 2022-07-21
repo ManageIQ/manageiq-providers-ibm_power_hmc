@@ -16,6 +16,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios do
   end
 
   context "vios" do
+    it "supports clone" do
+      expect(described_class.supports?(:clone)).to be false
+    end
+    it "supports publish" do
+      expect(described_class.supports?(:publish)).to be false
+    end
+    it "supports migrate" do
+      expect(described_class.supports?(:migrate)).to be false
+    end
+  end
+
+  context "performance" do
     let(:filename) { "test_data/metrics_host.json" }
     it "process_samples" do
       allow(vios).to receive(:collect_samples).and_return(samples)
