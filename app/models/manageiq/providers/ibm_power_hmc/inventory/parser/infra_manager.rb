@@ -44,20 +44,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def parse_vm_disks(lpar, hardware)
-    collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
-      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
-
-      persister.disks.build(
-        :device_type => "disk",
-        :hardware    => hardware,
-        :storage     => persister.storages.lazy_find(found_ssp_uuid),
-        :device_name => mapping.storage.name,
-        :size        => mapping.storage.capacity.to_f.gigabytes.round
-      )
-    end
-  end
-
   def parse_host_operating_system(host, sys)
     persister.host_operating_systems.build(
       :host         => host,
@@ -111,7 +97,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_vioses
     collector.vioses.each do |vios|
       parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
-      # Add VIOS specific parsing code here.
+      parse_storage_mappings(vios)
     end
   end
 
@@ -204,7 +190,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.vnic_dedicated_uuids.map do |uuid|
       build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
-    parse_vm_disks(lpar, hardware)
   end
 
   def parse_vm_advanced_settings(vm, lpar)
@@ -267,6 +252,78 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_vm_hardware(t, template)
       parse_vm_operating_system(t, template)
       parse_vm_advanced_settings(t, template)
+    end
+  end
+
+  def parse_storage_mappings(vios)
+    parse_vscsi_mappings(vios)
+    parse_vfc_mappings(vios)
+  end
+
+  def storage_size(storage)
+    case storage
+    when IbmPowerHmc::VirtualOpticalMedia
+      storage.size.to_f.gigabytes.to_i
+    when IbmPowerHmc::LogicalUnit
+      storage.capacity.to_f.gigabytes.to_i
+    else
+      storage.capacity.to_i.megabytes
+    end
+  end
+
+  def parse_vscsi_mappings(vios)
+    vios.vscsi_mappings.select(&:client).each do |mapping|
+      vm_hardware = persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true})
+      guest_device = persister.guest_devices.build(
+        :hardware        => vm_hardware,
+        :uid_ems         => mapping.client.location,
+        :ems_ref         => mapping.client.location,
+        :device_type     => "storage",
+        :controller_type => "client vscsi storage adapter",
+        :auto_detect     => true,
+        :location        => mapping.client.location,
+        :filename        => mapping.server.location
+      )
+      next if mapping.storage.nil?
+
+      size = storage_size(mapping.storage)
+      persister.disks.build(
+        :device_type => mapping.storage.class.name,
+        :hardware    => vm_hardware,
+        :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
+        :device_name => mapping.storage.name,
+        :size        => size
+      )
+      scsi_target = persister.miq_scsi_targets.build(
+        :guest_device => guest_device,
+        :iscsi_name   => mapping.device.target,
+        :uid_ems      => mapping.device.udid
+      )
+      persister.miq_scsi_luns.build(
+        :miq_scsi_target => scsi_target,
+        :canonical_name  => mapping.device.lun,
+        :device_name     => mapping.storage.name,
+        :device_type     => mapping.storage.class.name,
+        :capacity        => size,
+        :uid_ems         => mapping.storage.udid
+      )
+    end
+  end
+
+  def parse_vfc_mappings(vios)
+    vios.vfc_mappings.select(&:client).each do |mapping|
+      persister.guest_devices.build(
+        :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
+        :uid_ems         => mapping.client.location,
+        :ems_ref         => mapping.client.location,
+        :device_type     => "storage",
+        :controller_type => "client vfc storage adapter",
+        :auto_detect     => true,
+        :address         => mapping.client.respond_to?(:wwpns) ? mapping.client.wwpns.join(",") : nil,
+        :location        => mapping.client.location,
+        :filename        => mapping.server.location,
+        :model           => mapping&.port&.name
+      )
     end
   end
 
