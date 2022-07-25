@@ -260,6 +260,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     parse_vfc_mappings(vios)
   end
 
+  def storage_size(storage)
+    case storage
+    when IbmPowerHmc::VirtualOpticalMedia
+      storage.size.to_f.gigabytes.to_i
+    when IbmPowerHmc::LogicalUnit
+      storage.capacity.to_f.gigabytes.to_i
+    else
+      storage.capacity.to_i.megabytes
+    end
+  end
+
   def parse_vscsi_mappings(vios)
     vios.vscsi_mappings.select(&:client).each do |mapping|
       vm_hardware = persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true})
@@ -275,12 +286,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       )
       next if mapping.storage.nil?
 
+      size = storage_size(mapping.storage)
       persister.disks.build(
         :device_type => mapping.storage.class.name,
         :hardware    => vm_hardware,
         :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
         :device_name => mapping.storage.name,
-        :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
+        :size        => size
       )
       scsi_target = persister.miq_scsi_targets.build(
         :guest_device => guest_device,
@@ -292,7 +304,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :canonical_name  => mapping.device.lun,
         :device_name     => mapping.storage.name,
         :device_type     => mapping.storage.class.name,
-        :capacity        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity,
+        :capacity        => size,
         :uid_ems         => mapping.storage.udid
       )
     end
