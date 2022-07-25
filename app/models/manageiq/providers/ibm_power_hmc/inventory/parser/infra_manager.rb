@@ -120,7 +120,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
       parse_lpar_guest_devices(lpar, hardware)
     else
-      parse_mappings(lpar, hardware) # lpar is a vios in this condition
+      parse_storage_mappings(lpar, hardware) # lpar is a vios in this condition
     end
 
     parse_vm_operating_system(vm, lpar)
@@ -257,15 +257,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def parse_mappings(vios, hardware)
+  def parse_storage_mappings(vios, hardware)
     parse_vscsi_mappings(vios, hardware)
     parse_vfc_mappings(vios)
   end
 
   def parse_vscsi_mappings(vios, hardware)
     vios.vscsi_mappings.select(&:client).each do |mapping|
+      vm_hardware = persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true})
       guest_device = persister.guest_devices.build(
-        :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
+        :hardware        => vm_hardware,
         :uid_ems         => mapping.client.location,
         :ems_ref         => mapping.client.location,
         :device_type     => "storage",
@@ -278,7 +279,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
       persister.disks.build(
         :device_type => mapping.storage.class.name,
-        :hardware    => hardware,
+        :hardware    => vm_hardware,
         :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
         :device_name => mapping.storage.name,
         :size        => mapping.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? mapping.storage.size : mapping.storage.capacity
