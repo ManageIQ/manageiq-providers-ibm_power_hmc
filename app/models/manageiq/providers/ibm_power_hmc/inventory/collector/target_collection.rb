@@ -111,6 +111,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @vnics || {}
   end
 
+  def guest_devices
+    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
+    references(:guest_devices).map do |ems_ref|
+      $ibm_power_hmc_log.info("#{self.class}##{__method__} REF #{ems_ref}")
+    end
+  end
+
   private
 
   def parse_targets!
@@ -130,6 +137,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target!(:miq_templates, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage
         add_target!(:storages, target.ems_ref)
+      when GuestDevice
+        add_target!(:guest_devices, {:uid_ems => target.uid_ems, :hardware => target.hardware})
       else
         $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
       end

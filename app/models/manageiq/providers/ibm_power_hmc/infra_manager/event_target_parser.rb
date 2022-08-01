@@ -39,6 +39,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
+        if elems[:type].eql?("VirtualIOServer") && /Virtual.+Mapping/ =~ raw_event[:detail]
+          ems_event.ext_management_system.guest_devices.where(ems_ref: elems[:uuid]).pluck(:uid_ems, :hardware_id).each do |loc_code, hardware_id|
+            new_targets << {:assoc => :guest_devices, :uid_ems => loc_code, :hardware => hardware_id}
+          end
+        end
         new_targets << {:assoc => :vms, :ems_ref => elems[:uuid]}
       when "VirtualSwitch", "VirtualNetwork"
         if elems.key?(:manager_uuid)
@@ -51,10 +56,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       end
 
       new_targets.each do |t|
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{t[:ems_ref]}")
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{t[:ems_ref]} #{t[:uid_ems]} #{t[:hardware]}")
         target_collection.add_target(
           :association => t[:assoc],
-          :manager_ref => {:ems_ref => t[:ems_ref]}
+          :manager_ref => {:ems_ref => t[:ems_ref], :uid_ems => t[:uid_ems], :hardware => t[:hardware]}.compact
         )
       end
       target_collection
