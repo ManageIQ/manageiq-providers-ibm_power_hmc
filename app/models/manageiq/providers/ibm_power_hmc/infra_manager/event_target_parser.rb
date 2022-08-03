@@ -40,7 +40,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
         if elems[:type].eql?("VirtualIOServer") && /Virtual.+Mapping/ =~ raw_event[:detail]
-          ems_event.ext_management_system.guest_devices.where(ems_ref: elems[:uuid]).pluck(:uid_ems, :hardware_id).each do |loc_code, hardware_id|
+          controller_type = "client #{/SCSI/ =~ raw_event[:detail] ? "scsi" : "vfc"} storage adapter"
+          ems_event.ext_management_system.guest_devices.where(ems_ref: elems[:uuid], controller_type: controller_type).pluck(:uid_ems, :hardware_id).each do |loc_code, hardware_id|
             new_targets << {:assoc => :guest_devices, :uid_ems => loc_code, :hardware => hardware_id}
           end
         end
