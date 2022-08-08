@@ -76,12 +76,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @vscsi_lun_mappings_by_uuid ||= vscsi_lun_mappings.group_by(&:lpar_uuid)
   end
 
-  def guest_devices
-    @guest_devices ||= vioses.map do |vios|
-      [vios.vscsi_mappings.select(&:client), vios.vfc_mappings.select(&:client)]
-    end.flatten.compact
-  end
-
   private
 
   def do_ssps(connection)
