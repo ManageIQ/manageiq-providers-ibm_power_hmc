@@ -77,7 +77,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def guest_devices
-    @guest_devices ||= @vioses.map do |vios|
+    @guest_devices ||= vioses.map do |vios|
       [vios.vscsi_mappings.select(&:client), vios.vfc_mappings.select(&:client)]
     end.flatten.compact
   end
