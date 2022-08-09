@@ -90,13 +90,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      hardware = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      parse_lpar_guest_devices(lpar, hardware)
     end
   end
 
   def parse_vioses
     collector.vioses.each do |vios|
-      parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
+      hardware = parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
+      parse_vios_storage_mappings(vios, hardware)
     end
   end
 
@@ -115,17 +117,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :host            => host
     )
     hardware = parse_vm_hardware(vm, lpar)
-
-    if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
-      parse_lpar_guest_devices(lpar, hardware)
-    else
-      parse_vios_storage_mappings(lpar, hardware)
-    end
-
     parse_vm_operating_system(vm, lpar)
     parse_vm_guest_devices(lpar, hardware)
     parse_vm_advanced_settings(vm, lpar)
-    vm
+    hardware
   end
 
   def parse_vm_hardware(vm, lpar)

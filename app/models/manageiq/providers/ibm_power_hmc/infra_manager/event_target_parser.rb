@@ -51,10 +51,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       end
 
       new_targets.each do |t|
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{t[:ems_ref]} #{t[:uid_ems]} #{t[:hardware]}")
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{t[:ems_ref]}")
         target_collection.add_target(
           :association => t[:assoc],
-          :manager_ref => {:ems_ref => t[:ems_ref], :uid_ems => t[:uid_ems], :hardware => t[:hardware]}.compact
+          :manager_ref => {:ems_ref => t[:ems_ref]}
         )
       end
       target_collection
