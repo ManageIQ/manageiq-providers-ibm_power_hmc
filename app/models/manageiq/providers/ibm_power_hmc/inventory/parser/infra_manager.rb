@@ -273,19 +273,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vscsi_mappings(vios, hardware)
-    vios.vscsi_mappings.select(&:client).each do |mapping|
-      guest_device = persister.guest_devices.build(
+    # Build one guest_device per server storage adapter
+    vios.vscsi_mappings.select(&:client).uniq { |m| m.server.name }.each do |adapter|
+      persister.guest_devices.build(
         :hardware        => hardware,
-        :uid_ems         => mapping.server.name,
-        :ems_ref         => mapping.lpar_uuid,
+        :uid_ems         => adapter.server.name,
+        :ems_ref         => adapter.lpar_uuid,
         :device_type     => "storage",
         :controller_type => "server vscsi storage adapter",
         :auto_detect     => true,
-        :location        => mapping.server.location,
-        :filename        => mapping.client.location
+        :location        => adapter.server.location,
+        :filename        => adapter.client.location
       )
-      next if mapping.storage.nil?
-
+    end
+    # Build one storage per backing device
+    vios.vscsi_mappings.select(&:client).select(&:storage).each do |mapping|
       size = storage_size(mapping.storage)
       persister.disks.build(
         :device_type => mapping.storage.class.name,
@@ -295,7 +297,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :size        => size
       )
       scsi_target = persister.miq_scsi_targets.build(
-        :guest_device => guest_device,
+        :guest_device => persister.guest_devices.lazy_find({:uid_ems => mapping.server.name, :hardware => hardware}),
         :iscsi_name   => mapping.device.target,
         :uid_ems      => mapping.device.udid
       )

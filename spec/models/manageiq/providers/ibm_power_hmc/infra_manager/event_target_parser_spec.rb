@@ -112,45 +112,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
     end
   end
 
-  context "storage mappings" do
-    let(:host)  { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => @ems, :ems_ref => "HOST1") }
-    let(:vios1) { FactoryBot.create(:ibm_power_hmc_vios, :ext_management_system => @ems, :ems_ref => "VIOS1", :host => host) }
-    let(:vios2) { FactoryBot.create(:ibm_power_hmc_vios, :ext_management_system => @ems, :ems_ref => "VIOS2", :host => host) }
-    let(:lpar1) { FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => @ems, :ems_ref => "LPAR1", :host => host) }
-    let(:lpar2) { FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => @ems, :ems_ref => "LPAR2", :host => host) }
-    let(:lpar3) { FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => @ems, :ems_ref => "LPAR3", :host => host) }
-    let(:hardware1) { FactoryBot.create(:hardware, :vm => lpar1) }
-    let(:hardware2) { FactoryBot.create(:hardware, :vm => lpar2) }
-    let(:hardware3) { FactoryBot.create(:hardware, :vm => lpar3) }
-    let!(:guest_device1f) { FactoryBot.create(:ibm_power_hmc_guest_device_vfc,   :hardware => hardware1, :ems_ref => vios1.ems_ref) }
-    let!(:guest_device1s) { FactoryBot.create(:ibm_power_hmc_guest_device_vscsi, :hardware => hardware1, :ems_ref => vios1.ems_ref) }
-    let!(:guest_device2f) { FactoryBot.create(:ibm_power_hmc_guest_device_vfc,   :hardware => hardware2, :ems_ref => vios2.ems_ref) }
-    let!(:guest_device2s) { FactoryBot.create(:ibm_power_hmc_guest_device_vscsi, :hardware => hardware2, :ems_ref => vios2.ems_ref) }
-    let!(:guest_device3f) { FactoryBot.create(:ibm_power_hmc_guest_device_vfc,   :hardware => hardware3, :ems_ref => vios1.ems_ref) }
-    let!(:guest_device3s) { FactoryBot.create(:ibm_power_hmc_guest_device_vscsi, :hardware => hardware3, :ems_ref => vios1.ems_ref) }
-    let!(:guest_device4f) { FactoryBot.create(:ibm_power_hmc_guest_device_vfc,   :hardware => hardware3, :ems_ref => vios2.ems_ref) }
-    let!(:guest_device4s) { FactoryBot.create(:ibm_power_hmc_guest_device_vscsi, :hardware => hardware3, :ems_ref => vios2.ems_ref) }
-
-    it "vfc" do
-      assert_event_triggers_target("test_data/virtual_io_server_vfc.xml",
-        [
-          [:vms,           {:ems_ref => vios1.ems_ref}],
-          [:guest_devices, {:uid_ems => guest_device1f.uid_ems, :hardware => hardware1.id}],
-          [:guest_devices, {:uid_ems => guest_device3f.uid_ems, :hardware => hardware3.id}]
-        ]
-      )
-    end
-    it "vscsi" do
-      assert_event_triggers_target("test_data/virtual_io_server_vscsi.xml",
-        [
-          [:vms,           {:ems_ref => vios2.ems_ref}],
-          [:guest_devices, {:uid_ems => guest_device2s.uid_ems, :hardware => hardware2.id}],
-          [:guest_devices, {:uid_ems => guest_device4s.uid_ems, :hardware => hardware3.id}]
-        ]
-      )
-    end
-  end
-
   def assert_event_triggers_target(filename, expected_targets, usertask = nil)
     ems_event      = create_ems_event(filename, usertask)
     parsed_targets = described_class.new(ems_event).parse
