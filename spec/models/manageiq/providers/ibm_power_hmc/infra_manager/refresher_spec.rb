@@ -64,16 +64,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       )
     end
 
-    def create_parser(tc)
-      parser = ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::TargetCollection.new.tap do |parser|
-        parser.collector = ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection.new(ems, tc)
-        parser.persister = ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::TargetCollection.new(ems, tc)
+    def create_parser(target_collection)
+      ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::TargetCollection.new.tap do |parser|
+        parser.collector = ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection.new(ems, target_collection)
+        parser.persister = ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::TargetCollection.new(ems, target_collection)
       end
     end
 
     def rebuild_hardware(hardware)
       parser.persister.hardwares.build(
-        :vm_or_template  => parser.persister.vms.build(
+        :vm_or_template => parser.persister.vms.build(
           :type            => hardware.vm.type,
           :uid_ems         => hardware.vm.ems_ref,
           :ems_ref         => hardware.vm.ems_ref,
@@ -207,7 +207,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :controller_type => "server vfc storage adapter",
         :auto_detect     => true,
         :location        => "",
-        :filename        => "",
+        :filename        => ""
       )
       aggregate_failures "before" do
         expect(vios2.hardware.guest_devices.size).to eq(4)
@@ -237,7 +237,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
             :controller_type => "server vfc storage adapter",
             :auto_detect     => true,
             :location        => "",
-            :filename        => "",
+            :filename        => ""
           ),
           :iscsi_name   => "new_target",
           :uid_ems      => "new_target"
@@ -256,7 +256,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       vios2.reload
       ems.reload
       guest_device2s.reload
-      new_gd = ems.guest_devices.find_by(uid_ems: "test")
+      new_gd = ems.guest_devices.find_by(:uid_ems => "test")
       aggregate_failures "after" do
         expect(vios2.hardware.guest_devices.size).to eq(5)
         expect(guest_device2s.miq_scsi_targets.size).to eq(2)
@@ -326,8 +326,8 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       vios2.reload
       ems.reload
       guest_device2s.reload
-      new_target = ems.miq_scsi_targets.find_by(iscsi_name: "new_target")
-      new_lun = ems.miq_scsi_luns.find_by(device_name: "new_lun")
+      new_target = ems.miq_scsi_targets.find_by(:iscsi_name => "new_target")
+      new_lun = ems.miq_scsi_luns.find_by(:device_name => "new_lun")
       aggregate_failures "after" do
         expect(vios2.hardware.guest_devices.size).to eq(4)
         expect(guest_device2s.miq_scsi_targets.size).to eq(3)
