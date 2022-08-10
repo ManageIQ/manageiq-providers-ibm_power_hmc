@@ -28,6 +28,11 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
     it "find_destination_in_vmdb" do
       expect(prov.find_destination_in_vmdb(vm.ems_ref).ems_ref).to eq(vm.ems_ref)
     end
+    it "start_clone" do
+      allow_any_instance_of(template.class).to receive(:provision_lpar).and_return(nil)
+      expect_any_instance_of(template.class).to receive(:provision_lpar)
+      prov.start_clone({})
+    end
   end
 
   context "publish" do
@@ -53,6 +58,11 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
     it "find_destination_in_vmdb" do
       expect(prov.find_destination_in_vmdb(template.ems_ref).ems_ref).to eq(template.ems_ref)
     end
+    it "start_clone" do
+      allow_any_instance_of(vm.class).to receive(:make_template).and_return(nil)
+      expect_any_instance_of(vm.class).to receive(:make_template)
+      prov.start_clone({})
+    end
   end
 
   context "clone" do
@@ -65,7 +75,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
         :userid       => admin.userid,
         :miq_request  => pr,
         :source       => template,
-        :request_type => 'clone_to_vm',
+        :request_type => 'clone_to_template',
         :state        => 'pending',
         :status       => 'Ok',
         :options      => {:src_vm_id => [template.id, template.name]}
@@ -77,6 +87,11 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision do
     end
     it "find_destination_in_vmdb" do
       expect(prov.find_destination_in_vmdb(template.ems_ref).ems_ref).to eq(template.ems_ref)
+    end
+    it "start_clone" do
+      allow_any_instance_of(template.class).to receive(:make_clone).and_return(nil)
+      expect_any_instance_of(template.class).to receive(:make_clone)
+      prov.start_clone({})
     end
   end
 end

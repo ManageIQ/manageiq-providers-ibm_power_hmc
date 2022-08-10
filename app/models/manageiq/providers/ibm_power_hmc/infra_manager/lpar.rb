@@ -34,6 +34,13 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     end
   end
 
+  def do_request(request_type, options)
+    case request_type
+    when 'clone_to_template'
+      make_template(options)
+    end
+  end
+
   def make_template(options)
     $ibm_power_hmc_log.info("#{self.class}##{__method__} ems_ref #{ems_ref} template_name #{options[:name]}")
     ext_management_system.with_provider_connection do |connection|

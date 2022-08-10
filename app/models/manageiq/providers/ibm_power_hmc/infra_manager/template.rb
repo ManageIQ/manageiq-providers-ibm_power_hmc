@@ -2,6 +2,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Provi
   supports :provisioning
   supports :clone
 
+  def do_request(request_type, options)
+    case request_type
+    when 'template'
+      provision_lpar(options)
+    when 'clone_to_template'
+      make_clone(options)
+    end
+  end
+
   def provision_lpar(options)
     $ibm_power_hmc_log.info("#{self.class}##{__method__} template_name #{name} lpar name #{options[:name]}")
     host = Host.find(options[:host_id])
