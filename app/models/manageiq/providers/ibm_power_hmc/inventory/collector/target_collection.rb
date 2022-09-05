@@ -42,6 +42,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         do_netadapters_lpar(connection, lpar)
         do_sriov_elps_lpar(connection, lpar)
         do_vnics(connection, lpar)
+        do_storadapters(connection, lpar)
       end
     end
     @lpars || []

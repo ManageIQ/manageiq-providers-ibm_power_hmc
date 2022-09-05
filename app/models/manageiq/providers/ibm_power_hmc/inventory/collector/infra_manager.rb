@@ -2,6 +2,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def initialize(manager, target)
     super
     @netadapters = {}
+    @storadapters = {}
     @sriov_elps = {}
     @vnics = {}
     @ssps = {}
@@ -56,6 +57,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def vnics
     @vnics || {}
+  end
+
+  def storadapters
+    @storadapters || {}
   end
 
   def templates
@@ -116,6 +121,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       do_netadapters_lpar(connection, lpar)
       do_sriov_elps_lpar(connection, lpar)
       do_vnics(connection, lpar)
+      do_storadapters(connection, lpar)
     end
   end
 
@@ -177,6 +183,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       @vnics[vnic_dedicated_uuid] = connection.vnic_dedicated(lpar.uuid, vnic_dedicated_uuid)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("vnic query failed for #{lpar.uuid}/#{vnic_dedicated_uuid}: #{e}")
+    end
+  end
+
+  def do_storadapters(connection, lpar)
+    lpar.vscsi_client_uuids.each do |vscsi_client_uuid|
+      @storadapters[vscsi_client_uuid] = connection.vscsi_client_adapter(lpar.uuid, vscsi_client_uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("vscsi client adapter query failed for #{lpar.uuid}/#{vscsi_client_uuid}: #{e}")
+    end
+    lpar.vfc_client_uuids.each do |vfc_client_uuid|
+      @storadapters[vfc_client_uuid] = connection.vfc_client_adapter(lpar.uuid, vfc_client_uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("vfc client adapter query failed for #{lpar.uuid}/#{vfc_client_uuid}: #{e}")
     end
   end
 

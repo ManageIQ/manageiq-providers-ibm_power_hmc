@@ -183,8 +183,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_lpar_guest_devices(lpar, hardware)
-    lpar.vnic_dedicated_uuids.map do |uuid|
+    lpar.vnic_dedicated_uuids.each do |uuid|
       build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
+    end
+    lpar.vscsi_client_uuids.each do |uuid|
+      build_vscsi_client_dev(collector.storadapters[uuid], hardware)
+    end
+    lpar.vfc_client_uuids.each do |uuid|
+      build_vfc_client_dev(collector.storadapters[uuid], hardware)
     end
   end
 
@@ -359,6 +365,36 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :auto_detect     => true,
         :address         => mac_addr,
         :location        => device.location
+      )
+    end
+  end
+
+  def build_vscsi_client_dev(device, hardware)
+    unless device.nil?
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => device.uuid,
+        :ems_ref         => device.uuid,
+        :device_type     => "storage",
+        :controller_type => "client vscsi storage adapter",
+        :auto_detect     => true,
+        :location        => device.location,
+        :filename        => device.server_location
+      )
+    end
+  end
+
+  def build_vfc_client_dev(device, hardware)
+    unless device.nil?
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => device.uuid,
+        :ems_ref         => device.uuid,
+        :device_type     => "storage",
+        :controller_type => "client vfc storage adapter",
+        :auto_detect     => true,
+        :location        => device.location,
+        :address         => device.respond_to?(:wwpns) ? device.wwpns.join(",") : nil,
       )
     end
   end
