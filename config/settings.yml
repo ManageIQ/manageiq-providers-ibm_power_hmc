@@ -1,5 +1,6 @@
 :ems:
   :ems_ibm_power_hmc:
+    :api_request_timeout: 60
     :blacklisted_event_names: []
     :event_handling:
       :event_groups:

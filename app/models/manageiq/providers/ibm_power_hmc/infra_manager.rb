@@ -143,7 +143,14 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.raw_connect(hostname, port, userid, password, validate_ssl, validate)
     require "ibm_power_hmc"
 
-    hc = IbmPowerHmc::Connection.new(:host => hostname, :port => port, :username => userid, :password => password, :validate_ssl => validate_ssl)
+    hc = IbmPowerHmc::Connection.new(
+      :host         => hostname,
+      :port         => port,
+      :username     => userid,
+      :password     => password,
+      :validate_ssl => validate_ssl,
+      :timeout      => Settings.ems.ems_ibm_power_hmc.api_request_timeout
+    )
     if validate
       # Do a logon/logoff to verify credentials
       hc.logon
