@@ -291,11 +291,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     vios.vscsi_mappings.select(&:client).select(&:storage).each do |mapping|
       size = storage_size(mapping.storage)
       persister.disks.build(
-        :device_type => mapping.storage.class.name,
-        :hardware    => hardware,
-        :storage     => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
-        :device_name => mapping.storage.name,
-        :size        => size
+        :device_type     => mapping.storage.class.name,
+        :hardware        => hardware,
+        :storage         => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
+        :device_name     => mapping.storage.name,
+        :size            => size,
+        :controller_type => mapping.storage.class.name,
+        :location        => mapping.storage.name
       )
       scsi_target = persister.miq_scsi_targets.build(
         :guest_device => persister.guest_devices.lazy_find({:uid_ems => mapping.server.name, :hardware => hardware}),
