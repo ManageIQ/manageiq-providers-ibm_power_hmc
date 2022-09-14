@@ -83,7 +83,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :name         => "pcm_enabled",
       :display_name => _("PCM-enabled"),
       :description  => _("Performance and Capacity Monitoring data collection enabled"),
-      :value        => collector.pcm_enabled[sys.uuid]&.aggregation,
+      :value        => collector.pcm_enabled[sys.uuid].aggregation,
       :read_only    => true
     )
   end
@@ -412,7 +412,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :controller_type => "client vfc storage adapter",
         :auto_detect     => true,
         :location        => device.location,
-        :address         => device.respond_to?(:wwpns) ? device.wwpns.join(",") : nil,
+        :address         => device.respond_to?(:wwpns) ? device.wwpns.join(",") : nil
       )
     end
   end
