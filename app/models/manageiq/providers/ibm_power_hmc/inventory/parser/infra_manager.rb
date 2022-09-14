@@ -83,7 +83,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :name         => "pcm_enabled",
       :display_name => _("PCM-enabled"),
       :description  => _("Performance and Capacity Monitoring data collection enabled"),
-      :value        => collector.pcm_enabled[sys.uuid].aggregation,
+      :value        => collector.pcm_enabled[sys.uuid]&.aggregation,
       :read_only    => true
     )
   end
@@ -92,6 +92,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.lpars.each do |lpar|
       hardware = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
       parse_lpar_guest_devices(lpar, hardware)
+      parse_lpar_disks(lpar, hardware)
     end
   end
 
@@ -129,6 +130,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :memory_mb       => lpar.memory,
       :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
+  end
+
+  def parse_lpar_disks(lpar, hardware)
+    # Implemented in TargetCollection subclass
   end
 
   def parse_vswitches(host, sys)
@@ -290,14 +295,25 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     # Build one storage per backing device
     vios.vscsi_mappings.select(&:client).select(&:storage).each do |mapping|
       size = storage_size(mapping.storage)
-      persister.disks.build(
+      storage = persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid])
+      backing = persister.disks.build(
         :device_type     => mapping.storage.class.name,
         :hardware        => hardware,
-        :storage         => persister.storages.lazy_find(collector.ssp_lus_by_udid[mapping.storage.udid]),
+        :storage         => storage,
         :device_name     => mapping.storage.name,
         :size            => size,
         :controller_type => mapping.storage.class.name,
         :location        => mapping.storage.name
+      )
+      persister.disks.build(
+        :device_type     => mapping.storage.class.name,
+        :hardware        => persister.hardwares.lazy_find({:vm_or_template => persister.vms.lazy_find(mapping.lpar_uuid)}, {:transform_nested_lazy_finds => true}),
+        :storage         => storage,
+        :device_name     => mapping.storage.name,
+        :size            => size,
+        :controller_type => mapping.storage.class.name,
+        :location        => mapping.storage.name,
+        :backing         => backing
       )
       scsi_target = persister.miq_scsi_targets.build(
         :guest_device => persister.guest_devices.lazy_find({:uid_ems => mapping.server.name, :hardware => hardware}),
