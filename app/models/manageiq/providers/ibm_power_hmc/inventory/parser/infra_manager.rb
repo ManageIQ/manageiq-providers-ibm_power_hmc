@@ -138,6 +138,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
 
     parse_vm_operating_system(vm, lpar)
+    parse_vm_ip_address(lpar, hardware)
     parse_vm_guest_devices(lpar, hardware)
     parse_vm_advanced_settings(vm, lpar)
     vm
@@ -149,6 +150,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :memory_mb       => lpar.memory,
       :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
+  end
+
+  def parse_vm_ip_address(lpar, hardware)
+    if lpar.rmc_ipaddr
+      persister.networks.build(
+        :ipaddress   => lpar.rmc_ipaddr,
+        :ipv6address => nil,
+        :hardware    => hardware
+      )
+    end
   end
 
   def parse_vswitches(host, sys)
