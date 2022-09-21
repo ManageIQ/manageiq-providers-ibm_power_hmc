@@ -92,14 +92,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_advanced_settings(host, sys)
-    persister.hosts_advanced_settings.build(
-      :resource     => host,
-      :name         => "pcm_enabled",
-      :display_name => _("PCM-enabled"),
-      :description  => _("Performance and Capacity Monitoring data collection enabled"),
-      :value        => collector.pcm_enabled[sys.uuid].aggregation,
-      :read_only    => true
-    )
+    if collector.pcm_enabled[sys.uuid]
+      persister.hosts_advanced_settings.build(
+        :resource     => host,
+        :name         => "pcm_enabled",
+        :display_name => _("PCM-enabled"),
+        :description  => _("Performance and Capacity Monitoring data collection enabled"),
+        :value        => collector.pcm_enabled[sys.uuid].aggregation,
+        :read_only    => true
+      )
+    end
   end
 
   def parse_lpars
