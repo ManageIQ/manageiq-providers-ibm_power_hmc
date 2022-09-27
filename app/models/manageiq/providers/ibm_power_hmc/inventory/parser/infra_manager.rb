@@ -177,7 +177,29 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_operating_system(vm, lpar)
-    os_info = lpar.os&.split
+    if lpar.os.nil? || lpar.os.downcase == "unknown"
+      # RSCT is not running on the LPAR
+      if lpar.respond_to?(:type) && lpar.type == "Virtual IO Server"
+        os_info = ["VIOS"]
+      end
+    else
+      # HMC provides the OS version as a flat string.
+      # We do our best to extract the name, version and build numbers from this string.
+      # Also, HMCs older than v10 have a 32 characters limit on the OS name part.
+      # Examples of what we get from HMC/RSCT:
+      # "VIOS 3.1.0.11"
+      # "AIX 7.3 7300-00-00-0000"
+      # "Linux/Debian 4.4.0-87-generic Unknown"
+      # "Linux/Hardware Management Conso V10R2 1030"
+      # "Linux/Red Hat Enterprise Linux  4.18.0-372.19.1.el8_6.ppc8.4 (Ootpa) 8.4 (Ootpa)"
+      # "Linux/Red Hat Enterprise Linux (CoreOS) 4.18.0-372.19.1.el8_6.ppc8.4 (Ootpa) 8.4 (Ootpa)"
+      os_info = lpar.os.split
+      if os_info.length > 3
+        # Split on the first word that contains a digit
+        os_info = lpar.os.split(/\s+(?=\S*\d)/, 2)
+      end
+    end
+
     if os_info
       persister.operating_systems.build(
         :vm_or_template => vm,
