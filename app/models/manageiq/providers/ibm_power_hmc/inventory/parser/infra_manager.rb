@@ -138,7 +138,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
 
     parse_vm_operating_system(vm, lpar)
-    parse_vm_ip_address(lpar, hardware)
+    parse_vm_networks(lpar, hardware)
     parse_vm_guest_devices(lpar, hardware)
     parse_vm_advanced_settings(vm, lpar)
     vm
@@ -152,7 +152,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     )
   end
 
-  def parse_vm_ip_address(lpar, hardware)
+  def parse_vm_networks(lpar, hardware)
     if lpar.rmc_ipaddr
       persister.networks.build(
         :ipaddress   => lpar.rmc_ipaddr,
