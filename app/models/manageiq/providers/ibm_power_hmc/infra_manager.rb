@@ -17,6 +17,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
 
   supports :create
   supports :metrics
+  supports :native_console
   supports :provisioning
 
   has_many :hosts_advanced_settings, :through => :hosts, :source => :advanced_settings
@@ -158,6 +159,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
     end
 
     hc
+  end
+
+  def console_url
+    "https://#{hostname}/dashboard/"
   end
 
   def self.ems_type
