@@ -14,7 +14,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow < Manage
     return [] if hosts_ids.blank?
 
     all_hosts = load_ar_obj(src[:ems]).hosts.where(:id => hosts_ids)
-    #all_hosts.reject! { |h| !h.hmc_managed }
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
     _log.info("allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.zone.now - st}] seconds")
     rails_logger('allowed_hosts_obj', 1)
