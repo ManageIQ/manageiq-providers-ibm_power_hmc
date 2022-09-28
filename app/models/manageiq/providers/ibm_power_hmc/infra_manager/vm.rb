@@ -1,6 +1,10 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
+  supports :control do
+    unsupported_reason_add(:control, _("Host is not HMC-managed")) unless host.hmc_managed
+  end
+
   def provider_object(_connection = nil)
     raise StandardError, "Must be implemented in a subclass"
   end
