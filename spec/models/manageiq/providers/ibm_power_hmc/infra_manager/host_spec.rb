@@ -11,6 +11,10 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
     JSON.parse(Pathname.new(__dir__).join(filename).read)["test_data"]
   end
 
+  let(:vm) do
+    FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => ems, :ems_ref => "67890", :host => host)
+  end
+
   context "host" do
     let(:filename) { "test_data/metrics_host.json" }
     it "process_samples" do
@@ -52,7 +56,57 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
 
     it "supports metrics capture (true)" do
       FactoryBot.create(:advanced_settings, :name => "pcm_enabled", :resource => host, :value => "true")
-      expect(host.supports?(:capture)).to be true
+      expect(host.supports?(:capture)).to (be true), "unsupported reason: #{host.unsupported_reason(:capture)}"
+    end
+
+    it "supports power operations (true)" do
+      FactoryBot.create(:advanced_settings, :name => "hmc_managed", :resource => host, :value => "true")
+      vm.update(:raw_power_state => "not activated")
+      host.power_state = "off"
+      expect(host.supports?(:start)).to (be true), "unsupported reason: #{host.unsupported_reason(:start)}"
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
+      host.power_state = "on"
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to (be true), "unsupported reason: #{host.unsupported_reason(:stop)}"
+      expect(host.supports?(:shutdown)).to (be true), "unsupported reason: #{host.unsupported_reason(:shutdown)}"
+      vm.update(:raw_power_state => "running")
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to (be true), "unsupported reason: #{host.unsupported_reason(:stop)}"
+      expect(host.supports?(:shutdown)).to be false
+    end
+
+    it "supports power operations (false)" do
+      FactoryBot.create(:advanced_settings, :name => "hmc_managed", :resource => host, :value => "false")
+      vm.update(:raw_power_state => "not activated")
+      host.power_state = "off"
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
+      host.power_state = "on"
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
+      vm.update(:raw_power_state => "running")
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
+    end
+
+    it "supports power operations (no setting)" do
+      vm.update(:raw_power_state => "not activated")
+      host.power_state = "off"
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
+      host.power_state = "on"
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
+      vm.update(:raw_power_state => "running")
+      expect(host.supports?(:start)).to be false
+      expect(host.supports?(:stop)).to be false
+      expect(host.supports?(:shutdown)).to be false
     end
   end
 

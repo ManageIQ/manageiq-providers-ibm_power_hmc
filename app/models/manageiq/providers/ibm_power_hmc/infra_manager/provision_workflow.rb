@@ -9,7 +9,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow < Manage
 
     rails_logger('allowed_hosts_obj', 0)
     st = Time.zone.now
-    hosts_ids = load_ar_obj(src[:ems]).hosts.pluck(:id)
+    hosts_ids = load_ar_obj(src[:ems]).hosts.joins(:advanced_settings).where(:advanced_settings => {:name => "hmc_managed", :value => "true"}).pluck(:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
     return [] if hosts_ids.blank?
 

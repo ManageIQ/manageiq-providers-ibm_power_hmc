@@ -1,5 +1,8 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
-  supports :rename
+  supports :rename do
+    unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host.hmc_managed
+  end
+
   supports :publish
 
   def provider_object(connection = nil)

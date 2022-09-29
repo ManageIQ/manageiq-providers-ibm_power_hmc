@@ -7,13 +7,20 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow do
   let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
   let(:switch1)  { FactoryBot.create(:switch, :name => "A") }
   let(:switch2)  { FactoryBot.create(:switch, :name => "B") }
-  let!(:host1)   { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST1", :switches => [switch1]) }
-  let!(:host2)   { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST2", :switches => [switch2]) }
+  let(:switch3)  { FactoryBot.create(:switch, :name => "C") }
+  let(:host1)    { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST1", :switches => [switch1]) }
+  let(:host2)    { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST2", :switches => [switch2]) }
+  let(:host3)    { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "HOST3", :switches => [switch3]) }
   let!(:vlan1)   { FactoryBot.create(:lan, :name => "lan_A", :switch_id => switch1.id, :ems_ref => host1.ems_ref) }
   let!(:vlan2)   { FactoryBot.create(:lan, :name => "lan_B", :switch_id => switch2.id, :ems_ref => host2.ems_ref) }
+  let!(:vlan3)   { FactoryBot.create(:lan, :name => "lan_C", :switch_id => switch3.id, :ems_ref => host3.ems_ref) }
 
   before do
     stub_dialog(:get_dialogs)
+    host1.advanced_settings.create!(:name => "hmc_managed", :value => "true")
+    host2.advanced_settings.create!(:name => "hmc_managed", :value => "true")
+    # Host3 is not HMC-managed and thus should not appear as an allowed host
+    host3.advanced_settings.create!(:name => "hmc_managed", :value => "false")
   end
 
   context '#allowed_hosts' do

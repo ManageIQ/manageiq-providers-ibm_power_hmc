@@ -102,6 +102,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :read_only    => true
       )
     end
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "hmc_managed",
+      :display_name => _("HMC-managed"),
+      :description  => _("The PowerVM management master of this host is a HMC."),
+      :value        => sys.is_classic_hmc_mgmt.eql?("true") ? sys.is_classic_hmc_mgmt : sys.is_hmc_mgmt_master,
+      :read_only    => true
+    )
   end
 
   def parse_lpars
