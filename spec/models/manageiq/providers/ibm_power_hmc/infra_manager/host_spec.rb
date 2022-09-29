@@ -72,7 +72,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
       expect(host.supports?(:shutdown)).to (be true), "unsupported reason: #{host.unsupported_reason(:shutdown)}"
       vm.update(:raw_power_state => "running")
       expect(host.supports?(:start)).to be false
-      expect(host.supports?(:stop)).to (be true), "unsupported reason: #{host.unsupported_reason(:shutdown)}"
+      expect(host.supports?(:stop)).to (be true), "unsupported reason: #{host.unsupported_reason(:stop)}"
       expect(host.supports?(:shutdown)).to be false
     end
 
