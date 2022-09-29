@@ -4,6 +4,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     connection.vios(ems_ref)
   end
 
+  def console_url
+    URI::HTTPS.build(:host => ext_management_system.hostname, :path => "/dashboard/", :fragment => "resources/systems/#{host.ems_ref}/virtual-i-o-servers")
+  end
+
   def poweron(params = {})
     ext_management_system.with_provider_connection do |connection|
       connection.poweron_vios(ems_ref, params)

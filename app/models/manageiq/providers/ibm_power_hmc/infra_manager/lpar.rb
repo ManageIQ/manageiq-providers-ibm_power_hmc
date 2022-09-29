@@ -10,6 +10,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     connection.lpar(ems_ref)
   end
 
+  def console_url
+    URI::HTTPS.build(:host => ext_management_system.hostname, :path => "/dashboard/", :fragment => "resources/systems/#{host.ems_ref}/logical-partitions")
+  end
+
   def poweron(params = {})
     ext_management_system.with_provider_connection do |connection|
       connection.poweron_lpar(ems_ref, params)
