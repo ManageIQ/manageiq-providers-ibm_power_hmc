@@ -7,6 +7,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     unsupported_reason_add(:control, _("Host is not HMC-managed")) unless host_hmc_managed
   end
 
+  supports :native_console do
+    reason ||= _("VM Console not supported because VM is orphaned") if orphaned?
+    reason ||= _("VM Console not supported because VM is archived") if archived?
+    unsupported_reason_add(:native_console, reason) if reason
+  end
+
   def provider_object(_connection = nil)
     raise StandardError, "Must be implemented in a subclass"
   end
