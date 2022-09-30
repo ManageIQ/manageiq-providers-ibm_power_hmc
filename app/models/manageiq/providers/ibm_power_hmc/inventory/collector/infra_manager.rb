@@ -1,9 +1,9 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < ManageIQ::Providers::IbmPowerHmc::Inventory::Collector
-  def collect!(&block)
+  def collect!
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
       @connection = connection
-      block.call
+      yield
     end
   end
 
