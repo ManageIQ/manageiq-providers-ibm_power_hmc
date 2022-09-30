@@ -1,13 +1,14 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < ManageIQ::Providers::IbmPowerHmc::Inventory::Parser
   def parse
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    collector.collect!
-
-    parse_cecs
-    parse_lpars
-    parse_vioses
-    parse_templates
-    parse_ssps
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} start")
+    collector.collect! do
+      parse_cecs
+      parse_lpars
+      parse_vioses
+      parse_templates
+      parse_ssps
+    end
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} end")
   end
 
   def parse_cecs
@@ -28,7 +29,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_host_hardware(host, sys)
       parse_host_advanced_settings(host, sys)
       parse_vswitches(host, sys)
-      parse_vlans(sys)
+      parse_vlans(host, sys)
     end
   end
 
@@ -171,27 +172,30 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vswitches(host, sys)
-    collector.vswitches[sys.uuid].each do |vswitch|
-      switch = persister.host_virtual_switches.build(
-        :uid_ems => vswitch.uuid,
-        :name    => vswitch.name,
-        :host    => host
-      )
-      persister.host_switches.build(:host => host, :switch => switch)
+    if collector.vswitches.key?(sys.uuid)
+      collector.vswitches[sys.uuid].each do |vswitch|
+        switch = persister.host_virtual_switches.build(
+          :uid_ems => vswitch.uuid,
+          :name    => vswitch.name,
+          :host    => host
+        )
+        persister.host_switches.build(:host => host, :switch => switch)
+      end
     end
   end
 
-  def parse_vlans(sys)
-    collector.vlans[sys.uuid].each do |vlan|
-      managed_system = persister.hosts.lazy_find(sys.uuid)
-      vswitch = persister.host_virtual_switches.lazy_find(:host => managed_system, :uid_ems => vlan.vswitch_uuid)
-      persister.lans.build(
-        :uid_ems => vlan.uuid,
-        :switch  => vswitch,
-        :tag     => vlan.vlan_id,
-        :name    => vlan.name,
-        :ems_ref => sys.uuid
-      )
+  def parse_vlans(host, sys)
+    if collector.vlans.key?(sys.uuid)
+      collector.vlans[sys.uuid].each do |vlan|
+        vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vlan.vswitch_uuid)
+        persister.lans.build(
+          :uid_ems => vlan.uuid,
+          :switch  => vswitch,
+          :tag     => vlan.vlan_id,
+          :name    => vlan.name,
+          :ems_ref => sys.uuid
+        )
+      end
     end
   end
 
@@ -230,22 +234,28 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_guest_devices(lpar, hardware)
-    lpar.net_adap_uuids.each do |uuid|
-      build_ethernet_dev(collector.netadapters[uuid], hardware, "client network adapter")
+    if collector.netadapters.key?(lpar.uuid)
+      collector.netadapters[lpar.uuid].each do |ent|
+        build_ethernet_dev(ent, hardware, "client network adapter")
+      end
     end
 
-    lpar.sriov_elp_uuids.each do |uuid|
-      build_ethernet_dev(collector.sriov_elps[uuid], hardware, "sr-iov")
+    if collector.sriov_elps.key?(lpar.uuid)
+      collector.sriov_elps[lpar.uuid].each do |ent|
+        build_ethernet_dev(ent, hardware, "sr-iov")
+      end
     end
 
-    lpar.lhea_ports.each do |lhea|
-      build_ethernet_dev(lhea, hardware, "host ethernet adapter")
+    lpar.lhea_ports.each do |ent|
+      build_ethernet_dev(ent, hardware, "host ethernet adapter")
     end
   end
 
   def parse_lpar_guest_devices(lpar, hardware)
-    lpar.vnic_dedicated_uuids.map do |uuid|
-      build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
+    if collector.vnics.key?(lpar.uuid)
+      collector.vnics[lpar.uuid].each do |ent|
+        build_ethernet_dev(ent, hardware, "vnic")
+      end
     end
     parse_vm_disks(lpar, hardware)
   end
