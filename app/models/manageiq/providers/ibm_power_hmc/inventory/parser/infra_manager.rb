@@ -32,19 +32,29 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
+  def self.storage_capacity(storage)
+    case storage
+    when IbmPowerHmc::VirtualOpticalMedia
+      storage.size.to_f.gigabytes.to_i
+    when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit
+      storage.capacity.to_f.gigabytes.to_i
+    else
+      storage.capacity.to_i.megabytes
+    end
+  end
+
   def parse_ssps
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} : received ssps => #{collector.ssps}")
     collector.ssps.each do |ssp|
       persister.storages.build(
         :name        => ssp.name,
-        :total_space => ssp.capacity.to_f.gigabytes.round, # hmc returns a str in byte
+        :total_space => self.class.storage_capacity(ssp),
         :ems_ref     => ssp.cluster_uuid,
         :free_space  => ssp.free_space.to_f.gigabytes.round
       )
     end
   end
 
-  def parse_vm_disks(lpar, hardware)
+  def parse_lpar_disks(lpar, hardware)
     collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
       found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
 
@@ -53,7 +63,20 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :hardware    => hardware,
         :storage     => persister.storages.lazy_find(found_ssp_uuid),
         :device_name => mapping.storage.name,
-        :size        => mapping.storage.capacity.to_f.gigabytes.round
+        :size        => self.class.storage_capacity(mapping.storage)
+      )
+    end
+  end
+
+  def parse_vios_disks(vios, hardware)
+    vios.pvs.each do |pv|
+      persister.disks.build(
+        :hardware        => hardware,
+        :device_type     => "disk",
+        :device_name     => pv.name,
+        :size            => self.class.storage_capacity(pv),
+        :location        => pv.location,
+        :controller_type => pv.is_fc == "true" ? "FC" : "SCSI"
       )
     end
   end
@@ -114,14 +137,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      _vm, hardware = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      parse_lpar_disks(lpar, hardware)
+      parse_lpar_guest_devices(lpar, hardware)
     end
   end
 
   def parse_vioses
     collector.vioses.each do |vios|
-      parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
-      # Add VIOS specific parsing code here.
+      _vm, hardware = parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
+      parse_vios_disks(vios, hardware)
     end
   end
 
@@ -139,17 +164,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :raw_power_state => lpar.state,
       :host            => host
     )
-    hardware = parse_vm_hardware(vm, lpar)
-
-    if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
-      parse_lpar_guest_devices(lpar, hardware)
-    end
-
     parse_vm_operating_system(vm, lpar)
+    parse_vm_advanced_settings(vm, lpar)
+
+    hardware = parse_vm_hardware(vm, lpar)
     parse_vm_networks(lpar, hardware)
     parse_vm_guest_devices(lpar, hardware)
-    parse_vm_advanced_settings(vm, lpar)
-    vm
+
+    [vm, hardware]
   end
 
   def parse_vm_hardware(vm, lpar)
@@ -247,7 +269,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     lpar.vnic_dedicated_uuids.map do |uuid|
       build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
     end
-    parse_vm_disks(lpar, hardware)
   end
 
   def parse_vm_advanced_settings(vm, lpar)
