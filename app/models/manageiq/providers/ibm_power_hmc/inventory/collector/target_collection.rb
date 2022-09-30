@@ -5,110 +5,53 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     parse_targets!
   end
 
-  def collect!
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-  end
-
   def cecs
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @cecs ||=
-        references(:hosts).map do |ems_ref|
-          connection.managed_system(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-
-      do_vswitches(connection)
-      do_vlans(connection)
-      do_pcm_preferences(connection)
-    end
-    @cecs || []
+    @cecs ||=
+      references(:hosts).map do |ems_ref|
+        connection.managed_system(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
+        nil
+      end.compact
   end
 
   def lpars
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @lpars ||=
-        references(:vms).map do |ems_ref|
-          connection.lpar(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-
-      @lpars.each do |lpar|
-        do_netadapters_lpar(connection, lpar)
-        do_sriov_elps_lpar(connection, lpar)
-        do_vnics(connection, lpar)
-      end
-    end
-    @lpars || []
+    @lpars ||=
+      references(:vms).map do |ems_ref|
+        connection.lpar(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
+        nil
+      end.compact
   end
 
   def vioses
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @vioses ||=
-        references(:vms).map do |ems_ref|
-          connection.vios(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-
-      @vioses.each do |vios|
-        do_netadapters_vios(connection, vios)
-        do_sriov_elps_vios(connection, vios)
-      end
-    end
-    @vioses || []
+    @vioses ||=
+      references(:vms).map do |ems_ref|
+        connection.vios(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
+        nil
+      end.compact
   end
 
   def templates
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @templates ||=
-        references(:miq_templates).map do |ems_ref|
-          connection.template(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-    end
-    @templates || []
+    @templates ||=
+      references(:miq_templates).map do |ems_ref|
+        connection.template(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpError => e
+        $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
+        nil
+      end.compact
   end
 
   def ssps
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @ssps = connection.ssps # we gather every ssp.
+    @ssps ||= begin
+      references(:storage).empty? ? [] : connection.ssps
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error querying ssps: #{e}") unless e.status == 404
-      nil
-    end
-    @ssps || []
-  end
-
-  def netadapters
-    @netadapters || {}
-  end
-
-  def vswitches
-    @vswitches || {}
-  end
-
-  def vlans
-    @vlans || {}
-  end
-
-  def sriov_elps
-    @sriov_elps || {}
-  end
-
-  def vnics
-    @vnics || {}
+      []
+    end.compact
   end
 
   private
@@ -130,8 +73,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target!(:miq_templates, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage
         add_target!(:storages, target.ems_ref)
-      else
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
       end
     end
   end
