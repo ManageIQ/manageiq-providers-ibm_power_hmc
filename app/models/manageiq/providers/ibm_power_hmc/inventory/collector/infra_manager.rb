@@ -107,7 +107,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   private :netadapters_vios
 
   def netadapters
-    @netadapers ||= netadapters_lpar.merge(netadapters_vios)
+    @netadapters ||= netadapters_lpar.merge(netadapters_vios)
   end
 
   def sriov_elps_lpar
