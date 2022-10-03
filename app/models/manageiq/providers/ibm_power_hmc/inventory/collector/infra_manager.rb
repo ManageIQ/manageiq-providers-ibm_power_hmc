@@ -1,6 +1,5 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < ManageIQ::Providers::IbmPowerHmc::Inventory::Collector
   def collect!
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
       @connection = connection
       yield
@@ -143,14 +142,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def templates
     @templates ||= begin
-      connection.templates_summary.map do |template|
-        connection.template(template.uuid)
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("template query failed for #{template.uuid}: #{e}")
-        nil
-      end.compact
+      connection.templates
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("templates summary query failed: #{e}")
+      $ibm_power_hmc_log.error("templates query failed: #{e}")
       []
     end
   end
