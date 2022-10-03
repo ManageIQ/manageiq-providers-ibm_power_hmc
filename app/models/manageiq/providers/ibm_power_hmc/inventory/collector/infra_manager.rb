@@ -8,18 +8,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_reader :connection
 
-  def ssp_lus_by_udid
-    @ssp_lus_by_udid ||= ssps.flat_map { |ssp| ssp.lus.map { |lu| [lu.udid, ssp.cluster_uuid] } }.to_h
-  end
-
-  def vscsi_lun_mappings
-    @vscsi_lun_mappings ||= vioses.flat_map { |vios| vios.vscsi_mappings.select { |mapping| mapping.storage.kind_of?(IbmPowerHmc::LogicalUnit) } }
-  end
-
-  def vscsi_lun_mappings_by_uuid
-    @vscsi_lun_mappings_by_uuid ||= vscsi_lun_mappings.group_by(&:lpar_uuid)
-  end
-
   def ssps
     @ssps ||= begin
       connection.ssps
@@ -83,6 +71,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     end
   end
 
+  def vscsi_mappings
+    @vscsi_mappings ||= vioses.collect(&:vscsi_mappings).flatten.select do |m|
+      m.lpar_uuid && m.client && m.server && m.storage && m.device
+    end
+  end
+
   def netadapters_lpar
     @netadapters_lpar ||= lpars.map do |lpar|
       [lpar.uuid, connection.network_adapter_lpar(lpar.uuid)] unless lpar.net_adap_uuids.empty?
@@ -138,6 +132,38 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       $ibm_power_hmc_log.error("vnics query failed for #{lpar.uuid}: #{e}")
       nil
     end.compact.to_h
+  end
+
+  def vscsi_client_adapters
+    @vscsi_client_adapters ||= lpars.map do |lpar|
+      [lpar.uuid, connection.vscsi_client_adapter(lpar.uuid)] unless lpar.vscsi_client_uuids.empty?
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("vscsi client adapters query failed for #{lpar.uuid}: #{e}")
+      nil
+    end.compact.to_h
+  end
+
+  def lpar_disks_from_db
+    []
+  end
+
+  def lpar_disks_from_api
+    @lpar_disks_from_api ||= vscsi_mappings.map do |m|
+      {
+        :lpar_uuid  => m.lpar_uuid,
+        :client_dr  => m.client.location,
+        :udid       => m.storage.udid,
+        :thin       => m.storage.respond_to?(:thin) ? m.storage.thin == "true" : nil,
+        :cluster_id => m.device.try(:cluster_id),
+        :storage    => m.storage,
+        :type       => m.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? "cdrom" : "disk",
+        :path       => m.device.kind_of?(IbmPowerHmc::SharedFileSystemFile) ? m.device.path : nil
+      }
+    end
+  end
+
+  def lpar_disks
+    @lpar_disks ||= lpar_disks_from_api.concat(lpar_disks_from_db).group_by { |d| d[:lpar_uuid] }
   end
 
   def templates

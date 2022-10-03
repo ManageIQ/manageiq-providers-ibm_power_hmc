@@ -3,6 +3,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     super
 
     parse_targets!
+
+    manager.with_provider_connection do |connection|
+      @connection = connection
+      infer_ems_refs_from_api
+    end
+
+    target.manager_refs_by_association_reset
   end
 
   def cecs
@@ -58,6 +65,35 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
       $ibm_power_hmc_log.error("error querying ssp: #{e}") unless e.status == 404
       []
     end.compact
+  end
+
+  def infer_ems_refs_from_api
+    # Refresh LPARs that have disk paths going through any of the updated VIOSes.
+    vscsi_mappings.each do |m|
+      $ibm_power_hmc_log.debug("#{self.class}##{__method__} add LPAR target #{m.lpar_uuid}")
+      add_target!(:vms, m.lpar_uuid)
+    end
+  end
+
+  def lpar_disks_from_db
+    # Limit DB query to LPARs only (not VIOSes) and only for the ones that still exist.
+    @lpar_disks_from_db ||= manager.vms.where(:ems_ref => lpars.collect(&:uuid)).joins(:disks).select("vms.ems_ref as lpar_uuid", "disks.*").flat_map do |disk|
+      disk.location.split(",").map do |path|
+        # Preserve only paths to VIOSes that are not part of the target refresh.
+        if vscsi_client_adapters.has_key?(disk.lpar_uuid) &&
+           vscsi_client_adapters[disk.lpar_uuid].none? { |c| c.location == path && references(:vms).include?(c.vios_uuid) }
+          {
+            :lpar_uuid  => disk.lpar_uuid,
+            :client_drc => path,
+            :udid       => disk.device_name,
+            :size       => disk.size,
+            :thin       => disk.thin,
+            :type       => disk.device_type,
+            :path       => disk.filename
+          }
+        end
+      end.compact
+    end
   end
 
   private

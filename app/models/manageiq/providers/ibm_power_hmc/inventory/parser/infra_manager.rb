@@ -56,15 +56,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_lpar_disks(lpar, hardware)
-    collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
-      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
+    return unless collector.lpar_disks.key?(lpar.uuid) # LPAR has no disk
+
+    collector.lpar_disks[lpar.uuid].group_by { |d| d[:udid] }.each do |udid, paths|
+      disk = paths.first
 
       persister.disks.build(
-        :device_type => "disk",
-        :hardware    => hardware,
-        :storage     => persister.storages.lazy_find(found_ssp_uuid),
-        :device_name => mapping.storage.name,
-        :size        => self.class.storage_capacity(mapping.storage)
+        :hardware        => hardware,
+        :location        => paths.collect { |d| d[:client_drc] }.sort.uniq.join(","),
+        :device_name     => udid,
+        :device_type     => disk[:type],
+        :storage         => disk[:cluster_id] ? persister.storages.lazy_find(disk[:cluster_id]) : nil,
+        :size            => disk[:storage] ? self.class.storage_capacity(disk[:storage]) : disk[:size],
+        :thin            => disk[:thin],
+        :filename        => disk[:path],
+        :controller_type => "SCSI"
       )
     end
   end
