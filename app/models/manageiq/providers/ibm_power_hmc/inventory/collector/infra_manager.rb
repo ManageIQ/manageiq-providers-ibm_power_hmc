@@ -151,7 +151,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     @lpar_disks_from_api ||= vscsi_mappings.map do |m|
       {
         :lpar_uuid  => m.lpar_uuid,
-        :client_dr  => m.client.location,
+        :client_drc => m.client.location,
         :udid       => m.storage.udid,
         :thin       => m.storage.respond_to?(:thin) ? m.storage.thin == "true" : nil,
         :cluster_id => m.device.try(:cluster_id),
