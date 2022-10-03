@@ -78,20 +78,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def lpar_disks_from_db
     # Limit DB query to LPARs only (not VIOSes) and only for the ones that still exist.
     @lpar_disks_from_db ||= manager.vms.where(:ems_ref => lpars.collect(&:uuid)).joins(:disks).select("vms.ems_ref as lpar_uuid", "disks.*").flat_map do |disk|
+      next unless vscsi_client_adapters.key?(disk.lpar_uuid)
+
       disk.location.split(",").map do |path|
         # Preserve only paths to VIOSes that are not part of the target refresh.
-        if vscsi_client_adapters.has_key?(disk.lpar_uuid) &&
-           vscsi_client_adapters[disk.lpar_uuid].none? { |c| c.location == path && references(:vms).include?(c.vios_uuid) }
-          {
-            :lpar_uuid  => disk.lpar_uuid,
-            :client_drc => path,
-            :udid       => disk.device_name,
-            :size       => disk.size,
-            :thin       => disk.thin,
-            :type       => disk.device_type,
-            :path       => disk.filename
-          }
-        end
+        next if vscsi_client_adapters[disk.lpar_uuid].any? { |c| c.location == path && references(:vms).include?(c.vios_uuid) }
+
+        {
+          :lpar_uuid  => disk.lpar_uuid,
+          :client_drc => path,
+          :udid       => disk.device_name,
+          :size       => disk.size,
+          :thin       => disk.thin,
+          :type       => disk.device_type,
+          :path       => disk.filename
+        }
       end.compact
     end
   end
