@@ -91,7 +91,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_hardware(host, sys)
-    hardware = persister.host_hardwares.build(
+    persister.host_hardwares.build(
       :host            => host,
       :cpu_type        => "ppc64",
       :bitness         => 64,
