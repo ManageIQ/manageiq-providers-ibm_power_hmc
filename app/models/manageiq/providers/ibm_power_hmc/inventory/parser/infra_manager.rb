@@ -91,28 +91,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_hardware(host, sys)
-    hardware = persister.host_hardwares.build(
+    persister.host_hardwares.build(
       :host            => host,
       :cpu_type        => "ppc64",
       :bitness         => 64,
       :manufacturer    => "IBM",
       :model           => "#{sys.mtype}#{sys.model}",
-      # :cpu_speed     => 2348, # in MHz
       :memory_mb       => sys.memory,
       :cpu_total_cores => sys.cpus,
       :serial_number   => sys.serial
     )
-
-    parse_host_guest_devices(hardware, sys)
-  end
-
-  def parse_host_guest_devices(hardware, sys)
-    # persister.host_guest_devices.build(
-    #   :hardware    => hardware,
-    #   :uid_ems     => sys.xxx,
-    #   :device_name => sys.xxx,
-    #   :device_type => sys.xxx
-    # )
   end
 
   def parse_host_advanced_settings(host, sys)
@@ -367,19 +355,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def build_ethernet_dev(device, hardware, controller_type)
-    unless device.nil?
-      mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
-      id = device.respond_to?(:uuid) ? device.uuid : device.macaddr
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => id,
-        :device_name     => mac_addr,
-        :device_type     => "ethernet",
-        :controller_type => controller_type,
-        :auto_detect     => true,
-        :address         => mac_addr,
-        :location        => device.location
-      )
-    end
+    mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
+    id = device.respond_to?(:uuid) ? device.uuid : device.macaddr
+    persister.guest_devices.build(
+      :hardware        => hardware,
+      :uid_ems         => id,
+      :device_name     => mac_addr,
+      :device_type     => "ethernet",
+      :controller_type => controller_type,
+      :auto_detect     => true,
+      :address         => mac_addr,
+      :location        => device.location
+    )
   end
 end
