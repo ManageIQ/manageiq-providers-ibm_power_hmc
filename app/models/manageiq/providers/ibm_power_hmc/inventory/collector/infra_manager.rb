@@ -58,23 +58,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   end
 
   def lpars
-    @lpars ||=
-      cecs.map do |sys|
-        connection.lpars(sys.uuid) unless sys.lpars_uuids.empty?
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
-        nil
-      end.flatten.compact
+    @lpars ||= cecs.flat_map do |sys|
+      connection.lpars(sys.uuid) unless sys.lpars_uuids.empty?
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
+      nil
+    end.compact
   end
 
   def vioses
-    @vioses ||=
-      cecs.map do |sys|
-        connection.vioses(sys.uuid) unless sys.vioses_uuids.empty?
-      rescue IbmPowerHmc::Connection::HttpError => e
-        $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
-        nil
-      end.flatten.compact
+    @vioses ||= cecs.flat_map do |sys|
+      connection.vioses(sys.uuid) unless sys.vioses_uuids.empty?
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
+      nil
+    end.compact
   end
 
   def pcm_enabled
