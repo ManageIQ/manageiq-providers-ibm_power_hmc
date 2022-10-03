@@ -63,7 +63,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
       persister.disks.build(
         :hardware        => hardware,
-        :location        => paths.collect { |d| d[:client_drc] }.sort.uniq.join(","),
+        :location        => paths.pluck(:client_drc).sort.uniq.join(","),
         :device_name     => udid,
         :device_type     => disk[:type],
         :storage         => disk[:cluster_id] ? persister.storages.lazy_find(disk[:cluster_id]) : nil,
