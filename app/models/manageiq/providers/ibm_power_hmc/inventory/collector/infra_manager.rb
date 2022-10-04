@@ -150,15 +150,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def lpar_disks_from_api
     @lpar_disks_from_api ||= vscsi_mappings.map do |m|
       {
-        :lpar_uuid   => m.lpar_uuid,
-        :client_drc  => m.client.location,
-        :udid        => m.storage.udid,
-        :thin        => m.storage.respond_to?(:thin) ? m.storage.thin == "true" : nil,
-        :cluster_id  => m.device.try(:cluster_id),
-        :storage     => m.storage,
-        :type        => m.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? "cdrom" : "disk",
-        :mode        => m.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? m.storage.mount_opts : "rw",
-        :path        => m.device.kind_of?(IbmPowerHmc::SharedFileSystemFileVirtualTargetDevice) ? m.device.path : nil
+        :lpar_uuid  => m.lpar_uuid,
+        :client_drc => m.client.location,
+        :udid       => m.storage.udid,
+        :thin       => m.storage.respond_to?(:thin) ? m.storage.thin == "true" : nil,
+        :cluster_id => m.device.try(:cluster_id),
+        :storage    => m.storage,
+        :type       => m.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? "cdrom" : "disk",
+        :mode       => m.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? m.storage.mount_opts : "rw",
+        :path       => m.device.kind_of?(IbmPowerHmc::SharedFileSystemFileVirtualTargetDevice) ? m.device.path : nil
       }
     end
   end
