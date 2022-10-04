@@ -37,10 +37,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     case storage
     when IbmPowerHmc::VirtualOpticalMedia
       storage.size.to_f.gigabytes.to_i
-    when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit
+    when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit, IbmPowerHmc::VirtualDisk
       storage.capacity.to_f.gigabytes.to_i
     else
-      storage.capacity.to_i.megabytes
+      storage.capacity.to_f.megabytes.to_i
+    end
+  end
+
+  def self.storage_type(storage)
+    case storage
+    when IbmPowerHmc::PhysicalVolume
+      "Physical Volume"
+    when IbmPowerHmc::VirtualDisk
+      "Logical Volume"
+    when IbmPowerHmc::VirtualOpticalMedia
+      "Optical Media"
+    when IbmPowerHmc::LogicalUnit
+      "Logical Unit"
     end
   end
 
@@ -60,6 +73,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
     collector.lpar_disks[lpar.uuid].group_by { |d| d[:udid] }.each do |udid, paths|
       disk = paths.first
+      size = disk[:storage] ? self.class.storage_capacity(disk[:storage]) : disk[:size]
 
       persister.disks.build(
         :hardware        => hardware,
@@ -67,7 +81,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :device_name     => udid,
         :device_type     => disk[:type],
         :storage         => disk[:cluster_id] ? persister.storages.lazy_find(disk[:cluster_id]) : nil,
-        :size            => disk[:storage] ? self.class.storage_capacity(disk[:storage]) : disk[:size],
+        :size            => size,
+        :size_on_disk    => size,
+        :mode            => disk[:mode],
+        :disk_type       => disk[:storage] ? self.class.storage_type(disk[:storage]) : disk[:disk_type],
         :thin            => disk[:thin],
         :filename        => disk[:path],
         :controller_type => "SCSI"

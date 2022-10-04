@@ -87,6 +87,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
           :client_drc => path,
           :udid       => disk.device_name,
           :size       => disk.size,
+          :mode       => disk.mode,
+          :disk_type  => disk.disk_type,
           :thin       => disk.thin,
           :type       => disk.device_type,
           :path       => disk.filename
