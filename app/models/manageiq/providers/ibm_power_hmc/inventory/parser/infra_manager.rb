@@ -94,12 +94,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_vios_disks(vios, hardware)
     vios.pvs.each do |pv|
+      size = self.class.storage_capacity(pv)
+
       persister.disks.build(
         :hardware        => hardware,
-        :device_type     => "disk",
-        :device_name     => pv.name,
-        :size            => self.class.storage_capacity(pv),
         :location        => pv.location,
+        :device_name     => pv.name,
+        :device_type     => "disk",
+        :size            => size,
+        :size_on_disk    => size,
+        :mode            => "rw",
+        :disk_type       => self.class.storage_type(pv),
         :controller_type => pv.is_fc == "true" ? "FC" : "SCSI"
       )
     end
