@@ -37,10 +37,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     case storage
     when IbmPowerHmc::VirtualOpticalMedia
       storage.size.to_f.gigabytes.to_i
-    when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit
+    when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit, IbmPowerHmc::VirtualDisk
       storage.capacity.to_f.gigabytes.to_i
     else
-      storage.capacity.to_i.megabytes
+      storage.capacity.to_f.megabytes.to_i
+    end
+  end
+
+  def self.storage_type(storage)
+    case storage
+    when IbmPowerHmc::PhysicalVolume
+      "Physical Volume"
+    when IbmPowerHmc::VirtualDisk
+      "Logical Volume"
+    when IbmPowerHmc::VirtualOpticalMedia
+      "Optical Media"
+    when IbmPowerHmc::LogicalUnit
+      "Logical Unit"
     end
   end
 
@@ -56,27 +69,42 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_lpar_disks(lpar, hardware)
-    collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
-      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
+    return unless collector.lpar_disks.key?(lpar.uuid) # LPAR has no disk
+
+    collector.lpar_disks[lpar.uuid].group_by { |d| d[:udid] }.each do |udid, paths|
+      disk = paths.first
+      size = disk[:storage] ? self.class.storage_capacity(disk[:storage]) : disk[:size]
 
       persister.disks.build(
-        :device_type => "disk",
-        :hardware    => hardware,
-        :storage     => persister.storages.lazy_find(found_ssp_uuid),
-        :device_name => mapping.storage.name,
-        :size        => self.class.storage_capacity(mapping.storage)
+        :hardware        => hardware,
+        :location        => paths.pluck(:client_drc).sort.uniq.join(","),
+        :device_name     => udid,
+        :device_type     => disk[:type],
+        :storage         => disk[:cluster_id] ? persister.storages.lazy_find(disk[:cluster_id]) : nil,
+        :size            => size,
+        :size_on_disk    => size,
+        :mode            => disk[:mode],
+        :disk_type       => disk[:storage] ? self.class.storage_type(disk[:storage]) : disk[:disk_type],
+        :thin            => disk[:thin],
+        :filename        => disk[:path],
+        :controller_type => "SCSI"
       )
     end
   end
 
   def parse_vios_disks(vios, hardware)
     vios.pvs.each do |pv|
+      size = self.class.storage_capacity(pv)
+
       persister.disks.build(
         :hardware        => hardware,
-        :device_type     => "disk",
-        :device_name     => pv.name,
-        :size            => self.class.storage_capacity(pv),
         :location        => pv.location,
+        :device_name     => pv.name,
+        :device_type     => "disk",
+        :size            => size,
+        :size_on_disk    => size,
+        :mode            => "rw",
+        :disk_type       => self.class.storage_type(pv),
         :controller_type => pv.is_fc == "true" ? "FC" : "SCSI"
       )
     end
