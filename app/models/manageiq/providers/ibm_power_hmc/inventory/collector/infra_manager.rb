@@ -157,7 +157,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
         :cluster_id => m.device.try(:cluster_id),
         :storage    => m.storage,
         :type       => m.storage.kind_of?(IbmPowerHmc::VirtualOpticalMedia) ? "cdrom" : "disk",
-        :path       => m.device.kind_of?(IbmPowerHmc::SharedFileSystemFile) ? m.device.path : nil
+        :path       => m.device.kind_of?(IbmPowerHmc::SharedFileSystemFileVirtualTargetDevice) ? m.device.path : nil
       }
     end
   end
