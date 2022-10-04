@@ -18,7 +18,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :uid_ems             => sys.uuid,
         :ems_ref             => sys.uuid,
         :name                => sys.name,
-        :hypervisor_hostname => "#{sys.mtype}#{sys.model}_#{sys.serial}",
+        :hypervisor_hostname => "#{sys.mtype}-#{sys.model}*#{sys.serial}",
         :hostname            => sys.hostname,
         :ipaddress           => sys.ipaddr,
         :power_state         => lookup_power_state(sys.state),
@@ -36,12 +36,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_cecs_unavailable
     collector.cecs_unavailable.each do |sys|
-      mtype, model, serial = sys["MTMS"].split(/[-\*]/)
+      mtype_model, serial = sys["MTMS"].split("*")
       host = persister.hosts.build(
         :uid_ems             => sys["UUID"],
         :ems_ref             => sys["UUID"],
         :name                => sys["SystemName"],
-        :hypervisor_hostname => "#{mtype}#{model}_#{serial}",
+        :hypervisor_hostname => sys["MTMS"],
         :ipaddress           => sys["IPAddress"],
         :power_state         => lookup_power_state(sys["State"]),
         :vmm_vendor          => "ibm_power_hmc",
@@ -57,7 +57,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :cpu_type        => "ppc64",
         :bitness         => 64,
         :manufacturer    => "IBM",
-        :model           => "#{mtype}#{model}",
+        :model           => mtype_model,
         :memory_mb       => sys["InstalledSystemMemory"],
         :cpu_total_cores => sys["InstalledSystemProcessorUnits"],
         :serial_number   => serial

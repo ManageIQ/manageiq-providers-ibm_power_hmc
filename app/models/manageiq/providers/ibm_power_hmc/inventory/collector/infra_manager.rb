@@ -26,21 +26,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     end
   end
 
-  def self.cec_unavailable?(quick_cec)
-    ["failed authentication", "no connection"].include?(quick_cec["State"].downcase)
+  def self.cec_unavailable?(cec_quick)
+    ["failed authentication", "no connection"].include?(cec_quick["State"].downcase)
   end
 
   def cecs
-    @cecs ||= cecs_quick.map do |quick_cec|
-      connection.managed_system(quick_cec["UUID"]) unless self.class.cec_unavailable?(quick_cec)
+    @cecs ||= cecs_quick.map do |cec_quick|
+      connection.managed_system(cec_quick["UUID"]) unless self.class.cec_unavailable?(cec_quick)
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("managed system query failed for #{quick_cec["UUID"]}: #{e}")
+      $ibm_power_hmc_log.error("managed system query failed for #{cec_quick["UUID"]}: #{e}")
       nil
     end.compact
   end
 
   def cecs_unavailable
-    @cecs_unavailable ||= cecs_quick.select { |quick_cec| self.class.cec_unavailable?(quick_cec) }
+    @cecs_unavailable ||= cecs_quick.select { |cec_quick| self.class.cec_unavailable?(cec_quick) }
   end
 
   def vlans
