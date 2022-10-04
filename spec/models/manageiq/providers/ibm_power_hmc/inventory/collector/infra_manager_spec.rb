@@ -12,24 +12,13 @@ describe ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager do
       end
       allow(collector.connection).to receive(:managed_systems_quick).and_return(
         [
-          {
-            "UUID"  => "1",
-            "State" => "operating"
-          },
-          {
-            "UUID"  => "2",
-            "State" => "failed authentication"
-          },
-          {
-            "UUID"  => "3",
-            "State" => "no connection"
-          }
+          { "UUID"  => "1", "State" => "operating" },
+          { "UUID"  => "2", "State" => "failed authentication" },
+          { "UUID"  => "3", "State" => "no connection" }
         ]
       )
-      available   = collector.cecs
-      unavailable = collector.cecs_unavailable
+      expect(collector.cecs).to contain_exactly("1")
+      expect(collector.cecs_unavailable.pluck("UUID")).to contain_exactly("2", "3")
     end
-    expect(available).to contain_exactly("1")
-    expect(unavailable.pluck("UUID")).to contain_exactly("2", "3")
   end
 end
