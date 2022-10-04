@@ -13,16 +13,16 @@ describe ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager do
       allow(collector.connection).to receive(:managed_systems_quick).and_return(
         [
           {
-              "UUID"  => "1",
-              "State" => "operating"
+            "UUID"  => "1",
+            "State" => "operating"
           },
           {
-              "UUID"  => "2",
-              "State" => "failed authentication"
+            "UUID"  => "2",
+            "State" => "failed authentication"
           },
           {
-              "UUID"  => "3",
-              "State" => "no connection"
+            "UUID"  => "3",
+            "State" => "no connection"
           }
         ]
       )

@@ -52,13 +52,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :product_name => "phyp",
         :build_number => sys["SystemFirmware"]
       )
-      hardware = persister.host_hardwares.build(
+      persister.host_hardwares.build(
         :host            => host,
         :cpu_type        => "ppc64",
         :bitness         => 64,
         :manufacturer    => "IBM",
         :model           => "#{mtype}#{model}",
-        # :cpu_speed     => 2348, # in MHz
         :memory_mb       => sys["InstalledSystemMemory"],
         :cpu_total_cores => sys["InstalledSystemProcessorUnits"],
         :serial_number   => serial
