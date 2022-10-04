@@ -6,7 +6,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
     manager.with_provider_connection do |connection|
       @connection = connection
-      infer_ems_refs_from_api
+      infer_related_ems_refs_api!
     end
 
     target.manager_refs_by_association_reset
@@ -67,7 +67,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     end.compact
   end
 
-  def infer_ems_refs_from_api
+  def infer_related_ems_refs_api!
     # Refresh LPARs that have disk paths going through any of the updated VIOSes.
     vscsi_mappings.each do |m|
       $ibm_power_hmc_log.debug("#{self.class}##{__method__} add LPAR target #{m.lpar_uuid}")
