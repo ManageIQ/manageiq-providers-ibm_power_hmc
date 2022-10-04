@@ -3,6 +3,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     $ibm_power_hmc_log.info("#{self.class}##{__method__} start")
     collector.collect! do
       parse_cecs
+      parse_cecs_unavailable
       parse_lpars
       parse_vioses
       parse_templates
@@ -30,6 +31,38 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_host_advanced_settings(host, sys)
       parse_vswitches(host, sys)
       parse_vlans(host, sys)
+    end
+  end
+
+  def parse_cecs_unavailable
+    collector.cecs_unavailable.each do |sys|
+      mtype, model, serial = sys["MTMS"].split(/[-\*]/)
+      host = persister.hosts.build(
+        :uid_ems             => sys["UUID"],
+        :ems_ref             => sys["UUID"],
+        :name                => sys["SystemName"],
+        :hypervisor_hostname => "#{mtype}#{model}_#{serial}",
+        :ipaddress           => sys["IPAddress"],
+        :power_state         => lookup_power_state(sys["State"]),
+        :vmm_vendor          => "ibm_power_hmc",
+        :type                => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.name
+      )
+      persister.host_operating_systems.build(
+        :host         => host,
+        :product_name => "phyp",
+        :build_number => sys["SystemFirmware"]
+      )
+      hardware = persister.host_hardwares.build(
+        :host            => host,
+        :cpu_type        => "ppc64",
+        :bitness         => 64,
+        :manufacturer    => "IBM",
+        :model           => "#{mtype}#{model}",
+        # :cpu_speed     => 2348, # in MHz
+        :memory_mb       => sys["InstalledSystemMemory"],
+        :cpu_total_cores => sys["InstalledSystemProcessorUnits"],
+        :serial_number   => serial
+      )
     end
   end
 
