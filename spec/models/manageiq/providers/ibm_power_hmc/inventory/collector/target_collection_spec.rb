@@ -6,10 +6,10 @@ describe ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollectio
   let!(:host4) { FactoryBot.create(:ibm_power_hmc_host, :ext_management_system => ems, :ems_ref => "1", :power_state => "on") }
 
   it "collect cecs" do
-    CECS = {
-      "1" => { "UUID"  => "1", "State" => "no connection" },
-      "2" => { "UUID"  => "2", "State" => "operating" },
-      "3" => { "UUID"  => "3", "State" => "failed authentication" }
+    cecs = {
+      "1" => {"UUID"  => "1", "State" => "no connection"},
+      "2" => {"UUID"  => "2", "State" => "operating"},
+      "3" => {"UUID"  => "3", "State" => "failed authentication"}
     }
     collector = described_class.new(
       ems,
@@ -17,12 +17,12 @@ describe ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollectio
     )
     collector.collect! do
       allow(collector.connection).to receive(:managed_system).with(an_instance_of(String)) do |uuid|
-        expect(uuid).to be_in(CECS.keys)
+        expect(uuid).to be_in(cecs.keys)
         uuid
       end
       allow(collector.connection).to receive(:managed_system_quick).with(an_instance_of(String)) do |uuid|
-        expect(uuid).to be_in(CECS.keys)
-        CECS[uuid]
+        expect(uuid).to be_in(cecs.keys)
+        cecs[uuid]
       end
       expect(collector.cecs).to contain_exactly("2")
       expect(collector.cecs_unavailable.pluck("UUID")).to contain_exactly("1", "3")
