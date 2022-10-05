@@ -44,11 +44,46 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :build_number => "7300-00-00-0000"
       )
     end
+  end
 
-    def full_refresh(ems)
-      VCR.use_cassette(described_class.name.underscore) do
-        EmsRefresh.refresh(ems)
+  context "#target_refresh" do
+    let(:ems) do
+      ext = FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication)
+      full_refresh(ext)
+      ext
+    end
+
+    def target_refresh(target, example)
+      expect(target).not_to be_nil
+      VCR.use_cassette("#{described_class.name.underscore}_#{example.description}") do
+        EmsRefresh.refresh(target)
       end
+    end
+
+    it "host" do |example|
+      target_refresh(ems.hosts.first, example)
+    end
+
+    it "lpar" do |example|
+      target_refresh(ems.vms.where(:type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar").first, example)
+    end
+
+    it "vios" do |example|
+      target_refresh(ems.vms.where(:type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios").first, example)
+    end
+
+    it "template" do |example|
+      target_refresh(ems.miq_templates.first, example)
+    end
+
+    it "storage" do |example|
+      target_refresh(ems.storages.first, example)
+    end
+  end
+
+  def full_refresh(target)
+    VCR.use_cassette(described_class.name.underscore) do
+      EmsRefresh.refresh(target)
     end
   end
 end
