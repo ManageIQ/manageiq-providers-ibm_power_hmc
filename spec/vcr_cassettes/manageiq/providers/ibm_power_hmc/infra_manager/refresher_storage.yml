@@ -1,0 +1,376 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: UTF-8
+      string: "<LogonRequest schemaVersion='V1_1_0' xmlns='http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/'><UserID>ibm-power-hmc-username</UserID><Password>ibm-power-hmc-password</Password></LogonRequest>"
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonRequest
+      X-Api-Session:
+      - ''
+      Content-Length:
+      - '176'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11003293
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonResponse
+      Content-Length:
+      - '576'
+      Set-Cookie:
+      - CCFWSESSION=A4FAF0370A50BB5316FF9023BACCBD58; Path=/; Secure; HttpOnly
+      - JSESSIONID=0000btEvq3DX_LDjjXvmzzr6NC9:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Wed, 05 Oct 2022 08:47:19 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <LogonResponse xmlns="http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom/>
+            </Metadata>
+            <X-API-Session kb="ROR" kxe="false">XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphCgLKj7HOPYmVllmST36f00PEij1-oLxjN8zPnNsyWoghEYxtcw6lzzJhmTErEtVu-7iuG_W5nI7WhwFzfE5MSJnIgnAtbA7xr6KGE445rroGtgZrU5fOFWifBBpvy38-GT6C6y-_ktojJIsywYaPD3IxavlwDzv7NgJJMG1xGSNjKyntHbiaT6IJs42dCLmtM=</X-API-Session>
+        </LogonResponse>
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 08:16:24 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/Cluster/8f2a83e9-f4c7-35e5-987e-9ac54a498dab
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphCgLKj7HOPYmVllmST36f00PEij1-oLxjN8zPnNsyWoghEYxtcw6lzzJhmTErEtVu-7iuG_W5nI7WhwFzfE5MSJnIgnAtbA7xr6KGE445rroGtgZrU5fOFWifBBpvy38-GT6C6y-_ktojJIsywYaPD3IxavlwDzv7NgJJMG1xGSNjKyntHbiaT6IJs42dCLmtM=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11003295
+      Content-Type:
+      - application/atom+xml
+      Etag:
+      - "-1293505716"
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Last-Modified:
+      - Wed, 05 Oct 2022 08:47:19 GMT
+      X-Hmc-Schema-Version:
+      - V1_5_0
+      X-Transactionrecord-Uuid:
+      - bcba2c0b-e6ec-4160-b959-7833dc16f048
+      Content-Length:
+      - '4127'
+      Set-Cookie:
+      - JSESSIONID=0000M1OMC1PVLhgLHlM6YO0Docj:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Wed, 05 Oct 2022 08:47:19 GMT
+      Cache-Control:
+      - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>8f2a83e9-f4c7-35e5-987e-9ac54a498dab</id>
+            <title>Cluster</title>
+            <published>2022-10-05T09:47:19.805+01:00</published>
+            <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Cluster/8f2a83e9-f4c7-35e5-987e-9ac54a498dab"/>
+            <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
+            <author>
+                <name>IBM Power Systems Management Console</name>
+            </author>
+            <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-1293505716</etag:etag>
+            <content type="application/vnd.ibm.powervm.uom+xml; type=Cluster">
+                <Cluster:Cluster xmlns:Cluster="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>8f2a83e9-f4c7-35e5-987e-9ac54a498dab</AtomID>
+                    <AtomCreated>1664440900847</AtomCreated>
+                </Atom>
+            </Metadata>
+            <ClusterName kxe="false" kb="COR">SSP_Cluster_1</ClusterName>
+            <ClusterID kb="CUD" kxe="false">227b8db88679ff11ec80c776016f70ca01</ClusterID>
+            <RepositoryDisk kxe="false" kb="CUD" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <PhysicalVolume schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <Description kxe="false" kb="CUD">MPIO IBM 2076 FC Disk</Description>
+                    <UniqueDeviceID kb="ROR" kxe="false">01M0lCTTIxNDU1MjQ2MDA1MDc2NDAwODEwMERDNDgwMDAwMDAwMDAwMkJGNg==</UniqueDeviceID>
+                    <VolumeCapacity kb="CUR" kxe="false">51200</VolumeCapacity>
+                    <VolumeName kb="CUR" kxe="false">hdisk5</VolumeName>
+                    <VolumeState kxe="false" kb="ROR">active</VolumeState>
+                    <IsFibreChannelBacked kb="ROR" kxe="false">true</IsFibreChannelBacked>
+                    <StorageLabel ksv="V1_3_0" kb="ROR" kxe="false">cG9sbHV4aW9zX3NzcF90ZXN0X2NhbDA=</StorageLabel>
+                </PhysicalVolume>
+            </RepositoryDisk>
+            <ClusterSharedStoragePool kb="CUD" kxe="false" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Cluster/8f2a83e9-f4c7-35e5-987e-9ac54a498dab/SharedStoragePool/4afae2fc-e45f-3e05-a0e2-9aeecde3c122" rel="related"/>
+            <Node kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <Node schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <HostName kb="CUD" kxe="false">polluxios2.coopibm.frec.bull.fr</HostName>
+                    <PartitionID kxe="false" kb="CUD">8</PartitionID>
+                    <MachineTypeModelAndSerialNumber kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                        <Metadata>
+                            <Atom/>
+                        </Metadata>
+                        <MachineType kb="CUR" kxe="false">8284</MachineType>
+                        <Model kxe="false" kb="CUR">22A</Model>
+                        <SerialNumber kb="CUR" kxe="false">21FD4AV</SerialNumber>
+                    </MachineTypeModelAndSerialNumber>
+                    <VirtualIOServerLevel kb="CUD" kxe="false">2.2.6.00</VirtualIOServerLevel>
+                    <VirtualIOServer kxe="false" kb="CUD" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/VirtualIOServer/1ABB7000-4A15-4749-9EAE-CD0A0827CDFE" rel="related"/>
+                    <State ksv="V1_3_0" kxe="false" kb="ROR">Up</State>
+                </Node>
+            </Node>
+            <ClusterCapabilities ksv="V1_3_0" kb="ROR" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <IsTierCapable ksv="V1_3_0" kb="ROR" kxe="false">true</IsTierCapable>
+                <IsTierMirrorCapable ksv="V1_3_0" kb="ROR" kxe="false">true</IsTierMirrorCapable>
+            </ClusterCapabilities>
+        </Cluster:Cluster>
+            </content>
+        </entry>
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 08:16:25 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/SharedStoragePool/4afae2fc-e45f-3e05-a0e2-9aeecde3c122
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphCgLKj7HOPYmVllmST36f00PEij1-oLxjN8zPnNsyWoghEYxtcw6lzzJhmTErEtVu-7iuG_W5nI7WhwFzfE5MSJnIgnAtbA7xr6KGE445rroGtgZrU5fOFWifBBpvy38-GT6C6y-_ktojJIsywYaPD3IxavlwDzv7NgJJMG1xGSNjKyntHbiaT6IJs42dCLmtM=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11003296
+      Content-Type:
+      - application/atom+xml
+      Etag:
+      - "-344406796"
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Last-Modified:
+      - Wed, 05 Oct 2022 08:47:20 GMT
+      X-Hmc-Schema-Version:
+      - V1_5_0
+      X-Transactionrecord-Uuid:
+      - 0febd138-d74d-43f8-8420-c0b54a1ac62c
+      Content-Length:
+      - '5954'
+      Set-Cookie:
+      - JSESSIONID=0000uqab74gNB9XoDiEeqtwzkbp:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Wed, 05 Oct 2022 08:47:20 GMT
+      Cache-Control:
+      - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>4afae2fc-e45f-3e05-a0e2-9aeecde3c122</id>
+            <title>SharedStoragePool</title>
+            <published>2022-10-05T09:47:20.359+01:00</published>
+            <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/SharedStoragePool/4afae2fc-e45f-3e05-a0e2-9aeecde3c122"/>
+            <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
+            <author>
+                <name>IBM Power Systems Management Console</name>
+            </author>
+            <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-344406796</etag:etag>
+            <content type="application/vnd.ibm.powervm.uom+xml; type=SharedStoragePool">
+                <SharedStoragePool:SharedStoragePool xmlns:SharedStoragePool="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>4afae2fc-e45f-3e05-a0e2-9aeecde3c122</AtomID>
+                    <AtomCreated>1663732982415</AtomCreated>
+                </Atom>
+            </Metadata>
+            <LogicalUnits kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <LogicalUnit schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <ThinDevice kxe="false" kb="CUR">true</ThinDevice>
+                    <UniqueDeviceID kxe="false" kb="ROR">277b8db88679ff11ec80c776016f70ca01c6134fc9872cddd2670de9cbd35f7c75</UniqueDeviceID>
+                    <UnitCapacity kxe="false" kb="COR">0.1</UnitCapacity>
+                    <LogicalUnitType kb="COD" kxe="false">VirtualIO_Disk</LogicalUnitType>
+                    <InUse kb="ROR" kxe="false">true</InUse>
+                    <UnitName kxe="false" kb="CUR">lu_panar</UnitName>
+                </LogicalUnit>
+                <LogicalUnit schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <ThinDevice kxe="false" kb="CUR">true</ThinDevice>
+                    <UniqueDeviceID kxe="false" kb="ROR">277b8db88679ff11ec80c776016f70ca015c1366f4ff09b1e27aa120dd7c2a073f</UniqueDeviceID>
+                    <UnitCapacity kxe="false" kb="COR">0.1</UnitCapacity>
+                    <LogicalUnitType kb="COD" kxe="false">VirtualIO_Disk</LogicalUnitType>
+                    <InUse kb="ROR" kxe="false">true</InUse>
+                    <UnitName kxe="false" kb="CUR">callistelu0</UnitName>
+                </LogicalUnit>
+                <LogicalUnit schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <ThinDevice kxe="false" kb="CUR">true</ThinDevice>
+                    <UniqueDeviceID kxe="false" kb="ROR">277b8db88679ff11ec80c776016f70ca01dc11836124a6c8390d182a4636fe845d</UniqueDeviceID>
+                    <UnitCapacity kxe="false" kb="COR">1</UnitCapacity>
+                    <LogicalUnitType kb="COD" kxe="false">VirtualIO_Disk</LogicalUnitType>
+                    <InUse kb="ROR" kxe="false">false</InUse>
+                    <UnitName kxe="false" kb="CUR">vincentlu0</UnitName>
+                </LogicalUnit>
+                <LogicalUnit schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <ThinDevice kxe="false" kb="CUR">true</ThinDevice>
+                    <UniqueDeviceID kxe="false" kb="ROR">277b8db88679ff11ec80c776016f70ca01d0f53f1e9c4ad95b560451a8d76587e6</UniqueDeviceID>
+                    <UnitCapacity kxe="false" kb="COR">0.2</UnitCapacity>
+                    <LogicalUnitType kb="COD" kxe="false">VirtualIO_Disk</LogicalUnitType>
+                    <InUse kb="ROR" kxe="false">false</InUse>
+                    <UnitName kxe="false" kb="CUR">damienlu</UnitName>
+                </LogicalUnit>
+            </LogicalUnits>
+            <MultiDataTierConfigured kxe="false" kb="CUD">false</MultiDataTierConfigured>
+            <MultiFailureGroupConfigured kb="CUD" kxe="false">false</MultiFailureGroupConfigured>
+            <PhysicalVolumes kxe="false" kb="CUR" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <PhysicalVolume schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <Description kxe="false" kb="CUD">MPIO IBM 2076 FC Disk</Description>
+                    <UniqueDeviceID kb="ROR" kxe="false">01M0lCTTIxNDU1MjQ2MDA1MDc2NDAwODEwMERDNDgwMDAwMDAwMDAwMkJGNw==</UniqueDeviceID>
+                    <VolumeCapacity kb="CUR" kxe="false">51200</VolumeCapacity>
+                    <VolumeName kb="CUR" kxe="false">hdisk6</VolumeName>
+                    <VolumeState kxe="false" kb="ROR">active</VolumeState>
+                    <IsFibreChannelBacked kb="ROR" kxe="false">true</IsFibreChannelBacked>
+                    <StorageLabel ksv="V1_3_0" kb="ROR" kxe="false">cG9sbHV4aW9zX3NzcF90ZXN0X2NhbDE=</StorageLabel>
+                </PhysicalVolume>
+            </PhysicalVolumes>
+            <Capacity kb="CUR" kxe="false">49.88</Capacity>
+            <FreeSpace kb="CUR" kxe="false">48.97</FreeSpace>
+            <OverCommitSpace kb="CUR" kxe="false">0</OverCommitSpace>
+            <TotalLogicalUnitSize kxe="false" kb="CUR">1.4</TotalLogicalUnitSize>
+            <AlertThreshold kb="CUD" kxe="false">60%</AlertThreshold>
+            <StoragePoolName kb="CUR" kxe="false">SSP_1</StoragePoolName>
+            <UniqueDeviceID kb="ROR" kxe="false">247b8db88679ff11ec80c776016f70ca01000000000AC540C30000000061E9755E</UniqueDeviceID>
+            <AssociatedTiers ksv="V1_3_0" kxe="false" kb="CUD">
+                <link href="https://ibm-power-hmc-hostname:12443/rest/api/uom/SharedStoragePool/4afae2fc-e45f-3e05-a0e2-9aeecde3c122/Tier/5efd5b5a-9428-39a0-b081-449507b6a83c" rel="related"/>
+            </AssociatedTiers>
+            <AssociatedCluster ksv="V1_3_0" kb="CUD" kxe="false" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Cluster/8f2a83e9-f4c7-35e5-987e-9ac54a498dab" rel="related"/>
+        </SharedStoragePool:SharedStoragePool>
+            </content>
+        </entry>
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 08:16:25 GMT
+- request:
+    method: delete
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphCgLKj7HOPYmVllmST36f00PEij1-oLxjN8zPnNsyWoghEYxtcw6lzzJhmTErEtVu-7iuG_W5nI7WhwFzfE5MSJnIgnAtbA7xr6KGE445rroGtgZrU5fOFWifBBpvy38-GT6C6y-_ktojJIsywYaPD3IxavlwDzv7NgJJMG1xGSNjKyntHbiaT6IJs42dCLmtM=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11003297
+      Content-Language:
+      - en-US
+      Content-Length:
+      - '0'
+      Set-Cookie:
+      - CCFWSESSION=A4FAF0370A50BB5316FF9023BACCBD58; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
+        Max-Age=0; Path="/"; Secure
+      - JSESSIONID=0000Dm7ojyNas7_qiZnBlXjeWnY:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      - JSESSIONID=A4FAF0370A50BB5316FF9023BACCBD58; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
+        Max-Age=0; Path="/hmc"; Secure
+      Date:
+      - Wed, 05 Oct 2022 08:47:20 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 08:16:25 GMT
+recorded_with: VCR 5.1.0

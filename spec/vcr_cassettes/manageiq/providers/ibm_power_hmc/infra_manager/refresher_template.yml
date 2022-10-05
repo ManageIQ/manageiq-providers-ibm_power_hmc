@@ -1,0 +1,335 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: UTF-8
+      string: "<LogonRequest schemaVersion='V1_1_0' xmlns='http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/'><UserID>ibm-power-hmc-username</UserID><Password>ibm-power-hmc-password</Password></LogonRequest>"
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonRequest
+      X-Api-Session:
+      - ''
+      Content-Length:
+      - '176'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11001415
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonResponse
+      Content-Length:
+      - '576'
+      Set-Cookie:
+      - CCFWSESSION=52B3A5955294A0C68787EBD60F015000; Path=/; Secure; HttpOnly
+      - JSESSIONID=0000ZbKfSnxD5Bxnioj2kgopwtv:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Wed, 05 Oct 2022 08:19:39 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <LogonResponse xmlns="http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom/>
+            </Metadata>
+            <X-API-Session kb="ROR" kxe="false">XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphADNgsiDyY8YxrN8xzS-fdSaLRLgvDbEn0dJqcpnFMcNTcRQ_krNX6zLbPWqz5dee-TKi2LeWUJPVE0gjLOvn6nOdtJB6nWN0pXXyboP_7GIPFYBdDDXg1Xp8dLeKQMRt7ckVwXspd2-l7DelehAwcOfWJaPImv3RUK2xFelgMC_ZoBCdB9zzw5mpBvU9f8YWk=</X-API-Session>
+        </LogonResponse>
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 07:48:45 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/templates/PartitionTemplate/8768e650-266c-4d21-8abe-dd6e86163c37
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphADNgsiDyY8YxrN8xzS-fdSaLRLgvDbEn0dJqcpnFMcNTcRQ_krNX6zLbPWqz5dee-TKi2LeWUJPVE0gjLOvn6nOdtJB6nWN0pXXyboP_7GIPFYBdDDXg1Xp8dLeKQMRt7ckVwXspd2-l7DelehAwcOfWJaPImv3RUK2xFelgMC_ZoBCdB9zzw5mpBvU9f8YWk=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11001417
+      Content-Type:
+      - application/atom+xml
+      Content-Length:
+      - '11975'
+      Set-Cookie:
+      - JSESSIONID=0000T3wNo5Egg4u7H5_wh_v6gmI:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Wed, 05 Oct 2022 08:19:39 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>8768e650-266c-4d21-8abe-dd6e86163c37</id>
+            <title>PartitionTemplate</title>
+            <published>2022-10-05T09:19:39.719+01:00</published>
+            <author>
+                <name>IBM Power Systems Management Console</name>
+            </author>
+            <content type="application/vnd.ibm.powervm.templates+xml; type=PartitionTemplate">
+                <PartitionTemplate:PartitionTemplate xmlns:PartitionTemplate="http://www.ibm.com/xmlns/systems/power/firmware/templates/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/templates/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>8768e650-266c-4d21-8abe-dd6e86163c37</AtomID>
+                </Atom>
+            </Metadata>
+            <partitionTemplateName kb="CUD" kxe="false">Copie12</partitionTemplateName>
+            <description kxe="false" kb="CUD"/>
+            <logicalPartitionConfig kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <partitionId kb="CUD" kxe="false">98</partitionId>
+                <partitionName kxe="false" kb="CUD">CHIOTTES</partitionName>
+                <partitionType kb="CUD" kxe="false">AIX/Linux</partitionType>
+                <state kb="CUD" kxe="false">not activated</state>
+                <osVersion kb="CUD" kxe="false">Unknown</osVersion>
+                <logicalSerialNumber kxe="false" kb="CUD">21FD4AV63</logicalSerialNumber>
+                <currAllocatedBSRArrays kb="CUD" kxe="false">0</currAllocatedBSRArrays>
+                <progressPartitionDataTotal kb="CUD" kxe="false">0</progressPartitionDataTotal>
+                <progressPartitionDataRemaining kxe="false" kb="CUD">0</progressPartitionDataRemaining>
+                <currProcessorCompatibilityMode kb="CUD" kxe="false">POWER8</currProcessorCompatibilityMode>
+                <pendProcessorCompatibilityMode kxe="false" kb="CUD">POWER8</pendProcessorCompatibilityMode>
+                <allowPerformanceDataCollection kb="CUD" kxe="false">false</allowPerformanceDataCollection>
+                <availabilityPriority kb="CUD" kxe="false">127</availabilityPriority>
+                <isTimeReferencePartition kxe="false" kb="CUD">false</isTimeReferencePartition>
+                <vtpmEnabled kb="CUD" kxe="false">false</vtpmEnabled>
+                <enableCallHome kxe="false" kb="CUD">false</enableCallHome>
+                <syncCurrentProfile kb="CUD" kxe="false">On</syncCurrentProfile>
+                <isConnectionMonitoringEnabled kb="CUD" kxe="false">false</isConnectionMonitoringEnabled>
+                <isRedundantErrorPathReportingEnabled kxe="false" kb="CUD">false</isRedundantErrorPathReportingEnabled>
+                <capabilities kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <isRmcOsShutdownCapable kxe="false" kb="CUD">false</isRmcOsShutdownCapable>
+                    <isDLPARMemoryCapable kb="CUD" kxe="false">false</isDLPARMemoryCapable>
+                    <isDLPARProcessorCapable kxe="false" kb="CUD">false</isDLPARProcessorCapable>
+                    <isDLPARIOCapable kb="CUD" kxe="false">false</isDLPARIOCapable>
+                    <isInternalAndExternalIntrusionDetectionCapable kb="CUD" kxe="false">false</isInternalAndExternalIntrusionDetectionCapable>
+                </capabilities>
+                <processorConfiguration kxe="false" kb="CUD" schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <hasDedicatedProcessors kb="CUD" kxe="false">false</hasDedicatedProcessors>
+                    <sharingMode kb="CUD" kxe="false">uncapped</sharingMode>
+                    <sharedProcessorConfiguration kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                        <Metadata>
+                            <Atom/>
+                        </Metadata>
+                        <sharedProcessorPoolId kb="CUD" kxe="false">0</sharedProcessorPoolId>
+                        <uncappedWeight kb="CUD" kxe="false">128</uncappedWeight>
+                        <minProcessingUnits kb="CUD" kxe="false">0.1</minProcessingUnits>
+                        <desiredProcessingUnits kb="CUD" kxe="false">1</desiredProcessingUnits>
+                        <maxProcessingUnits kb="CUD" kxe="false">4</maxProcessingUnits>
+                        <minVirtualProcessors kb="CUD" kxe="false">1</minVirtualProcessors>
+                        <desiredVirtualProcessors kb="CUD" kxe="false">4</desiredVirtualProcessors>
+                        <maxVirtualProcessors kb="CUD" kxe="false">8</maxVirtualProcessors>
+                    </sharedProcessorConfiguration>
+                    <currSharingMode kb="CUD" kxe="false">uncapped</currSharingMode>
+                    <currHasDedicatedProcessors kb="CUD" kxe="false">false</currHasDedicatedProcessors>
+                    <runHasDedicatedProcessors kb="CUD" kxe="false">false</runHasDedicatedProcessors>
+                </processorConfiguration>
+                <memoryConfiguration kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <minMemory kxe="false" kb="CUD">2048</minMemory>
+                    <desiredMemory kb="CUD" kxe="false">16384</desiredMemory>
+                    <maxMemory kxe="false" kb="CUD">16384</maxMemory>
+                    <minHugePageCount kb="CUD" kxe="false">0</minHugePageCount>
+                    <desiredHugePageCount kb="CUD" kxe="false">0</desiredHugePageCount>
+                    <maxHugePageCount kxe="false" kb="CUD">0</maxHugePageCount>
+                    <hptRatio kb="CUD" kxe="false">7</hptRatio>
+                    <bsrArrays kb="CUD" kxe="false">0</bsrArrays>
+                    <activeMemorySharingEnabled kb="CUD" kxe="false">false</activeMemorySharingEnabled>
+                    <activeMemoryExpansionEnabled kb="CUD" kxe="false">false</activeMemoryExpansionEnabled>
+                    <isManualEntitledMode kxe="false" kb="CUD">false</isManualEntitledMode>
+                    <expansionFactor kb="CUD" kxe="false">0.0</expansionFactor>
+                    <currMinMemory kb="CUD" kxe="false">2048</currMinMemory>
+                    <runMinMemory kxe="false" kb="CUD">2048</runMinMemory>
+                    <currMaxMemory kb="CUD" kxe="false">16384</currMaxMemory>
+                    <runMemory kxe="false" kb="CUD">256</runMemory>
+                    <currMemory kb="CUD" kxe="false">16384</currMemory>
+                    <currMinHugePageCount kb="CUD" kxe="false">0</currMinHugePageCount>
+                    <currHugePageCount kxe="false" kb="CUD">0</currHugePageCount>
+                    <currMaxHugePageCount kxe="false" kb="CUD">0</currMaxHugePageCount>
+                    <runHugePageCount kb="CUD" kxe="false">0</runHugePageCount>
+                    <currHPTRatio kxe="false" kb="CUD">7</currHPTRatio>
+                    <autoEntitledMemoryEnabled kb="CUD" kxe="false">false</autoEntitledMemoryEnabled>
+                    <isSharedMemory kxe="false" kb="CUD">false</isSharedMemory>
+                    <currExpansionFactor kb="CUD" kxe="false">0.0</currExpansionFactor>
+                    <runExpansionFactor kb="CUD" kxe="false">0.0</runExpansionFactor>
+                    <isMemoryCompressionHardwareAccessEnabled kb="CUD" kxe="false">false</isMemoryCompressionHardwareAccessEnabled>
+                    <memExpansionEnabled kb="CUD" kxe="false">false</memExpansionEnabled>
+                    <currBsrArrays kb="CUD" kxe="false">0</currBsrArrays>
+                    <redundantErrorPathReportingEnabled kxe="false" kb="CUD">false</redundantErrorPathReportingEnabled>
+                </memoryConfiguration>
+                <ioConfiguration kxe="false" kb="CUD" schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <currMaxVirtualIOSlots kb="CUD" kxe="false">64</currMaxVirtualIOSlots>
+                </ioConfiguration>
+                <clientNetworkAdapters kxe="false" kb="CUD" schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <ClientNetworkAdapter schemaVersion="V1_5_0">
+                        <Metadata>
+                            <Atom/>
+                        </Metadata>
+                        <VirtualSlotNumber kxe="false" kb="CUD">2</VirtualSlotNumber>
+                        <isRequired kxe="false" kb="CUD">false</isRequired>
+                        <isVariedOn kxe="false" kb="CUD">false</isVariedOn>
+                        <locationCode kb="CUD" kxe="false">U8284.22A.21FD4AV-V99-C2</locationCode>
+                        <drcName kxe="false" kb="CUD">U8284.22A.21FD4AV-V99-C2</drcName>
+                        <MACAddress kxe="false" kb="CUD">76016115B002</MACAddress>
+                        <PortVLANID kb="CUD" kxe="false">1</PortVLANID>
+                        <QualityOfServicePriority kb="CUD" kxe="false">0</QualityOfServicePriority>
+                        <QualityOfServicePriorityEnabled kb="CUD" kxe="false">true</QualityOfServicePriorityEnabled>
+                        <TaggedVLANSupported kb="CUD" kxe="false">true</TaggedVLANSupported>
+                        <clientVirtualNetworks kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                            <Metadata>
+                                <Atom/>
+                            </Metadata>
+                            <ClientVirtualNetwork schemaVersion="V1_5_0">
+                                <Metadata>
+                                    <Atom/>
+                                </Metadata>
+                                <name kb="CUD" kxe="false">VLAN1-ETHERNET0</name>
+                                <vlanId kxe="false" kb="CUD">1</vlanId>
+                                <isTagged kxe="false" kb="CUD">false</isTagged>
+                                <associatedSwitchName kxe="false" kb="CUD">ETHERNET0</associatedSwitchName>
+                            </ClientVirtualNetwork>
+                        </clientVirtualNetworks>
+                    </ClientNetworkAdapter>
+                    <ClientNetworkAdapter schemaVersion="V1_5_0">
+                        <Metadata>
+                            <Atom/>
+                        </Metadata>
+                        <VirtualSlotNumber kxe="false" kb="CUD">3</VirtualSlotNumber>
+                        <isRequired kxe="false" kb="CUD">false</isRequired>
+                        <isVariedOn kxe="false" kb="CUD">false</isVariedOn>
+                        <locationCode kb="CUD" kxe="false">U8284.22A.21FD4AV-V99-C3</locationCode>
+                        <drcName kxe="false" kb="CUD">U8284.22A.21FD4AV-V99-C3</drcName>
+                        <MACAddress kxe="false" kb="CUD">76016115B003</MACAddress>
+                        <PortVLANID kb="CUD" kxe="false">4094</PortVLANID>
+                        <QualityOfServicePriorityEnabled kb="CUD" kxe="false">false</QualityOfServicePriorityEnabled>
+                        <TaggedVLANSupported kb="CUD" kxe="false">true</TaggedVLANSupported>
+                        <clientVirtualNetworks kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                            <Metadata>
+                                <Atom/>
+                            </Metadata>
+                            <ClientVirtualNetwork schemaVersion="V1_5_0">
+                                <Metadata>
+                                    <Atom/>
+                                </Metadata>
+                                <name kb="CUD" kxe="false">VLAN4094-MGMTSWITCH</name>
+                                <vlanId kxe="false" kb="CUD">4094</vlanId>
+                                <isTagged kxe="false" kb="CUD">true</isTagged>
+                                <associatedSwitchName kxe="false" kb="CUD">MGMTSWITCH</associatedSwitchName>
+                            </ClientVirtualNetwork>
+                        </clientVirtualNetworks>
+                    </ClientNetworkAdapter>
+                </clientNetworkAdapters>
+                <UseCapturedHeaInfo kxe="false" kb="CUD">true</UseCapturedHeaInfo>
+                <useCapturedSriovInfo kb="CUD" kxe="false">true</useCapturedSriovInfo>
+                <useCapturedDedicateVNICInfo kb="CUD" kxe="false">true</useCapturedDedicateVNICInfo>
+                <PowerOnWithHypervisor kb="CUD" kxe="false">false</PowerOnWithHypervisor>
+                <suspendEnable kb="CUD" kxe="false">false</suspendEnable>
+                <SimplifiedRemoteRestartEnable kxe="false" kb="CUD">DISABLED</SimplifiedRemoteRestartEnable>
+                <MigrationDisable kxe="false" kb="CUD">false</MigrationDisable>
+            </logicalPartitionConfig>
+            <isDraft kb="CUD" kxe="false">false</isDraft>
+            <VFCConfigurationOption kxe="false" kb="CUD">DeploymentTime</VFCConfigurationOption>
+            <VSCSIConfigurationOption kb="CUD" kxe="false">DeploymentTime</VSCSIConfigurationOption>
+        </PartitionTemplate:PartitionTemplate>
+            </content>
+        </entry>
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 07:48:45 GMT
+- request:
+    method: delete
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - XI8s53nqITuQiZaY4yNp9bMDY8RjoOb7DbF2XbZFphADNgsiDyY8YxrN8xzS-fdSaLRLgvDbEn0dJqcpnFMcNTcRQ_krNX6zLbPWqz5dee-TKi2LeWUJPVE0gjLOvn6nOdtJB6nWN0pXXyboP_7GIPFYBdDDXg1Xp8dLeKQMRt7ckVwXspd2-l7DelehAwcOfWJaPImv3RUK2xFelgMC_ZoBCdB9zzw5mpBvU9f8YWk=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT11001418
+      Content-Language:
+      - en-US
+      Content-Length:
+      - '0'
+      Set-Cookie:
+      - CCFWSESSION=52B3A5955294A0C68787EBD60F015000; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
+        Max-Age=0; Path="/"; Secure
+      - JSESSIONID=0000OwMVXeG8HEc_-MCqbVo9TG8:df67bf36-bfd6-4686-bf10-c2a670b6294d;
+        Path=/; Secure; HttpOnly
+      - JSESSIONID=52B3A5955294A0C68787EBD60F015000; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
+        Max-Age=0; Path="/hmc"; Secure
+      Date:
+      - Wed, 05 Oct 2022 08:19:39 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Wed, 05 Oct 2022 07:48:45 GMT
+recorded_with: VCR 5.1.0
