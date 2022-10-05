@@ -50,7 +50,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def clusters
     @clusters ||= references(:storages).map do |ems_ref|
-      connection.clusters(ems_ref)
+      connection.cluster(ems_ref)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error querying cluster #{ems_ref}: #{e}") unless e.status == 404
       nil
