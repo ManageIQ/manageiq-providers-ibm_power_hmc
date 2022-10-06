@@ -52,11 +52,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
   end
 
   context "#target_refresh" do
-    let(:ems) do
-      ext = FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication)
-      full_refresh(ext)
-      ext
-    end
+    let(:ems) { FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication) }
+    
+    before { full_refresh(ems) }
 
     def target_refresh(target, example)
       expect(target).not_to be_nil
