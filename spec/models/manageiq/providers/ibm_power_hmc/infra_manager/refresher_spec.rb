@@ -1,4 +1,12 @@
 describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
+  SAMPLE = {
+    :host     => "0685d4a6-2021-3044-84e3-59f44e9cc5d7",
+    :vios     => "4165A16F-0766-40F3-B9E2-7272E1910F2E",
+    :lpar     => "646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3",
+    :template => "3f109ae5-8553-4545-b211-c0de284c4872",
+    :storage  => "8f2a83e9-f4c7-35e5-987e-9ac54a498dab"
+  }.freeze
+
   it ".ems_type" do
     expect(described_class.ems_type).to eq(:ibm_power_hmc)
   end
@@ -28,10 +36,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     end
 
     def assert_specific_vm
-      lpar_id = "646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3"
-      vm = ems.vms.find_by(:ems_ref => lpar_id)
+      vm = ems.vms.find_by(:ems_ref => SAMPLE[:lpar])
       expect(vm).to have_attributes(
-        :ems_ref         => lpar_id,
+        :ems_ref         => SAMPLE[:lpar],
         :vendor          => "ibm_power_hmc",
         :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar",
         :name            => "cooplab",
@@ -55,29 +62,29 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
     def target_refresh(target, example)
       expect(target).not_to be_nil
-      VCR.use_cassette("#{described_class.name.underscore}_#{example.description}") do
+      VCR.use_cassette("#{described_class.name.underscore}_#{example.description}_#{target.ems_ref}") do
         EmsRefresh.refresh(target)
       end
     end
 
     it "host" do |example|
-      target_refresh(ems.hosts.first, example)
+      target_refresh(ems.hosts.find_by(:ems_ref => SAMPLE[:host]), example)
     end
 
     it "lpar" do |example|
-      target_refresh(ems.vms.where(:type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar").first, example)
+      target_refresh(ems.vms.find_by(:ems_ref => SAMPLE[:lpar]), example)
     end
 
     it "vios" do |example|
-      target_refresh(ems.vms.where(:type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios").first, example)
+      target_refresh(ems.vms.find_by(:ems_ref => SAMPLE[:vios]), example)
     end
 
     it "template" do |example|
-      target_refresh(ems.miq_templates.first, example)
+      target_refresh(ems.miq_templates.find_by(:ems_ref => SAMPLE[:template]), example)
     end
 
     it "storage" do |example|
-      target_refresh(ems.storages.first, example)
+      target_refresh(ems.storages.find_by(:ems_ref => SAMPLE[:storage]), example)
     end
   end
 
