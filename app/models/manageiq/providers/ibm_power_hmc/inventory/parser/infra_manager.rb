@@ -119,7 +119,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_hardware(host, sys)
-    persister.host_hardwares.build(
+    hardware = persister.host_hardwares.build(
       :host            => host,
       :cpu_type        => "ppc64",
       :bitness         => 64,
@@ -129,6 +129,24 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :cpu_total_cores => sys.cpus,
       :serial_number   => sys.serial
     )
+    parse_host_guest_devices(hardware, sys)
+  end
+
+  def parse_host_guest_devices(hardware, sys)
+    sys.io_adapters.each do |io|
+      next if io.udid.to_i == 65535 # Skip empty slots
+
+      persister.host_guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => io.dr_name,
+        :device_type     => "physical_port",
+        :controller_type => "IO",
+        :device_name     => "Adapter",
+        :location        => io.dr_name,
+        :model           => io.description,
+        :auto_detect     => true
+      )
+    end
   end
 
   def parse_host_advanced_settings(host, sys)
