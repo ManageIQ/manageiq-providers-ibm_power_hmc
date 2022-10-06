@@ -12,11 +12,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     target.manager_refs_by_association_reset
   end
 
-  def cecs
-    @cecs ||= references(:hosts).map do |ems_ref|
-      connection.managed_system(ems_ref)
+  def cecs_quick
+    @cecs_quick ||= references(:hosts).map do |ems_ref|
+      connection.managed_system_quick(ems_ref).merge("UUID" => ems_ref)
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
+      $ibm_power_hmc_log.error("managed systems quick query failed for #{ems_ref}: #{e}") unless e.status == 404
       nil
     end.compact
   end

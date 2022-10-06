@@ -3,6 +3,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     $ibm_power_hmc_log.info("#{self.class}##{__method__} start")
     collector.collect! do
       parse_cecs
+      parse_cecs_unavailable
       parse_lpars
       parse_vioses
       parse_templates
@@ -17,12 +18,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :uid_ems             => sys.uuid,
         :ems_ref             => sys.uuid,
         :name                => sys.name,
-        :hypervisor_hostname => "#{sys.mtype}#{sys.model}_#{sys.serial}",
+        :hypervisor_hostname => "#{sys.mtype}-#{sys.model}*#{sys.serial}",
         :hostname            => sys.hostname,
         :ipaddress           => sys.ipaddr,
         :power_state         => lookup_power_state(sys.state),
-        :vmm_vendor          => "ibm_power_hmc",
-        :type                => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.name
+        :vmm_vendor          => "ibm_power_hmc"
       )
 
       parse_host_operating_system(host, sys)
@@ -30,6 +30,36 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_host_advanced_settings(host, sys)
       parse_vswitches(host, sys)
       parse_vlans(host, sys)
+    end
+  end
+
+  def parse_cecs_unavailable
+    collector.cecs_unavailable.each do |sys|
+      mtype_model, serial = sys["MTMS"].split("*")
+      host = persister.hosts.build(
+        :uid_ems             => sys["UUID"],
+        :ems_ref             => sys["UUID"],
+        :name                => sys["SystemName"],
+        :hypervisor_hostname => sys["MTMS"],
+        :ipaddress           => sys["IPAddress"],
+        :power_state         => lookup_power_state(sys["State"]),
+        :vmm_vendor          => "ibm_power_hmc"
+      )
+      persister.host_operating_systems.build(
+        :host         => host,
+        :product_name => "phyp",
+        :build_number => sys["SystemFirmware"]
+      )
+      persister.host_hardwares.build(
+        :host            => host,
+        :cpu_type        => "ppc64",
+        :bitness         => 64,
+        :manufacturer    => "IBM",
+        :model           => mtype_model,
+        :memory_mb       => sys["InstalledSystemMemory"],
+        :cpu_total_cores => sys["InstalledSystemProcessorUnits"],
+        :serial_number   => serial
+      )
     end
   end
 
