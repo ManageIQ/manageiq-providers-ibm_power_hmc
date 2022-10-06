@@ -23,7 +23,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :ipaddress           => sys.ipaddr,
         :power_state         => lookup_power_state(sys.state),
         :vmm_vendor          => "ibm_power_hmc",
-        :type                => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.name
       )
 
       parse_host_operating_system(host, sys)
@@ -45,7 +44,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :ipaddress           => sys["IPAddress"],
         :power_state         => lookup_power_state(sys["State"]),
         :vmm_vendor          => "ibm_power_hmc",
-        :type                => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.name
       )
       persister.host_operating_systems.build(
         :host         => host,
