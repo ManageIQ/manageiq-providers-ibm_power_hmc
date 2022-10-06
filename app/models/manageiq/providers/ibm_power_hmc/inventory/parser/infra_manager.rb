@@ -134,7 +134,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_host_guest_devices(hardware, sys)
     sys.io_adapters.each do |io|
-      next if io.udid.to_i == 65535 # Skip empty slots
+      next if io.udid.to_i == 65_535 # Skip empty slots
 
       persister.host_guest_devices.build(
         :hardware        => hardware,
