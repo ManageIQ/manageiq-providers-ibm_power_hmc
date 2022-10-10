@@ -1,5 +1,5 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
-  def initialize(ems, options = {})
+  def initialize(ems, _options = {})
     @ems = ems
     @last_activity = nil
     @stop_polling = false
