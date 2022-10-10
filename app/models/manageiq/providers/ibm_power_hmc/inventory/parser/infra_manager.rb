@@ -243,6 +243,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     persister.hardwares.build(
       :vm_or_template  => vm,
       :memory_mb       => lpar.memory,
+      :cpu_type        => "ppc64",
       :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
   end
