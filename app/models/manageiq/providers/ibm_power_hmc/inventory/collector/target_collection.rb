@@ -78,6 +78,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     end.compact
   end
 
+  def shared_processor_pools
+    @shared_processor_pools ||= references(:resource_pools).map do |ems_ref|
+      sys_uuid, pool_uuid = ems_ref.split(":")
+      connection.shared_processor_pool(sys_uuid, pool_uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("shared_processor_pool query failed for #{pool_uuid} on cec #{sys_uuid}: #{e}")
+      nil
+    end.compact
+  end
+
   def infer_related_ems_refs_api!
     # Refresh LPARs that have disk paths going through any of the updated VIOSes.
     vscsi_mappings.each do |m|
@@ -121,6 +131,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
         add_target!(:miq_templates, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage
         add_target!(:storages, target.ems_ref)
+      when ManageIQ::Providers::IbmPowerHmc::InfraManager::ResourcePool
+        add_target!(:resource_pools, target.ems_ref)
       end
     end
   end
