@@ -7,6 +7,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     unsupported_reason_add(:control, _("Host is not HMC-managed")) unless host_hmc_managed
   end
 
+  supports :rename do
+    unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host.hmc_managed
+  end
+
   supports :native_console do
     reason ||= _("VM Console not supported because VM is orphaned") if orphaned?
     reason ||= _("VM Console not supported because VM is archived") if archived?
@@ -43,7 +47,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def raw_suspend
   end
 
-  def raw_rename
+  def raw_rename(new_name)
+    ext_management_system.with_provider_connection do |connection|
+      connection.modify_object do
+        provider_object(connection).tap { |lpar| lpar.name = new_name }
+      end
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error renaming LPAR #{ems_ref} to #{new_name}: #{e}")
+      raise
+    end
   end
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
