@@ -59,11 +59,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   private :clusters
 
   def ssps
+    # NOTE: We're using cluster ID as ems_ref for shared storage pools.
     @ssps ||= clusters.map do |cluster|
       connection.ssp(cluster.ssp_uuid)
     rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error querying ssp: #{e}") unless e.status == 404
-      []
+      $ibm_power_hmc_log.error("error querying ssp #{cluster.ssp_uuid}: #{e}") unless e.status == 404
+      nil
     end.compact
   end
 
