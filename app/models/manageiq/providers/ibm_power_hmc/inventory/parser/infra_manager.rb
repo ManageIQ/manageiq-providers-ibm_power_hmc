@@ -517,7 +517,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_resource_pools
     collector.shared_processor_pools.each do |pool|
-      next if pool.name =~ /^SharedPool\d\d$/ and pool.max == "0"
+      next if pool.name =~ /^SharedPool\d\d$/ && pool.max == "0"
 
       ref = "#{pool.sys_uuid}_#{pool.uuid}"
       persister.resource_pools.build(
@@ -525,9 +525,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :ems_ref            => ref,
         :name               => pool.name,
         :parent             => persister.hosts.lazy_find(pool.sys_uuid),
-        :cpu_shares         => pool.max.nil? ? "0"         : (pool.max.to_f - pool.available.to_f).to_s,
+        :cpu_shares         => pool.max.nil? ? "0" : (pool.max.to_f - pool.available.to_f).to_s,
         :cpu_reserve        => pool.available,
-        :cpu_reserve_expand => pool.max.nil? ? "false"     : "true",
+        :cpu_reserve_expand => pool.max.nil? ? "false" : "true",
         :cpu_limit          => pool.max.nil? ? "Unlimited" : pool.max
       )
     end
