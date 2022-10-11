@@ -80,7 +80,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def shared_processor_pools
     @shared_processor_pools ||= references(:resource_pools).map do |ems_ref|
-      sys_uuid, pool_uuid = ems_ref.split(":")
+      sys_uuid, pool_uuid = ems_ref.split("_")
       connection.shared_processor_pool(sys_uuid, pool_uuid)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("shared_processor_pool query failed for #{pool_uuid} on cec #{sys_uuid}: #{e}")

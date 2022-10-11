@@ -222,7 +222,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_lpar_common(lpar, type)
     # Common code for LPARs and VIOSes.
     host = persister.hosts.lazy_find(lpar.sys_uuid)
-    resource_pool = lpar.shared_processor_pool_uuid ? persister.resource_pools.lazy_find(lpar.shared_processor_pool_uuid) : nil
+    resource_pool = lpar.shared_processor_pool_uuid ? persister.resource_pools.lazy_find("#{lpar.sys_uuid}_#{lpar.shared_processor_pool_uuid}") : nil
     vm = persister.vms.build(
       :type            => type,
       :uid_ems         => lpar.uuid,
@@ -519,7 +519,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.shared_processor_pools.each do |pool|
       next if pool.name =~ /^SharedPool\d\d$/ and pool.max == "0"
 
-      ref = "#{pool.sys_uuid}:#{pool.uuid}"
+      ref = "#{pool.sys_uuid}_#{pool.uuid}"
       persister.resource_pools.build(
         :uid_ems            => ref,
         :ems_ref            => ref,
