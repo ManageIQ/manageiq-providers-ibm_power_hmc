@@ -4,6 +4,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
   let(:lpar_uuid)     { "646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3" }
   let(:template_uuid) { "3f109ae5-8553-4545-b211-c0de284c4872" }
   let(:storage_uuid)  { "8f2a83e9-f4c7-35e5-987e-9ac54a498dab" }
+  let(:respool_uuid)  { "d47a585d-eaa8-3a54-b4dc-93346276ea37_c41d8844-1d39-3512-944d-50f58de2d42d" }
 
   it ".ems_type" do
     expect(described_class.ems_type).to eq(:ibm_power_hmc)
@@ -140,6 +141,10 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
     it "storage" do |example|
       target_refresh(ems.storages.find_by(:ems_ref => storage_uuid), example)
+    end
+
+    it "resource_pool" do |example|
+      target_refresh(ems.resource_pools.find_by(:ems_ref => respool_uuid), example)
     end
   end
 
