@@ -243,6 +243,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     persister.hardwares.build(
       :vm_or_template  => vm,
       :memory_mb       => lpar.memory,
+      :cpu_type        => "ppc64",
       :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
   end
@@ -334,6 +335,20 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
     lpar.lhea_ports.each do |ent|
       build_ethernet_dev(ent, hardware, "host ethernet adapter")
+    end
+
+    # Physical adapters can be assigned to VIOSes and LPARs using IOMMU.
+    lpar.io_adapters.each do |io|
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => io.dr_name,
+        :device_type     => "physical_port",
+        :controller_type => "IO",
+        :device_name     => "Adapter",
+        :location        => io.dr_name,
+        :model           => io.description,
+        :auto_detect     => true
+      )
     end
   end
 
