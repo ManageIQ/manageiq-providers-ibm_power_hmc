@@ -520,16 +520,25 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       next if pool.name =~ /^SharedPool\d\d$/ && pool.max == "0"
 
       ref = "#{pool.sys_uuid}_#{pool.uuid}"
-      persister.resource_pools.build(
-        :uid_ems            => ref,
-        :ems_ref            => ref,
-        :name               => pool.name,
-        :parent             => persister.hosts.lazy_find(pool.sys_uuid),
-        :cpu_shares         => pool.max.nil? ? "0" : (pool.max.to_f - pool.available.to_f).to_s,
-        :cpu_reserve        => pool.available,
-        :cpu_reserve_expand => pool.max.nil? ? "false" : "true",
-        :cpu_limit          => pool.max.nil? ? "Unlimited" : pool.max
-      )
+      params = {
+        :uid_ems => ref,
+        :ems_ref => ref,
+        :name    => pool.name,
+        :parent  => persister.hosts.lazy_find(pool.sys_uuid)
+      }
+      if pool.name == "DefaultPool"
+        params[:cpu_shares]         = 0
+        params[:cpu_reserve]        = 0
+        params[:cpu_reserve_expand] = false
+        params[:cpu_limit]          = -1
+      else
+        params[:cpu_shares]         = pool.max.to_f - pool.available.to_f
+        params[:cpu_reserve]        = pool.available
+        params[:cpu_reserve_expand] = true
+        params[:cpu_limit]          = pool.max
+      end
+
+      persister.resource_pools.build(params)
     end
   end
 end
