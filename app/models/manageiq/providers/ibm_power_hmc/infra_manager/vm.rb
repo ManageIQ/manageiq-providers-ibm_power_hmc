@@ -8,7 +8,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   supports :rename do
-    unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host.hmc_managed
+    unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host_hmc_managed
   end
 
   supports :native_console do
