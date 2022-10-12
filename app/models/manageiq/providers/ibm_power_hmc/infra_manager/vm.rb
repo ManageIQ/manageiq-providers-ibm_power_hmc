@@ -48,14 +48,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_rename(new_name)
-    ext_management_system.with_provider_connection do |connection|
-      connection.modify_object do
-        provider_object(connection).tap { |lpar| lpar.name = new_name }
-      end
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error renaming LPAR #{ems_ref} to #{new_name}: #{e}")
-      raise
-    end
+    modify_attrs(:name => new_name)
   end
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
@@ -107,5 +100,22 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def cpu_percent_available?
     true
+  end
+
+  private
+
+  def modify_attrs(attrs = {})
+    ext_management_system.with_provider_connection do |connection|
+      connection.modify_object do
+        provider_object(connection).tap do |obj|
+          attrs.each do |key, value|
+            obj.send("#{key}=", value)
+          end
+        end
+      end
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error setting attributes #{attrs} for partition #{ems_ref}: #{e}")
+      raise
+    end
   end
 end
