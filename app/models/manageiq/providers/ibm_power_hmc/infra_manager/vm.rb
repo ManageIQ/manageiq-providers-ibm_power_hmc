@@ -102,6 +102,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     true
   end
 
+  def self.display_name(number = 1)
+    n_("Partition", "Partitions", number)
+  end
+
   private
 
   def modify_attrs(attrs = {})

@@ -60,6 +60,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios < ManageIQ::Providers
     end || {}
   end
 
+  def self.display_name(number = 1)
+    n_("Virtual I/O Server", "Virtual I/O Servers", number)
+  end
+
   private
 
   def get_sample_value(sample, key)
