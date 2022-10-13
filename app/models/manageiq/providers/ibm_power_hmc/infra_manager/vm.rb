@@ -11,6 +11,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host_hmc_managed
   end
 
+  supports :set_description do
+    unsupported_reason_add(:set_description, _("Host is not HMC-managed")) unless host_hmc_managed
+  end
+
   supports :native_console do
     reason ||= _("VM Console not supported because VM is orphaned") if orphaned?
     reason ||= _("VM Console not supported because VM is archived") if archived?
@@ -49,6 +53,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def raw_rename(new_name)
     modify_attrs(:name => new_name)
+  end
+
+  def raw_set_description(new_description)
+    modify_attrs(:description => new_description)
   end
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
