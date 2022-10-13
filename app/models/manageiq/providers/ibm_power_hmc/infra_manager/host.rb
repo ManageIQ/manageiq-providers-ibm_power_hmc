@@ -110,6 +110,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     true
   end
 
+  def self.display_name(number = 1)
+    n_("Managed System", "Managed Systems", number)
+  end
+
   private
 
   def get_sample_value(sample, key)
