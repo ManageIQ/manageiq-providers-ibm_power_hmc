@@ -25,7 +25,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @cec_cpu_freqs_from_db ||= begin
       # Limit DB query to hosts that are not being refreshed but for which we have VMs that are being refreshed.
       # We don't want to use API calls for these as they are quite expensive.
-      host_ems_refs = lpars.collect(&:sys_uuid).concat(vioses.collect(&:sys_uuid)).uniq - references(:hosts)
+      host_ems_refs = lpars.collect(&:sys_uuid).concat(vioses.collect(&:sys_uuid)).compact.uniq - references(:hosts)
       $ibm_power_hmc_log.debug("retrieving cpu_speed from db for hosts #{host_ems_refs}")
       manager.hosts.where(:ems_ref => host_ems_refs).joins(:host_hardwares).pluck("hosts.ems_ref", "hardwares.cpu_speed").to_h
     end
