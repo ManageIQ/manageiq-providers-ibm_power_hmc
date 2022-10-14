@@ -235,16 +235,19 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
     # Retrieve the CPU frequency of the CEC from one of its running VIOSes with RMC active.
     # We get the list of VIOSes using the quick API to reduce query time during targeted refresh.
+    mtms = "#{sys.mtype}-#{sys.model}*#{sys.serial}"
+    vioscmd = "lsdev -dev proc0 -attr frequency"
     vioses_quick[sys.uuid].select { |vios| vios["RMCState"] == "active" }.each do |vios|
-      mtms = "#{sys.mtype}-#{sys.model}*#{sys.serial}"
-      vioscmd = "lsdev -dev proc0 -attr frequency"
-      cmd = %(viosvrcmd -m "#{mtms}" --id #{vios["PartitionID"]} -t 1 -c "#{vioscmd}")
+      # NOTE: viosvrcmd -t option is not available on older HMCs.
+      cmd = %(viosvrcmd -m "#{mtms}" --id #{vios["PartitionID"]} -c "#{vioscmd}")
       job = connection.cli_run(hmc.uuid, cmd)
       ret = job.results["returnCode"]&.to_i
       next if ret != 0
 
       result = job.results["result"]
       return result.split("\n").last.to_f / 1_000_000.0 unless result.nil?
+    rescue IbmPowerHmc::HmcJob::JobFailed => e
+      $ibm_power_hmc_log.error("executing command #{cmd} failed: #{e}")
     end
     nil
   end
