@@ -241,9 +241,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       # NOTE: viosvrcmd -t option is not available on older HMCs.
       cmd = %(viosvrcmd -m "#{mtms}" --id #{vios["PartitionID"]} -c "#{vioscmd}")
       job = connection.cli_run(hmc.uuid, cmd)
-      ret = job.results["returnCode"]&.to_i
-      next if ret != 0
-
       result = job.results["result"]
       return result.split("\n").last.to_f / 1_000_000.0 unless result.nil?
     rescue IbmPowerHmc::HmcJob::JobFailed => e
