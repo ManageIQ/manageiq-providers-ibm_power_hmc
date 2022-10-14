@@ -58,7 +58,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def cec_cpu_freqs_from_api
     @cec_cpu_freqs_from_api ||= cecs.map do |sys|
-      [sys.uuid, cec_cpu_freq(connection, sys)]
+      [sys.uuid, cec_cpu_freq(sys)]
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("cpu frequency query failed for #{sys.uuid}: #{e}")
       nil
@@ -230,14 +230,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   private
 
-  def cec_cpu_freq(connection, sys)
+  def cec_cpu_freq(sys)
     return nil if hmc.nil? || !vioses_quick.key?(sys.uuid)
 
     # Retrieve the CPU frequency of the CEC from one of its running VIOSes with RMC active.
     # We get the list of VIOSes using the quick API to reduce query time during targeted refresh.
-    cmd = "lsdev -dev proc0 -attr frequency"
     vioses_quick[sys.uuid].select { |vios| vios["RMCState"] == "active" }.each do |vios|
-      job = connection.cli_run(hmc.uuid, "viosvrcmd -m \"#{sys.name}\" --id \"#{vios["PartitionID"]}\" -c \"#{cmd}\"")
+      mtms = "#{sys.mtype}-#{sys.model}*#{sys.serial}"
+      vioscmd = "lsdev -dev proc0 -attr frequency"
+      cmd = %(viosvrcmd -m "#{mtms}" --id #{vios["PartitionID"]} -t 1 -c "#{vioscmd}")
+      job = connection.cli_run(hmc.uuid, cmd)
       ret = job.results["returnCode"]&.to_i
       next if ret != 0
 
