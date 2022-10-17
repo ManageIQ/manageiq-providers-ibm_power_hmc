@@ -21,6 +21,8 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       end
 
       assert_ems
+      assert_specific_switch
+      assert_specific_lan
       assert_specific_vm
     end
 
@@ -31,6 +33,24 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       expect(ems.vms.count).to be > 1
 
       expect(ems.type).to eq("ManageIQ::Providers::IbmPowerHmc::InfraManager")
+    end
+
+    def assert_specific_switch
+      host = ems.hosts.find_by(:ems_ref => host_uuid)
+      switch = host.switches.find_by(:name => "ETHERNET0(Default)")
+
+      expect(switch).not_to be_nil
+      expect(switch.lans.count).to eq(1)
+      expect(switch.hosts.count).to eq(1)
+    end
+
+    def assert_specific_lan
+      host = ems.hosts.find_by(:ems_ref => host_uuid)
+      switch = host.switches.find_by(:name => "ETHERNET0(Default)")
+      lan = switch.lans.find_by(:name => "VLAN1-ETHERNET0")
+
+      expect(lan).not_to be_nil
+      expect(lan.switch.name).to eq("ETHERNET0(Default)")
     end
 
     def assert_specific_vm
@@ -48,6 +68,14 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :version      => "7.3",
         :build_number => "7300-00-00-0000"
       )
+
+      nic = vm.hardware.guest_devices.find_by(:address => "be:6a:af:5d:eb:02")
+      expect(nic).to have_attributes(
+        :device_type     => "ethernet",
+        :controller_type => "client network adapter"
+      )
+      expect(nic.lan).not_to be_nil
+      expect(nic.lan.name).to eq("VLAN1-ETHERNET0")
     end
   end
 
