@@ -445,19 +445,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  private
+  def vlan_by_tag(sys_uuid, vswitch_uuid, vlan_id)
+    host = persister.hosts.lazy_find(sys_uuid)
+    vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vswitch_uuid)
+    persister.lans.lazy_find({:switch => vswitch, :tag => vlan_id}, {:ref => :by_tag})
+  end
 
-  def build_ethernet_dev(lpar, device, hardware, controller_type)
-    id = device.respond_to?(:uuid) ? device.uuid : device.macaddr
+  def build_ethernet_dev(lpar, ent, hardware, controller_type)
+    id = ent.respond_to?(:uuid) ? ent.uuid : ent.macaddr
 
-    macaddr = self.class.parse_macaddr(device.macaddr)
-    if device.kind_of?(IbmPowerHmc::ClientNetworkAdapter)
-      host = persister.hosts.lazy_find(lpar.sys_uuid)
-      vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => device.vswitch_uuid)
-      vlan = persister.lans.lazy_find({:switch => vswitch, :tag => device.vlan_id}, {:ref => :by_tag})
-    else
-      vlan = nil
-    end
+    macaddr = self.class.parse_macaddr(ent.macaddr)
+    vlan = vlan_by_tag(lpar.sys_uuid, ent.vswitch_uuid, ent.vlan_id) if ent.kind_of?(IbmPowerHmc::ClientNetworkAdapter)
 
     persister.guest_devices.build(
       :hardware        => hardware,
@@ -467,7 +465,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :controller_type => controller_type,
       :auto_detect     => true,
       :address         => macaddr,
-      :location        => device.location,
+      :location        => ent.location,
       :lan             => vlan
     )
   end
