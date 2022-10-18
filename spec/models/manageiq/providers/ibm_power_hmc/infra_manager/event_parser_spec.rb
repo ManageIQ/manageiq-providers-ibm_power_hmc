@@ -77,8 +77,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
     it "#event_to_hash" do
       expect(described_class.event_to_hash(event, nil)).to(
         include(
-          :vswitch_ems_ref => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
-          :host_ems_ref    => "e4acf909-6d0b-3c03-b75a-4d8495e5fc49"
+          :host_ems_ref => "e4acf909-6d0b-3c03-b75a-4d8495e5fc49"
         )
       )
     end
@@ -87,11 +86,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
   context "VirtualSwitch" do
     let(:filename) { "test_data/virtual_switch_short_url.xml" }
     it "#event_to_hash2" do
-      expect(described_class.event_to_hash(event, nil)).to(
-        include(
-          :vswitch_ems_ref => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
-        )
-      )
+      expect(described_class.event_to_hash(event, nil)).not_to have_key(:host_ems_ref)
     end
   end
 
@@ -100,7 +95,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
     it "#event_to_hash" do
       expect(described_class.event_to_hash(event, nil)).to(
         include(
-          :vlan_ems_ref => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
           :host_ems_ref => "e4acf909-6d0b-3c03-b75a-4d8495e5fc49"
         )
       )
@@ -110,22 +104,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
   context "VirtualNetwork" do
     let(:filename) { "test_data/virtual_network_short_url.xml" }
     it "#event_to_hash2" do
-      expect(described_class.event_to_hash(event, nil)).to(
-        include(
-          :vlan_ems_ref => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E"
-        )
-      )
-    end
-  end
-
-  context "Cluster" do
-    let(:filename) { "test_data/cluster.xml" }
-    it "#event_to_hash" do
-      expect(described_class.event_to_hash(event, nil)).to(
-        include(
-          :storage_ems_ref => "c1e50c27-888c-3c4d-8d4a-53a3768ea250"
-        )
-      )
+      expect(described_class.event_to_hash(event, nil)).not_to have_key(:host_ems_ref)
     end
   end
 

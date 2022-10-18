@@ -25,19 +25,15 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser
           event_hash[:host_ems_ref] = elems[-3]
         end
       when "VirtualSwitch"
-        event_hash[:vswitch_ems_ref] = uuid
         # Check if the URI also contains /ManagedSystem/{uuid}/
         if elems.length >= 4 && elems[-4] == "ManagedSystem"
           event_hash[:host_ems_ref] = elems[-3]
         end
       when "VirtualNetwork"
-        event_hash[:vlan_ems_ref] = uuid
         # Check if the URI also contains /ManagedSystem/{uuid}/
         if elems.length >= 4 && elems[-4] == "ManagedSystem"
           event_hash[:host_ems_ref] = elems[-3]
         end
-      when "Cluster"
-        event_hash[:storage_ems_ref] = uuid
       when "SharedProcessorPool"
         if elems.length >= 4 && elems[-4] == "ManagedSystem"
           event_hash[:host_ems_ref] = elems[-3]
