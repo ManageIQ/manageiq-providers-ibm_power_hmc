@@ -531,11 +531,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         params[:cpu_reserve]        = 0
         params[:cpu_reserve_expand] = false
         params[:cpu_limit]          = -1
+        params[:is_default]         = true
       else
         params[:cpu_shares]         = pool.max.to_f - pool.available.to_f
         params[:cpu_reserve]        = pool.available
         params[:cpu_reserve_expand] = true
         params[:cpu_limit]          = pool.max
+        params[:is_default]         = false
       end
 
       persister.resource_pools.build(params)
