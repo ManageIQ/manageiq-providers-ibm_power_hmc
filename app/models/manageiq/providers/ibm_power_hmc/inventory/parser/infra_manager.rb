@@ -276,8 +276,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       collector.vlans[sys.uuid].each do |vlan|
         vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vlan.vswitch_uuid)
         persister.lans.build(
-          :uid_ems => vlan.uuid,
           :switch  => vswitch,
+          :uid_ems => vlan.uuid,
           :tag     => vlan.vlan_id,
           :name    => vlan.name,
           :ems_ref => sys.uuid
@@ -323,18 +323,18 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_vm_guest_devices(lpar, hardware)
     if collector.netadapters.key?(lpar.uuid)
       collector.netadapters[lpar.uuid].each do |ent|
-        build_ethernet_dev(ent, hardware, "client network adapter")
+        build_ethernet_dev(lpar, ent, hardware, "client network adapter")
       end
     end
 
     if collector.sriov_elps.key?(lpar.uuid)
       collector.sriov_elps[lpar.uuid].each do |ent|
-        build_ethernet_dev(ent, hardware, "sr-iov")
+        build_ethernet_dev(lpar, ent, hardware, "sr-iov")
       end
     end
 
     lpar.lhea_ports.each do |ent|
-      build_ethernet_dev(ent, hardware, "host ethernet adapter")
+      build_ethernet_dev(lpar, ent, hardware, "host ethernet adapter")
     end
 
     # Physical adapters can be assigned to VIOSes and LPARs using IOMMU.
@@ -355,7 +355,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_lpar_guest_devices(lpar, hardware)
     if collector.vnics.key?(lpar.uuid)
       collector.vnics[lpar.uuid].each do |ent|
-        build_ethernet_dev(ent, hardware, "vnic")
+        build_ethernet_dev(lpar, ent, hardware, "vnic")
       end
     end
   end
@@ -445,18 +445,32 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def build_ethernet_dev(device, hardware, controller_type)
-    mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
-    id = device.respond_to?(:uuid) ? device.uuid : device.macaddr
+  def vlan_by_tag(sys_uuid, vswitch_uuid, vlan_id)
+    host = persister.hosts.lazy_find(sys_uuid)
+    vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vswitch_uuid)
+    persister.lans.lazy_find({:switch => vswitch, :tag => vlan_id}, {:ref => :by_tag})
+  end
+
+  def build_ethernet_dev(lpar, ent, hardware, controller_type)
+    id = ent.respond_to?(:uuid) ? ent.uuid : ent.macaddr
+
+    macaddr = self.class.parse_macaddr(ent.macaddr)
+    vlan = vlan_by_tag(lpar.sys_uuid, ent.vswitch_uuid, ent.vlan_id) if ent.kind_of?(IbmPowerHmc::ClientNetworkAdapter)
+
     persister.guest_devices.build(
       :hardware        => hardware,
       :uid_ems         => id,
-      :device_name     => mac_addr,
+      :device_name     => macaddr,
       :device_type     => "ethernet",
       :controller_type => controller_type,
       :auto_detect     => true,
-      :address         => mac_addr,
-      :location        => device.location
+      :address         => macaddr,
+      :location        => ent.location,
+      :lan             => vlan
     )
+  end
+
+  def self.parse_macaddr(macaddr)
+    macaddr.downcase.scan(/\w{2}/).join(':') unless macaddr.nil?
   end
 end
