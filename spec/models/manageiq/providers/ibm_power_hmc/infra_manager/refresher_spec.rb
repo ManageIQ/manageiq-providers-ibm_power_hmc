@@ -21,6 +21,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       end
 
       assert_ems
+      assert_specific_host
       assert_specific_switch
       assert_specific_lan
       assert_specific_vm
@@ -33,6 +34,30 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       expect(ems.vms.count).to be > 1
 
       expect(ems.type).to eq("ManageIQ::Providers::IbmPowerHmc::InfraManager")
+    end
+
+    def assert_specific_host
+      host = ems.hosts.find_by(:ems_ref => host_uuid)
+      expect(host).to have_attributes(
+        :ems_ref     => host_uuid,
+        :name        => "porthos",
+        :ipaddress   => "10.197.64.46",
+        :power_state => "on",
+        :vmm_vendor  => "ibm_power_hmc"
+      )
+      expect(host.operating_system).to have_attributes(
+        :product_name => "phyp",
+        :build_number => "SV860_FW860.61 (185)"
+      )
+      expect(host.hardware).to have_attributes(
+        :cpu_type        => "ppc64",
+        :bitness         => 64,
+        :model           => "828642A",
+        :cpu_speed       => 4_157,
+        :memory_mb       => 720_896,
+        :cpu_total_cores => 16,
+        :serial_number   => "103341V"
+      )
     end
 
     def assert_specific_switch
@@ -67,6 +92,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :product_name => "AIX",
         :version      => "7.3",
         :build_number => "7300-00-00-0000"
+      )
+      expect(vm.hardware).to have_attributes(
+        :cpu_type        => "ppc64",
+        :cpu_speed       => 4_157,
+        :memory_mb       => 4_096,
+        :cpu_total_cores => 1
       )
 
       nic = vm.hardware.guest_devices.find_by(:address => "be:6a:af:5d:eb:02")

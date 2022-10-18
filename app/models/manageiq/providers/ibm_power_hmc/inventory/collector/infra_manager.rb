@@ -8,6 +8,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   attr_reader :connection
 
+  def hmc
+    @hmc ||= begin
+      connection.management_console
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("management console query failed: #{e}")
+      nil
+    end
+  end
+
   def ssps
     @ssps ||= begin
       connection.ssps
@@ -41,6 +50,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def cecs_unavailable
     @cecs_unavailable ||= cecs_quick.select { |cec_quick| self.class.cec_unavailable?(cec_quick) }
+  end
+
+  def cec_cpu_freqs_from_db
+    {}
+  end
+
+  def cec_cpu_freqs_from_api
+    @cec_cpu_freqs_from_api ||= cecs.map do |sys|
+      [sys.uuid, cec_cpu_freq(sys)]
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("cpu frequency query failed for #{sys.uuid}: #{e}")
+      nil
+    end.compact.to_h
+  end
+
+  def cec_cpu_freqs
+    @cec_cpu_freqs ||= cec_cpu_freqs_from_api.merge(cec_cpu_freqs_from_db)
   end
 
   def vlans
@@ -77,6 +103,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
       nil
     end.compact
+  end
+
+  def vioses_quick
+    @vioses_quick ||= cecs.map do |sys|
+      [sys.uuid, connection.vioses_quick(sys.uuid)] unless sys.vioses_uuids.empty?
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("vioses quick query failed for #{sys.uuid}: #{e}")
+      nil
+    end.compact.to_h
   end
 
   def pcm_enabled
@@ -191,5 +226,26 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       $ibm_power_hmc_log.error("templates query failed: #{e}")
       []
     end
+  end
+
+  private
+
+  def cec_cpu_freq(sys)
+    return nil if hmc.nil? || !vioses_quick.key?(sys.uuid)
+
+    # Retrieve the CPU frequency of the CEC from one of its running VIOSes with RMC active.
+    # We get the list of VIOSes using the quick API to reduce query time during targeted refresh.
+    mtms = "#{sys.mtype}-#{sys.model}*#{sys.serial}"
+    vioscmd = "lsdev -dev proc0 -attr frequency"
+    vioses_quick[sys.uuid].select { |vios| vios["RMCState"] == "active" }.each do |vios|
+      # NOTE: viosvrcmd -t option is not available on older HMCs.
+      cmd = %(viosvrcmd -m "#{mtms}" --id #{vios["PartitionID"]} -c "#{vioscmd}")
+      job = connection.cli_run(hmc.uuid, cmd)
+      result = job.results["result"]
+      return result.split("\n").last.to_f / 1_000_000.0 unless result.nil?
+    rescue IbmPowerHmc::HmcJob::JobFailed => e
+      $ibm_power_hmc_log.error("executing command #{cmd} failed: #{e}")
+    end
+    nil
   end
 end

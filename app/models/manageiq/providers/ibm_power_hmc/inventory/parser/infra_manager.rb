@@ -155,6 +155,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :bitness         => 64,
       :manufacturer    => "IBM",
       :model           => "#{sys.mtype}#{sys.model}",
+      :cpu_speed       => collector.cec_cpu_freqs[sys.uuid],
       :memory_mb       => sys.memory,
       :cpu_total_cores => sys.cpus,
       :serial_number   => sys.serial
@@ -240,10 +241,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_hardware(vm, lpar)
+    # Common code for LPARs, VIOSes and templates.
     persister.hardwares.build(
       :vm_or_template  => vm,
       :memory_mb       => lpar.memory,
       :cpu_type        => "ppc64",
+      :cpu_speed       => lpar.respond_to?(:sys_uuid) ? collector.cec_cpu_freqs[lpar.sys_uuid] : nil,
       :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
   end
