@@ -213,6 +213,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     collector.vioses.each do |vios|
       _vm, hardware = parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
       parse_vios_disks(vios, hardware)
+      parse_vios_networks(vios, hardware)
+      parse_vios_guest_devices(vios, hardware)
     end
   end
 
@@ -254,9 +256,24 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_vm_networks(lpar, hardware)
     if lpar.rmc_ipaddr
       persister.networks.build(
+        :hardware    => hardware,
         :ipaddress   => lpar.rmc_ipaddr,
-        :ipv6address => nil,
-        :hardware    => hardware
+        :ipv6address => nil
+      )
+    end
+  end
+
+  def parse_vios_networks(vios, hardware)
+    vios.seas.collect(&:iface).compact.each do |iface|
+      next if iface.ip.nil?
+
+      # If the IP is the same as the RMC one, complete it with additional information.
+      persister.networks.find_or_build_by(:hardware => hardware, :ipaddress => iface.ip, :ipv6address => nil).assign_attributes(
+        :ipaddress       => iface.ip,
+        :ipv6address     => nil,
+        :subnet_mask     => iface.netmask,
+        :hostname        => iface.hostname,
+        :default_gateway => iface.gateway
       )
     end
   end
@@ -360,6 +377,24 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       collector.vnics[lpar.uuid].each do |ent|
         build_ethernet_dev(lpar, ent, hardware, "vnic")
       end
+    end
+  end
+
+  def parse_vios_guest_devices(vios, hardware)
+    vios.trunks.each do |trunk|
+      vlan = vlan_by_tag(vios.sys_uuid, trunk.vswitch_uuid, trunk.vlan_id)
+
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => trunk.location,
+        :device_name     => trunk.name,
+        :device_type     => "ethernet",
+        :controller_type => "trunk adapter",
+        :auto_detect     => true,
+        :address         => self.class.parse_macaddr(trunk.macaddr),
+        :location        => trunk.location,
+        :lan             => vlan
+      )
     end
   end
 
