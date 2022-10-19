@@ -30,5 +30,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
         :parent_inventory_collections => %i[hosts]
       )
     end
+    add_collection(infra, :resource_pools)
+    add_collection(infra, :vm_resource_pools)
+    add_collection(infra, :parent_blue_folders)
   end
 end

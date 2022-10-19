@@ -110,6 +110,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         }
       )
     end
+    it "SharedProcessorPool" do
+      assert_event_triggers_target(
+        "test_data/shared_processor_pool.xml",
+        [[:resource_pools, {:ems_ref => 'd47a585d-eaa8-3a54-b4dc-93346276ea37_27aae064-2855-39a0-b4e6-e3c9b5572036'}]]
+      )
+    end
   end
 
   def assert_event_triggers_target(filename, expected_targets, usertask = nil)

@@ -1,0 +1,181 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: UTF-8
+      string: "<LogonRequest schemaVersion='V1_1_0' xmlns='http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/'><UserID>ibm-power-hmc-username</UserID><Password>ibm-power-hmc-password</Password></LogonRequest>"
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonRequest
+      X-Api-Session:
+      - ''
+      Content-Length:
+      - '176'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT10473031
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonResponse
+      Content-Length:
+      - '576'
+      Set-Cookie:
+      - CCFWSESSION=6BE0CE3AC290623CD157CA94E27BFC4B; Path=/; Secure; HttpOnly
+      - JSESSIONID=0000Bpb57uVDQg8Ujffw-OWzxTb:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Tue, 11 Oct 2022 12:19:22 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <LogonResponse xmlns="http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom/>
+            </Metadata>
+            <X-API-Session kb="ROR" kxe="false">NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaAvVrPzGRvkD3UOAWr7AFcXQgbTuy5qpZMlEybub_Mtd2wRqTobF1aYJM38e1ZaVOni6flIBh_z3UZsbgA6VOrvRyJtqOvuBVyAuEOPrUoDX-HFI7xoPPIn6jN7CDjY2qqRfpisniIquuwl7H10yubrw2fBatnVzCFpZeZZMCHTD5vdF-m1_9bhwZ2eI79ixM8=</X-API-Session>
+        </LogonResponse>
+    http_version:
+  recorded_at: Tue, 11 Oct 2022 11:48:18 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedProcessorPool/c41d8844-1d39-3512-944d-50f58de2d42d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaAvVrPzGRvkD3UOAWr7AFcXQgbTuy5qpZMlEybub_Mtd2wRqTobF1aYJM38e1ZaVOni6flIBh_z3UZsbgA6VOrvRyJtqOvuBVyAuEOPrUoDX-HFI7xoPPIn6jN7CDjY2qqRfpisniIquuwl7H10yubrw2fBatnVzCFpZeZZMCHTD5vdF-m1_9bhwZ2eI79ixM8=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT10473032
+      Content-Type:
+      - application/atom+xml
+      Etag:
+      - "-1544338856"
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Last-Modified:
+      - Tue, 11 Oct 2022 12:19:22 GMT
+      X-Hmc-Schema-Version:
+      - V1_5_0
+      X-Transactionrecord-Uuid:
+      - 221b51e1-024d-4a63-98ca-e300bca10df9
+      Content-Length:
+      - '1916'
+      Set-Cookie:
+      - JSESSIONID=0000mX19OWgxKY-bYB-VzVJMo-p:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
+        Path=/; Secure; HttpOnly
+      Date:
+      - Tue, 11 Oct 2022 12:19:22 GMT
+      Cache-Control:
+      - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>c41d8844-1d39-3512-944d-50f58de2d42d</id>
+            <title>SharedProcessorPool</title>
+            <published>2022-10-11T13:19:22.858+01:00</published>
+            <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedProcessorPool/c41d8844-1d39-3512-944d-50f58de2d42d"/>
+            <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
+            <author>
+                <name>IBM Power Systems Management Console</name>
+            </author>
+            <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-1544338856</etag:etag>
+            <content type="application/vnd.ibm.powervm.uom+xml; type=SharedProcessorPool">
+                <SharedProcessorPool:SharedProcessorPool xmlns:SharedProcessorPool="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>c41d8844-1d39-3512-944d-50f58de2d42d</AtomID>
+                    <AtomCreated>1665390175791</AtomCreated>
+                </Atom>
+            </Metadata>
+            <CurrentReservedProcessingUnits kb="ROR" kxe="false">0</CurrentReservedProcessingUnits>
+            <MaximumProcessingUnits kxe="false" kb="CUD">2</MaximumProcessingUnits>
+            <PendingReservedProcessingUnits kb="CUD" kxe="false">0</PendingReservedProcessingUnits>
+            <PoolID kb="ROR" kxe="false">2</PoolID>
+            <AvailableProcUnits kxe="false" kb="CUD">2</AvailableProcUnits>
+            <PoolName kb="CUR" kxe="false">sloane</PoolName>
+        </SharedProcessorPool:SharedProcessorPool>
+            </content>
+        </entry>
+    http_version:
+  recorded_at: Tue, 11 Oct 2022 11:48:19 GMT
+- request:
+    method: delete
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session:
+      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaAvVrPzGRvkD3UOAWr7AFcXQgbTuy5qpZMlEybub_Mtd2wRqTobF1aYJM38e1ZaVOni6flIBh_z3UZsbgA6VOrvRyJtqOvuBVyAuEOPrUoDX-HFI7xoPPIn6jN7CDjY2qqRfpisniIquuwl7H10yubrw2fBatnVzCFpZeZZMCHTD5vdF-m1_9bhwZ2eI79ixM8=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      X-Transaction-Id:
+      - XT10473033
+      Content-Language:
+      - en-US
+      Content-Length:
+      - '0'
+      Set-Cookie:
+      - CCFWSESSION=6BE0CE3AC290623CD157CA94E27BFC4B; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
+        Max-Age=0; Path="/"; Secure
+      - JSESSIONID=0000ZkaiieYvY3eUc51zIQYPMA0:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
+        Path=/; Secure; HttpOnly
+      - JSESSIONID=6BE0CE3AC290623CD157CA94E27BFC4B; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
+        Max-Age=0; Path="/hmc"; Secure
+      Date:
+      - Tue, 11 Oct 2022 12:19:23 GMT
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Tue, 11 Oct 2022 11:48:19 GMT
+recorded_with: VCR 5.1.0

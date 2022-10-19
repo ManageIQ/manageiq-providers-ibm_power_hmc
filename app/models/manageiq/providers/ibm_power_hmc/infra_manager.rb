@@ -14,6 +14,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :Lpar
   require_nested :Vios
   require_nested :Storage
+  require_nested :ResourcePool
 
   supports :create
   supports :metrics

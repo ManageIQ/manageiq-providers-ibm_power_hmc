@@ -8,6 +8,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_vioses
       parse_templates
       parse_ssps
+      parse_resource_pools
     end
     $ibm_power_hmc_log.info("#{self.class}##{__method__} end")
   end
@@ -221,6 +222,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_lpar_common(lpar, type)
     # Common code for LPARs and VIOSes.
     host = persister.hosts.lazy_find(lpar.sys_uuid)
+    resource_pool = lpar.shared_processor_pool_uuid ? persister.resource_pools.lazy_find("#{lpar.sys_uuid}_#{lpar.shared_processor_pool_uuid}") : nil
     vm = persister.vms.build(
       :type            => type,
       :uid_ems         => lpar.uuid,
@@ -230,7 +232,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :vendor          => "ibm_power_hmc",
       :description     => lpar.description.to_s,
       :raw_power_state => lpar.state,
-      :host            => host
+      :host            => host,
+      :resource_pool   => resource_pool
     )
     parse_vm_operating_system(vm, lpar)
     parse_vm_advanced_settings(vm, lpar)
@@ -510,5 +513,34 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def self.parse_macaddr(macaddr)
     macaddr.downcase.scan(/\w{2}/).join(':') unless macaddr.nil?
+  end
+
+  def parse_resource_pools
+    collector.shared_processor_pools.each do |pool|
+      next if pool.name =~ /^SharedPool\d\d$/ && pool.max == "0"
+
+      ref = "#{pool.sys_uuid}_#{pool.uuid}"
+      params = {
+        :uid_ems => ref,
+        :ems_ref => ref,
+        :name    => pool.name,
+        :parent  => persister.hosts.lazy_find(pool.sys_uuid)
+      }
+      if pool.name == "DefaultPool"
+        params[:cpu_shares]         = 0
+        params[:cpu_reserve]        = 0
+        params[:cpu_reserve_expand] = false
+        params[:cpu_limit]          = -1
+        params[:is_default]         = true
+      else
+        params[:cpu_shares]         = pool.max.to_f - pool.available.to_f
+        params[:cpu_reserve]        = pool.available
+        params[:cpu_reserve_expand] = true
+        params[:cpu_limit]          = pool.max
+        params[:is_default]         = false
+      end
+
+      persister.resource_pools.build(params)
+    end
   end
 end

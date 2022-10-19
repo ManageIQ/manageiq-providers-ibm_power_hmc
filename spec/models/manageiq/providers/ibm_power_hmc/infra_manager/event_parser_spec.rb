@@ -128,4 +128,15 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       )
     end
   end
+
+  context "SharedProcessorPool" do
+    let(:filename) { "test_data/shared_processor_pool.xml" }
+    it "#event_to_hash" do
+      expect(described_class.event_to_hash(event, nil)).to(
+        include(
+          :host_ems_ref => "d47a585d-eaa8-3a54-b4dc-93346276ea37"
+        )
+      )
+    end
+  end
 end
