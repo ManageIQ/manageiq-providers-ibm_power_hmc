@@ -5,13 +5,13 @@
     :event_handling:
       :event_groups:
         :addition:
-          :critical:
+          :detail:
           - ADD_URI
         :configuration:
-          :critical:
+          :detail:
           - MODIFY_URI
         :deletion:
-          :critical:
+          :detail:
           - DELETE_URI
 :ems_refresh:
   :ibm_power_hmc:
