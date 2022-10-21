@@ -9,7 +9,6 @@
           - ADD_URI
         :configuration:
           :critical:
-          - INVALID_URI
           - MODIFY_URI
         :deletion:
           :critical:
