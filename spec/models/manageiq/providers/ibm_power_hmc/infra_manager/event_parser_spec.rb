@@ -45,7 +45,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       expect(described_class.event_to_hash(event, nil)).to(
         include(
           :vm_ems_ref => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
-          :message      => "Other"
+          :message    => "Other"
         )
       )
     end
@@ -70,7 +70,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser do
       expect(described_class.event_to_hash(event, nil)).to(
         include(
           :vm_ems_ref => "74CC38E2-C6DD-4B03-A0C6-088F7882EF0E",
-          :message      => "Other"
+          :message    => "Other"
         )
       )
     end
