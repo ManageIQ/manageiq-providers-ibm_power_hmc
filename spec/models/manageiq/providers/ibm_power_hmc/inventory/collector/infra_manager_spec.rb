@@ -4,7 +4,8 @@ describe ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager do
   it "collects cecs" do
     collector = described_class.new(ems, nil)
     collector.collect! do
-      allow(collector.connection).to receive(:managed_system).with(an_instance_of(String)) do |uuid|
+      allow(collector.connection).to receive(:managed_system).with(an_instance_of(String), an_instance_of(String)) do |uuid, group|
+        expect(group).to eq("SystemNetwork")
         expect(uuid).to be_in(["1", "2", "3"])
         uuid
       end
