@@ -33,7 +33,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
 
   def lpars
     @lpars ||= references(:vms).map do |ems_ref|
-      connection.lpar(ems_ref)
+      connection.lpar(ems_ref, nil, "None")
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
       nil

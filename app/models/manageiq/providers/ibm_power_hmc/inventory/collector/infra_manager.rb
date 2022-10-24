@@ -41,7 +41,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def cecs
     @cecs ||= cecs_quick.map do |cec_quick|
-      connection.managed_system(cec_quick["UUID"]) unless self.class.cec_unavailable?(cec_quick)
+      connection.managed_system(cec_quick["UUID"], "SystemNetwork") unless self.class.cec_unavailable?(cec_quick)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("managed system query failed for #{cec_quick["UUID"]}: #{e}")
       nil
@@ -89,7 +89,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
 
   def lpars
     @lpars ||= cecs.flat_map do |sys|
-      connection.lpars(sys.uuid) unless sys.lpars_uuids.empty?
+      connection.lpars(sys.uuid, nil, "None") unless sys.lpars_uuids.empty?
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
       nil

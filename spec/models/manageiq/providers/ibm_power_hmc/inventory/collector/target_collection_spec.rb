@@ -16,7 +16,8 @@ describe ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollectio
       InventoryRefresh::TargetCollection.new(:targets => [host1, host2, host3], :manager => ems)
     )
     collector.collect! do
-      allow(collector.connection).to receive(:managed_system).with(an_instance_of(String)) do |uuid|
+      allow(collector.connection).to receive(:managed_system).with(an_instance_of(String), an_instance_of(String)) do |uuid, group|
+        expect(group).to eq("SystemNetwork")
         expect(uuid).to be_in(cecs.keys)
         uuid
       end
