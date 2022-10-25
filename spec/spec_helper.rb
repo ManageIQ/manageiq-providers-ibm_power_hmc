@@ -9,11 +9,11 @@ Dir[File.join(__dir__, "support/**/*.rb")].sort.each { |f| require f }
 require "manageiq-providers-ibm_power_hmc"
 
 def sanitizer(interaction)
-  # Mask API session token in recorded file.
+  # Mask API session token in recorded file even though the logoff invalidates it.
   interaction.request.headers["X-Api-Session"] = "xxx" if interaction.request.headers.key?("X-Api-Session")
   interaction.response.body.gsub!(/<X-API-Session[^>]*>[^<]*<\/X-API-Session>/, "<X-API-Session>xxx</X-API-Session>")
   if interaction.request.uri.match?("rest/api/templates")
-    interaction.response.body.gsub!(/<K_X_API_SESSION_MEMENTO[^>]*>[^<]*<\/K_X_API_SESSION_MEMENTO>/, "<K_X_API_SESSION_MEMENTO>xxx</K_X_API_SESSION_MEMENTO>")
+    interaction.request.body.gsub!(/<K_X_API_SESSION_MEMENTO[^>]*>[^<]*<\/K_X_API_SESSION_MEMENTO>/, "<K_X_API_SESSION_MEMENTO>xxx</K_X_API_SESSION_MEMENTO>")
   end
 
   # Remove transient headers.
