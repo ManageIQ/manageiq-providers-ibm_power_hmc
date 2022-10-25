@@ -123,6 +123,13 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       expect(trunk.lan).not_to be_nil
       expect(trunk.lan.name).to eq("VLAN1-ETHERNET0")
 
+      expect(vios.networks.count).to eq(1)
+      network = vios.networks.first
+      expect(network).to have_attributes(
+        :ipaddress   => "10.197.64.77",
+        :subnet_mask => "255.255.240.0"
+      )
+
       io = vios.hardware.physical_ports.find_by(:location => "U78C9.001.WZS01L9-P1-C14")
       expect(io).to have_attributes(
         :device_type     => "physical_port",
@@ -182,6 +189,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       )
       expect(nic.lan).not_to be_nil
       expect(nic.lan.name).to eq("VLAN1-ETHERNET0")
+
+      expect(lpar.networks.count).to eq(1)
+      network = lpar.networks.first
+      expect(network).to have_attributes(
+        :ipaddress => "10.197.64.178"
+      )
 
       expect(lpar.disks.count).to eq(1)
 
