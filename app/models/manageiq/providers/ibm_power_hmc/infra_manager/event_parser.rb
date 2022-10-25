@@ -5,44 +5,30 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser
       :source     => 'IBM_POWER_HMC',
       :ems_ref    => event.id,
       :timestamp  => event.published,
+      :message    => event.detail,
       # Serialize IbmPowerHmc::Event
       :full_data  => {:data => event.data, :detail => event.detail, :usertask => event.usertask},
       :ems_id     => ems_id
     }
 
-    case event.type
-    when /.*_URI/
-      uri = URI(event.data)
-      elems = uri.path.split('/')
-      type, uuid = elems[-2], elems[-1]
-      case type
-      when "ManagedSystem"
-        event_hash[:host_ems_ref] = uuid
-      when "LogicalPartition", "VirtualIOServer"
-        event_hash[:vm_ems_ref] = uuid
-        # Check if the URI also contains /ManagedSystem/{uuid}/
-        if elems.length >= 4 && elems[-4] == "ManagedSystem"
-          event_hash[:host_ems_ref] = elems[-3]
-        end
-      when "VirtualSwitch"
-        event_hash[:vswitch_ems_ref] = uuid
-        # Check if the URI also contains /ManagedSystem/{uuid}/
-        if elems.length >= 4 && elems[-4] == "ManagedSystem"
-          event_hash[:host_ems_ref] = elems[-3]
-        end
-      when "VirtualNetwork"
-        event_hash[:vlan_ems_ref] = uuid
-        # Check if the URI also contains /ManagedSystem/{uuid}/
-        if elems.length >= 4 && elems[-4] == "ManagedSystem"
-          event_hash[:host_ems_ref] = elems[-3]
-        end
-      when "Cluster"
-        event_hash[:storage_ems_ref] = uuid
-      when "SharedProcessorPool"
-        if elems.length >= 4 && elems[-4] == "ManagedSystem"
-          event_hash[:host_ems_ref] = elems[-3]
-        end
-      end
+    elems = URI(event.data).path.split('/')
+    type, uuid = elems[-2], elems[-1]
+
+    # Check if the URI also contains /ManagedSystem/{uuid}/
+    if elems.length >= 4 && elems[-4] == "ManagedSystem"
+      host_uuid = elems[-3]
+    end
+
+    case type
+    when "ManagedSystem"
+      event_hash[:host_ems_ref] = uuid
+    when "LogicalPartition", "VirtualIOServer"
+      event_hash[:vm_ems_ref]   = uuid
+      event_hash[:host_ems_ref] = host_uuid unless host_uuid.nil?
+    when "VirtualSwitch", "VirtualNetwork", "SharedProcessorPool"
+      event_hash[:host_ems_ref] = host_uuid unless host_uuid.nil?
+    when "UserTask"
+      event_hash[:message] = event.usertask["key"]
     end
 
     event_hash
