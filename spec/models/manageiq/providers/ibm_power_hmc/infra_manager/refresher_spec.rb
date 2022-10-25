@@ -126,7 +126,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       expect(vios.networks.count).to eq(1)
       network = vios.networks.first
       expect(network).to have_attributes(
-        :ipaddress   => "10.197.64.77",
+        :ipaddress   => "10.197.64.55",
         :subnet_mask => "255.255.240.0"
       )
 
