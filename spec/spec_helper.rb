@@ -11,8 +11,9 @@ require "manageiq-providers-ibm_power_hmc"
 def sanitizer(interaction)
   # Mask API session token in recorded file even though the logoff invalidates it.
   interaction.request.headers["X-Api-Session"] = "xxx" if interaction.request.headers.key?("X-Api-Session")
-  interaction.response.body.gsub!(/<X-API-Session[^>]*>[^<]*<\/X-API-Session>/, "<X-API-Session>xxx</X-API-Session>")
-  if interaction.request.uri.match?("rest/api/templates")
+  if interaction.request.uri.match?("rest/api/web/Logon")
+    interaction.response.body.gsub!(/<X-API-Session[^>]*>[^<]*<\/X-API-Session>/, "<X-API-Session>xxx</X-API-Session>")
+  elsif interaction.request.uri.match?("rest/api/templates")
     interaction.request.body.gsub!(/<K_X_API_SESSION_MEMENTO[^>]*>[^<]*<\/K_X_API_SESSION_MEMENTO>/, "<K_X_API_SESSION_MEMENTO>xxx</K_X_API_SESSION_MEMENTO>")
   end
 
