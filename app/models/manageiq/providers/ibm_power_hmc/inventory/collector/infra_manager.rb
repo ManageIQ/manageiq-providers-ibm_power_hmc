@@ -126,8 +126,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     rescue IbmPowerHmc::Connection::HttpError => e
       if e.status != 404
         $ibm_power_hmc_log.error("vioses quick query failed for #{sys.uuid}: #{e}")
-        nil
+        raise
       end
+      nil
     end.compact.to_h
   end
 
