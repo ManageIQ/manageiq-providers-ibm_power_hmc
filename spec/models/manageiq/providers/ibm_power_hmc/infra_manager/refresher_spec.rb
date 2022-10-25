@@ -25,7 +25,8 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       assert_specific_host
       assert_specific_switch
       assert_specific_lan
-      assert_specific_vm
+      assert_specific_vios
+      assert_specific_lpar
     end
 
     def assert_ems
@@ -59,6 +60,19 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :cpu_total_cores => 16,
         :serial_number   => "103341V"
       )
+
+      io = host.hardware.physical_ports.find_by(:location => "U78C9.001.WZS00M8-P1-C15")
+      expect(io).to have_attributes(
+        :device_type     => "physical_port",
+        :controller_type => "IO",
+        :model           => "PCIe3 x8 SAS RAID Internal Adapter 6Gb"
+      )
+
+      setting = host.advanced_settings.find_by(:name => "pcm_enabled")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
     end
 
     def assert_specific_switch
@@ -79,9 +93,76 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       expect(lan.switch.name).to eq("ETHERNET0(Default)")
     end
 
-    def assert_specific_vm
-      vm = ems.vms.find_by(:ems_ref => lpar_uuid)
-      expect(vm).to have_attributes(
+    def assert_specific_vios
+      vios = ems.vms.find_by(:ems_ref => vios_uuid)
+      expect(vios).to have_attributes(
+        :ems_ref         => vios_uuid,
+        :vendor          => "ibm_power_hmc",
+        :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios",
+        :name            => "aramisios",
+        :raw_power_state => "running",
+        :power_state     => "on"
+      )
+      expect(vios.operating_system).to have_attributes(
+        :product_name => "VIOS",
+        :version      => "3.1.0.11"
+      )
+      expect(vios.hardware).to have_attributes(
+        :cpu_type        => "ppc64",
+        :cpu_speed       => 4_157,
+        :memory_mb       => 8_192,
+        :cpu_total_cores => 2
+      )
+
+      trunk = vios.hardware.nics.find_by(:address => "22:ed:8b:6e:01:02")
+      expect(trunk).to have_attributes(
+        :device_name     => "ent4",
+        :device_type     => "ethernet",
+        :controller_type => "trunk adapter"
+      )
+      expect(trunk.lan).not_to be_nil
+      expect(trunk.lan.name).to eq("VLAN1-ETHERNET0")
+
+      expect(vios.networks.count).to eq(1)
+      network = vios.networks.first
+      expect(network).to have_attributes(
+        :ipaddress   => "10.197.64.55",
+        :subnet_mask => "255.255.240.0"
+      )
+
+      io = vios.hardware.physical_ports.find_by(:location => "U78C9.001.WZS01L9-P1-C14")
+      expect(io).to have_attributes(
+        :device_type     => "physical_port",
+        :controller_type => "IO",
+        :model           => "PCIe3 x8 SAS RAID Internal Adapter 6Gb"
+      )
+
+      disk = vios.disks.find_by(:device_name => "hdisk0")
+      expect(disk).to have_attributes(
+        :controller_type => "SCSI",
+        :device_type     => "disk",
+        :disk_type       => "Physical Volume",
+        :location        => "U78C9.001.WZS01L9-P2-D2",
+        :mode            => "rw",
+        :size            => 286_102.megabytes
+      )
+
+      setting = vios.advanced_settings.find_by(:name => "processor_type")
+      expect(setting).to have_attributes(
+        :value     => "dedicated",
+        :read_only => true
+      )
+
+      expect(vios.host).not_to be_nil
+      expect(vios.host.name).to eq("aramis")
+
+      # VMs with dedicated CPUs have no shared processor pool.
+      expect(vios.parent_resource_pool).to be_nil
+    end
+
+    def assert_specific_lpar
+      lpar = ems.vms.find_by(:ems_ref => lpar_uuid)
+      expect(lpar).to have_attributes(
         :ems_ref         => lpar_uuid,
         :vendor          => "ibm_power_hmc",
         :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar",
@@ -89,25 +170,55 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :raw_power_state => "running",
         :power_state     => "on"
       )
-      expect(vm.operating_system).to have_attributes(
+      expect(lpar.operating_system).to have_attributes(
         :product_name => "AIX",
         :version      => "7.3",
         :build_number => "7300-00-00-0000"
       )
-      expect(vm.hardware).to have_attributes(
+      expect(lpar.hardware).to have_attributes(
         :cpu_type        => "ppc64",
         :cpu_speed       => 4_157,
         :memory_mb       => 4_096,
         :cpu_total_cores => 1
       )
 
-      nic = vm.hardware.guest_devices.find_by(:address => "be:6a:af:5d:eb:02")
+      nic = lpar.hardware.nics.find_by(:address => "be:6a:af:5d:eb:02")
       expect(nic).to have_attributes(
         :device_type     => "ethernet",
         :controller_type => "client network adapter"
       )
       expect(nic.lan).not_to be_nil
       expect(nic.lan.name).to eq("VLAN1-ETHERNET0")
+
+      expect(lpar.networks.count).to eq(1)
+      network = lpar.networks.first
+      expect(network).to have_attributes(
+        :ipaddress => "10.197.64.178"
+      )
+
+      expect(lpar.disks.count).to eq(1)
+
+      disk = lpar.disks.first
+      expect(disk).to have_attributes(
+        :controller_type => "SCSI",
+        :device_type     => "disk",
+        :disk_type       => "Physical Volume",
+        :location        => "U8286.42A.103341V-V16-C5",
+        :mode            => "rw",
+        :size            => 20.gigabytes
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "processor_type")
+      expect(setting).to have_attributes(
+        :value     => "uncapped",
+        :read_only => true
+      )
+
+      expect(lpar.host).not_to be_nil
+      expect(lpar.host.ems_ref).to eq(host_uuid)
+
+      expect(lpar.parent_resource_pool).not_to be_nil
+      expect(lpar.parent_resource_pool.name).to eq("DefaultPool")
     end
   end
 
