@@ -489,7 +489,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def vlan_by_tag(sys_uuid, vswitch_uuid, vlan_id)
     host = persister.hosts.lazy_find(sys_uuid)
     vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vswitch_uuid)
-    persister.lans.lazy_find({:switch => vswitch, :tag => vlan_id}, {:ref => :by_tag})
+    persister.lans.lazy_find({:switch => vswitch, :tag => vlan_id}, :ref => :by_tag)
   end
 
   def build_ethernet_dev(lpar, ent, hardware, controller_type)
