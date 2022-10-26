@@ -15,12 +15,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def cecs_quick
     @cecs_quick ||= references(:hosts).map do |ems_ref|
       connection.managed_system_quick(ems_ref).merge("UUID" => ems_ref)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("managed systems quick query failed for #{ems_ref}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("managed systems quick query failed for #{ems_ref}: #{e}")
+      raise
     end.compact
   end
 
@@ -37,48 +36,44 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   def lpars
     @lpars ||= references(:vms).map do |ems_ref|
       connection.lpar(ems_ref, nil, "None")
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}")
+      raise
     end.compact
   end
 
   def vioses
     @vioses ||= references(:vms).map do |ems_ref|
       connection.vios(ems_ref)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}")
+      raise
     end.compact
   end
 
   def templates
     @templates ||= references(:miq_templates).map do |ems_ref|
       connection.template(ems_ref)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("error querying template #{ems_ref}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying template #{ems_ref}: #{e}")
+      raise
     end.compact
   end
 
   def clusters
     @clusters ||= references(:storages).map do |ems_ref|
       connection.cluster(ems_ref)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("error querying cluster #{ems_ref}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying cluster #{ems_ref}: #{e}")
+      raise
     end.compact
   end
   private :clusters
@@ -87,12 +82,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     # NOTE: We're using cluster ID as ems_ref for shared storage pools.
     @ssps ||= clusters.map do |cluster|
       connection.ssp(cluster.ssp_uuid)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("error querying ssp #{cluster.ssp_uuid}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying ssp #{cluster.ssp_uuid}: #{e}")
+      raise
     end.compact
   end
 
@@ -100,12 +94,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     @shared_processor_pools ||= references(:resource_pools).map do |ems_ref|
       sys_uuid, pool_uuid = ems_ref.split("_")
       connection.shared_processor_pool(sys_uuid, pool_uuid)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      if e.status != 404
-        $ibm_power_hmc_log.error("error querying shared processor pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
-        raise
-      end
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying shared processor pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
+      raise
     end.compact
   end
 
