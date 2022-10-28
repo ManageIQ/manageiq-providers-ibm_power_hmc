@@ -11,27 +11,27 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def hmc
     @hmc ||= begin
       connection.management_console
-    rescue IbmPowerHmc::Connection::HttpError => e
+    rescue => e
       $ibm_power_hmc_log.error("management console query failed: #{e}")
-      nil
+      raise
     end
   end
 
   def ssps
     @ssps ||= begin
       connection.ssps
-    rescue IbmPowerHmc::Connection::HttpError => e
+    rescue => e
       $ibm_power_hmc_log.error("ssps query failed: #{e}")
-      []
+      raise
     end
   end
 
   def cecs_quick
     @cecs_quick ||= begin
       connection.managed_systems_quick
-    rescue IbmPowerHmc::Connection::HttpError => e
+    rescue => e
       $ibm_power_hmc_log.error("managed systems quick query failed: #{e}")
-      []
+      raise
     end
   end
 
@@ -42,9 +42,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def cecs
     @cecs ||= cecs_quick.map do |cec_quick|
       connection.managed_system(cec_quick["UUID"], "SystemNetwork") unless self.class.cec_unavailable?(cec_quick)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("managed system query failed for #{cec_quick["UUID"]}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("managed system query failed for #{cec_quick["UUID"]}: #{e}")
+      raise
     end.compact
   end
 
@@ -59,7 +61,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def cec_cpu_freqs_from_api
     @cec_cpu_freqs_from_api ||= cecs.map do |sys|
       [sys.uuid, cec_cpu_freq(sys)]
-    rescue IbmPowerHmc::Connection::HttpError => e
+    rescue => e
       $ibm_power_hmc_log.error("cpu frequency query failed for #{sys.uuid}: #{e}")
       nil
     end.compact.to_h
@@ -72,54 +74,64 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def vlans
     @vlans ||= cecs.map do |sys|
       [sys.uuid, connection.virtual_networks(sys.uuid)] unless sys.networks_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("virtual networks query failed for #{sys.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("virtual networks query failed for #{sys.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
 
   def vswitches
     @vswitches ||= cecs.map do |sys|
       [sys.uuid, connection.virtual_switches(sys.uuid)] unless sys.vswitches_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("virtual switches query failed for #{sys.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("virtual switches query failed for #{sys.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
 
   def lpars
     @lpars ||= cecs.flat_map do |sys|
       connection.lpars(sys.uuid, nil, "None") unless sys.lpars_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("lpars query failed for #{sys.uuid}: #{e}")
+      raise
     end.compact
   end
 
   def vioses
     @vioses ||= cecs.flat_map do |sys|
       connection.vioses(sys.uuid) unless sys.vioses_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("vioses query failed for #{sys.uuid} #{e}")
+      raise
     end.compact
   end
 
   def vioses_quick
     @vioses_quick ||= cecs.map do |sys|
       [sys.uuid, connection.vioses_quick(sys.uuid)] unless sys.vioses_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("vioses quick query failed for #{sys.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("vioses quick query failed for #{sys.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
 
   def pcm_enabled
     @pcm_enabled ||= begin
       connection.pcm_preferences.first.managed_system_preferences.index_by(&:id)
-    rescue IbmPowerHmc::Connection::HttpError => e
+    rescue => e
       $ibm_power_hmc_log.error("pcm preferences query failed: #{e}")
-      {}
+      raise
     end
   end
 
@@ -132,9 +144,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def netadapters_lpar
     @netadapters_lpar ||= lpars.map do |lpar|
       [lpar.uuid, connection.network_adapter_lpar(lpar.uuid)] unless lpar.net_adap_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("network adapters query failed for lpar #{lpar.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("network adapters query failed for lpar #{lpar.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
   private :netadapters_lpar
@@ -142,9 +156,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def netadapters_vios
     @netadapters_vios ||= vioses.map do |vios|
       [vios.uuid, connection.network_adapter_vios(vios.uuid)] unless vios.net_adap_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("network adapters query failed for vios #{vios.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("network adapters query failed for vios #{vios.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
   private :netadapters_vios
@@ -156,9 +172,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def sriov_elps_lpar
     @sriov_elps_lpar ||= lpars.map do |lpar|
       [lpar.uuid, connection.sriov_elp_lpar(lpar.uuid)] unless lpar.sriov_elp_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("sriov ethernet logical ports query failed for lpar #{lpar.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("sriov ethernet logical ports query failed for lpar #{lpar.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
   private :sriov_elps_lpar
@@ -166,9 +184,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def sriov_elps_vios
     @sriov_elps_vios ||= vioses.map do |vios|
       [vios.uuid, connection.sriov_elp_vios(vios.uuid)] unless vios.sriov_elp_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("sriov ethernet logical ports query failed for vios #{vios.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("sriov ethernet logical ports query failed for vios #{vios.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
   private :sriov_elps_vios
@@ -180,18 +200,22 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def vnics
     @vnics ||= lpars.map do |lpar|
       [lpar.uuid, connection.vnic_dedicated(lpar.uuid)] unless lpar.vnic_dedicated_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("vnics query failed for #{lpar.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("vnics query failed for #{lpar.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
 
   def vscsi_client_adapters
     @vscsi_client_adapters ||= lpars.map do |lpar|
       [lpar.uuid, connection.vscsi_client_adapter(lpar.uuid)] unless lpar.vscsi_client_uuids.empty?
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("vscsi client adapters query failed for #{lpar.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("vscsi client adapters query failed for #{lpar.uuid}: #{e}")
+      raise
     end.compact.to_h
   end
 
@@ -222,25 +246,27 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
   def templates
     @templates ||= begin
       connection.templates
-    rescue IbmPowerHmc::Connection::HttpError => e
+    rescue => e
       $ibm_power_hmc_log.error("templates query failed: #{e}")
-      []
+      raise
     end
   end
 
   def shared_processor_pools
     @shared_processor_pools ||= cecs.flat_map do |sys|
       connection.shared_processor_pool(sys.uuid)
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("shared_processor_pool query failed for #{sys.uuid}: #{e}")
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("shared processor pool query failed for #{sys.uuid}: #{e}")
+      raise
     end.compact
   end
 
   private
 
   def cec_cpu_freq(sys)
-    return nil if hmc.nil? || !vioses_quick.key?(sys.uuid)
+    return nil unless vioses_quick.key?(sys.uuid)
 
     # Retrieve the CPU frequency of the CEC from one of its running VIOSes with RMC active.
     # We get the list of VIOSes using the quick API to reduce query time during targeted refresh.
