@@ -1,6 +1,26 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
+  virtual_delegate :hmc_managed, :to => :host, :prefix => true, :allow_nil => true, :type => :boolean
+
+  supports :control do
+    unsupported_reason_add(:control, _("Host is not HMC-managed")) unless host_hmc_managed
+  end
+
+  supports :rename do
+    unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host_hmc_managed
+  end
+
+  supports :set_description do
+    unsupported_reason_add(:set_description, _("Host is not HMC-managed")) unless host_hmc_managed
+  end
+
+  supports :native_console do
+    reason ||= _("VM Console not supported because VM is orphaned") if orphaned?
+    reason ||= _("VM Console not supported because VM is archived") if archived?
+    unsupported_reason_add(:native_console, reason) if reason
+  end
+
   def provider_object(_connection = nil)
     raise StandardError, "Must be implemented in a subclass"
   end
@@ -31,7 +51,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   def raw_suspend
   end
 
-  def raw_rename
+  def raw_rename(new_name)
+    modify_attrs(:name => new_name)
+  end
+
+  def raw_set_description(new_description)
+    modify_attrs(:description => new_description)
   end
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
@@ -83,5 +108,26 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   def cpu_percent_available?
     true
+  end
+
+  def self.display_name(number = 1)
+    n_("Partition", "Partitions", number)
+  end
+
+  private
+
+  def modify_attrs(attrs = {})
+    ext_management_system.with_provider_connection do |connection|
+      connection.modify_object do
+        provider_object(connection).tap do |obj|
+          attrs.each do |key, value|
+            obj.send("#{key}=", value)
+          end
+        end
+      end
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error setting attributes #{attrs} for partition #{ems_ref}: #{e}")
+      raise
+    end
   end
 end

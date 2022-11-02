@@ -1,12 +1,8 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
-  class ProviderUnreachable < ManageIQ::Providers::BaseManager::EventCatcher::Runner::TemporaryFailure
-  end
-
-  def initialize(ems, options = {})
+  def initialize(ems, _options = {})
     @ems = ems
     @last_activity = nil
     @stop_polling = false
-    @poll_sleep = options[:poll_sleep] || 20.seconds
   end
 
   def start
@@ -17,19 +13,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventCatcher::Stream
     @stop_polling = true
   end
 
-  def poll
+  def poll(&block)
     @ems.with_provider_connection do |connection|
-      catch(:stop_polling) do
-        loop do
-          connection.next_events(false).each do |event|
-            throw :stop_polling if @stop_polling
-            yield event
-          end
-          sleep @poll_sleep
-        end
-      rescue => exception
-        raise ProviderUnreachable, exception.message
-      end
+      # The HMC waits 10 seconds by default before returning if there is no event.
+      connection.next_events(false).select do |event|
+        event.type.in?(["ADD_URI", "MODIFY_URI", "DELETE_URI"])
+      end.each(&block) until @stop_polling
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("querying hmc events failed: #{e}")
+      raise
     end
   end
 end

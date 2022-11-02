@@ -7,15 +7,18 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   supports :stop do
     unsupported_reason_add(:stop, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
+    unsupported_reason_add(:stop, _("Cannot shutdown a host that is not HMC-managed")) unless hmc_managed
   end
 
   supports :shutdown do
     unsupported_reason_add(:shutdown, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
     unsupported_reason_add(:shutdown, _("Cannot shutdown a host with running vms")) if vms.where(:power_state => "on").any?
+    unsupported_reason_add(:shutdown, _("Cannot shutdown a host that is not HMC-managed")) unless hmc_managed
   end
 
   supports :start do
     unsupported_reason_add(:start, _("Cannot start a host that is already powered on")) unless power_state == "off"
+    unsupported_reason_add(:start, _("Cannot start a host that is not HMC-managed")) unless hmc_managed
   end
 
   def shutdown
@@ -82,7 +85,17 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
     end
   end
 
+  def hmc_managed
+    as = advanced_settings.detect { |s| s.name == "hmc_managed" }
+    if as.nil?
+      false
+    else
+      ActiveRecord::Type::Boolean.new.cast(as.value)
+    end
+  end
+
   virtual_column :pcm_enabled, :type => :boolean, :uses => :advanced_settings
+  virtual_column :hmc_managed, :type => :boolean, :uses => :advanced_settings
 
   # Display or hide certain performance charts
   def cpu_mhz_available?
@@ -95,6 +108,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   def cpu_percent_available?
     true
+  end
+
+  def self.display_name(number = 1)
+    n_("Managed System", "Managed Systems", number)
   end
 
   private

@@ -1,13 +1,16 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < ManageIQ::Providers::IbmPowerHmc::Inventory::Parser
   def parse
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    collector.collect!
-
-    parse_cecs
-    parse_lpars
-    parse_vioses
-    parse_templates
-    parse_ssps
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} start")
+    collector.collect! do
+      parse_cecs
+      parse_cecs_unavailable
+      parse_lpars
+      parse_vioses
+      parse_templates
+      parse_ssps
+      parse_resource_pools
+    end
+    $ibm_power_hmc_log.info("#{self.class}##{__method__} end")
   end
 
   def parse_cecs
@@ -16,44 +19,124 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :uid_ems             => sys.uuid,
         :ems_ref             => sys.uuid,
         :name                => sys.name,
-        :hypervisor_hostname => "#{sys.mtype}#{sys.model}_#{sys.serial}",
+        :hypervisor_hostname => "#{sys.mtype}-#{sys.model}*#{sys.serial}",
         :hostname            => sys.hostname,
         :ipaddress           => sys.ipaddr,
         :power_state         => lookup_power_state(sys.state),
-        :vmm_vendor          => "ibm_power_hmc",
-        :type                => ManageIQ::Providers::IbmPowerHmc::InfraManager::Host.name
+        :vmm_vendor          => "ibm_power_hmc"
       )
 
       parse_host_operating_system(host, sys)
       parse_host_hardware(host, sys)
       parse_host_advanced_settings(host, sys)
       parse_vswitches(host, sys)
-      parse_vlans(sys)
+      parse_vlans(host, sys)
+    end
+  end
+
+  def parse_cecs_unavailable
+    collector.cecs_unavailable.each do |sys|
+      mtype_model, serial = sys["MTMS"].split("*")
+      host = persister.hosts.build(
+        :uid_ems             => sys["UUID"],
+        :ems_ref             => sys["UUID"],
+        :name                => sys["SystemName"],
+        :hypervisor_hostname => sys["MTMS"],
+        :ipaddress           => sys["IPAddress"],
+        :power_state         => lookup_power_state(sys["State"]),
+        :vmm_vendor          => "ibm_power_hmc"
+      )
+      persister.host_operating_systems.build(
+        :host         => host,
+        :product_name => "phyp",
+        :build_number => sys["SystemFirmware"]
+      )
+      persister.host_hardwares.build(
+        :host            => host,
+        :cpu_type        => "ppc64",
+        :bitness         => 64,
+        :manufacturer    => "IBM",
+        :model           => mtype_model,
+        :memory_mb       => sys["InstalledSystemMemory"],
+        :cpu_total_cores => sys["InstalledSystemProcessorUnits"],
+        :serial_number   => serial
+      )
+    end
+  end
+
+  def self.storage_capacity(storage)
+    case storage
+    when IbmPowerHmc::VirtualOpticalMedia
+      storage.size.to_f.gigabytes.to_i
+    when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit, IbmPowerHmc::VirtualDisk
+      storage.capacity.to_f.gigabytes.to_i
+    else
+      storage.capacity.to_f.megabytes.to_i
+    end
+  end
+
+  def self.storage_type(storage)
+    case storage
+    when IbmPowerHmc::PhysicalVolume
+      "Physical Volume"
+    when IbmPowerHmc::VirtualDisk
+      "Logical Volume"
+    when IbmPowerHmc::VirtualOpticalMedia
+      "Optical Media"
+    when IbmPowerHmc::LogicalUnit
+      "Logical Unit"
     end
   end
 
   def parse_ssps
-    $ibm_power_hmc_log.info("#{self.class}##{__method__} : received ssps => #{collector.ssps}")
     collector.ssps.each do |ssp|
       persister.storages.build(
         :name        => ssp.name,
-        :total_space => ssp.capacity.to_f.gigabytes.round, # hmc returns a str in byte
+        :total_space => self.class.storage_capacity(ssp),
         :ems_ref     => ssp.cluster_uuid,
         :free_space  => ssp.free_space.to_f.gigabytes.round
       )
     end
   end
 
-  def parse_vm_disks(lpar, hardware)
-    collector.vscsi_lun_mappings_by_uuid[lpar.uuid].to_a.each do |mapping|
-      found_ssp_uuid = collector.ssp_lus_by_udid[mapping.storage.udid]
+  def parse_lpar_disks(lpar, hardware)
+    return unless collector.lpar_disks.key?(lpar.uuid) # LPAR has no disk
+
+    collector.lpar_disks[lpar.uuid].group_by { |d| d[:udid] }.each do |udid, paths|
+      disk = paths.first
+      size = disk[:storage] ? self.class.storage_capacity(disk[:storage]) : disk[:size]
 
       persister.disks.build(
-        :device_type => "disk",
-        :hardware    => hardware,
-        :storage     => persister.storages.lazy_find(found_ssp_uuid),
-        :device_name => mapping.storage.name,
-        :size        => mapping.storage.capacity.to_f.gigabytes.round
+        :hardware        => hardware,
+        :location        => paths.pluck(:client_drc).sort.uniq.join(","),
+        :device_name     => udid,
+        :device_type     => disk[:type],
+        :storage         => disk[:cluster_id] ? persister.storages.lazy_find(disk[:cluster_id]) : nil,
+        :size            => size,
+        :size_on_disk    => size,
+        :mode            => disk[:mode],
+        :disk_type       => disk[:storage] ? self.class.storage_type(disk[:storage]) : disk[:disk_type],
+        :thin            => disk[:thin],
+        :filename        => disk[:path],
+        :controller_type => "SCSI"
+      )
+    end
+  end
+
+  def parse_vios_disks(vios, hardware)
+    vios.pvs.each do |pv|
+      size = self.class.storage_capacity(pv)
+
+      persister.disks.build(
+        :hardware        => hardware,
+        :location        => pv.location,
+        :device_name     => pv.name,
+        :device_type     => "disk",
+        :size            => size,
+        :size_on_disk    => size,
+        :mode            => "rw",
+        :disk_type       => self.class.storage_type(pv),
+        :controller_type => pv.is_fc == "true" ? "FC" : "SCSI"
       )
     end
   end
@@ -73,22 +156,29 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :bitness         => 64,
       :manufacturer    => "IBM",
       :model           => "#{sys.mtype}#{sys.model}",
-      # :cpu_speed     => 2348, # in MHz
+      :cpu_speed       => collector.cec_cpu_freqs[sys.uuid],
       :memory_mb       => sys.memory,
       :cpu_total_cores => sys.cpus,
       :serial_number   => sys.serial
     )
-
     parse_host_guest_devices(hardware, sys)
   end
 
   def parse_host_guest_devices(hardware, sys)
-    # persister.host_guest_devices.build(
-    #   :hardware    => hardware,
-    #   :uid_ems     => sys.xxx,
-    #   :device_name => sys.xxx,
-    #   :device_type => sys.xxx
-    # )
+    sys.io_adapters.each do |io|
+      next if io.udid.to_i == 65_535 # Skip empty slots
+
+      persister.host_guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => io.dr_name,
+        :device_type     => "physical_port",
+        :controller_type => "IO",
+        :device_name     => "Adapter",
+        :location        => io.dr_name,
+        :model           => io.description,
+        :auto_detect     => true
+      )
+    end
   end
 
   def parse_host_advanced_settings(host, sys)
@@ -102,24 +192,37 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :read_only    => true
       )
     end
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "hmc_managed",
+      :display_name => _("HMC-managed"),
+      :description  => _("The PowerVM management master of this host is a HMC."),
+      :value        => sys.is_classic_hmc_mgmt.eql?("true") ? sys.is_classic_hmc_mgmt : sys.is_hmc_mgmt_master,
+      :read_only    => true
+    )
   end
 
   def parse_lpars
     collector.lpars.each do |lpar|
-      parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      _vm, hardware = parse_lpar_common(lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
+      parse_lpar_disks(lpar, hardware)
+      parse_lpar_guest_devices(lpar, hardware)
     end
   end
 
   def parse_vioses
     collector.vioses.each do |vios|
-      parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
-      # Add VIOS specific parsing code here.
+      _vm, hardware = parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
+      parse_vios_disks(vios, hardware)
+      parse_vios_networks(vios, hardware)
+      parse_vios_guest_devices(vios, hardware)
     end
   end
 
   def parse_lpar_common(lpar, type)
     # Common code for LPARs and VIOSes.
     host = persister.hosts.lazy_find(lpar.sys_uuid)
+    resource_pool = lpar.shared_processor_pool_uuid ? persister.resource_pools.lazy_find("#{lpar.sys_uuid}_#{lpar.shared_processor_pool_uuid}") : nil
     vm = persister.vms.build(
       :type            => type,
       :uid_ems         => lpar.uuid,
@@ -129,55 +232,107 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :vendor          => "ibm_power_hmc",
       :description     => lpar.description.to_s,
       :raw_power_state => lpar.state,
-      :host            => host
+      :host            => host,
+      :resource_pool   => resource_pool
     )
-    hardware = parse_vm_hardware(vm, lpar)
-
-    if type.eql?(ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar.name)
-      parse_lpar_guest_devices(lpar, hardware)
-    end
-
     parse_vm_operating_system(vm, lpar)
-    parse_vm_guest_devices(lpar, hardware)
     parse_vm_advanced_settings(vm, lpar)
-    vm
+
+    hardware = parse_vm_hardware(vm, lpar)
+    parse_vm_networks(lpar, hardware)
+    parse_vm_guest_devices(lpar, hardware)
+
+    [vm, hardware]
   end
 
   def parse_vm_hardware(vm, lpar)
+    # Common code for LPARs, VIOSes and templates.
     persister.hardwares.build(
       :vm_or_template  => vm,
       :memory_mb       => lpar.memory,
+      :cpu_type        => "ppc64",
+      :cpu_speed       => lpar.respond_to?(:sys_uuid) ? collector.cec_cpu_freqs[lpar.sys_uuid] : nil,
       :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     )
   end
 
-  def parse_vswitches(host, sys)
-    collector.vswitches[sys.uuid].each do |vswitch|
-      switch = persister.host_virtual_switches.build(
-        :uid_ems => vswitch.uuid,
-        :name    => vswitch.name,
-        :host    => host
+  def parse_vm_networks(lpar, hardware)
+    if lpar.rmc_ipaddr
+      persister.networks.build(
+        :hardware    => hardware,
+        :ipaddress   => lpar.rmc_ipaddr,
+        :ipv6address => nil
       )
-      persister.host_switches.build(:host => host, :switch => switch)
     end
   end
 
-  def parse_vlans(sys)
-    collector.vlans[sys.uuid].each do |vlan|
-      managed_system = persister.hosts.lazy_find(sys.uuid)
-      vswitch = persister.host_virtual_switches.lazy_find(:host => managed_system, :uid_ems => vlan.vswitch_uuid)
-      persister.lans.build(
-        :uid_ems => vlan.uuid,
-        :switch  => vswitch,
-        :tag     => vlan.vlan_id,
-        :name    => vlan.name,
-        :ems_ref => sys.uuid
+  def parse_vios_networks(vios, hardware)
+    vios.seas.collect(&:iface).compact.each do |iface|
+      next if iface.ip.nil?
+
+      # If the IP is the same as the RMC one, complete it with additional information.
+      persister.networks.find_or_build_by(:hardware => hardware, :ipaddress => iface.ip, :ipv6address => nil).assign_attributes(
+        :ipaddress       => iface.ip,
+        :ipv6address     => nil,
+        :subnet_mask     => iface.netmask,
+        :hostname        => iface.hostname,
+        :default_gateway => iface.gateway
       )
+    end
+  end
+
+  def parse_vswitches(host, sys)
+    if collector.vswitches.key?(sys.uuid)
+      collector.vswitches[sys.uuid].each do |vswitch|
+        switch = persister.host_virtual_switches.build(
+          :uid_ems => vswitch.uuid,
+          :name    => vswitch.name,
+          :host    => host
+        )
+        persister.host_switches.build(:host => host, :switch => switch)
+      end
+    end
+  end
+
+  def parse_vlans(host, sys)
+    if collector.vlans.key?(sys.uuid)
+      collector.vlans[sys.uuid].each do |vlan|
+        vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vlan.vswitch_uuid)
+        persister.lans.build(
+          :switch  => vswitch,
+          :uid_ems => vlan.uuid,
+          :tag     => vlan.vlan_id,
+          :name    => vlan.name,
+          :ems_ref => sys.uuid
+        )
+      end
     end
   end
 
   def parse_vm_operating_system(vm, lpar)
-    os_info = lpar.os&.split
+    if lpar.os.nil? || lpar.os.downcase == "unknown"
+      # RSCT is not running on the LPAR
+      if lpar.respond_to?(:type) && lpar.type == "Virtual IO Server"
+        os_info = ["VIOS"]
+      end
+    else
+      # HMC provides the OS version as a flat string.
+      # We do our best to extract the name, version and build numbers from this string.
+      # Also, HMCs older than v10 have a 32 characters limit on the OS name part.
+      # Examples of what we get from HMC/RSCT:
+      # "VIOS 3.1.0.11"
+      # "AIX 7.3 7300-00-00-0000"
+      # "Linux/Debian 4.4.0-87-generic Unknown"
+      # "Linux/Hardware Management Conso V10R2 1030"
+      # "Linux/Red Hat Enterprise Linux  4.18.0-372.19.1.el8_6.ppc8.4 (Ootpa) 8.4 (Ootpa)"
+      # "Linux/Red Hat Enterprise Linux (CoreOS) 4.18.0-372.19.1.el8_6.ppc8.4 (Ootpa) 8.4 (Ootpa)"
+      os_info = lpar.os.split
+      if os_info.length > 3
+        # Split on the first word that contains a digit
+        os_info = lpar.os.split(/\s+(?=\S*\d)/, 2)
+      end
+    end
+
     if os_info
       persister.operating_systems.build(
         :vm_or_template => vm,
@@ -189,24 +344,61 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_guest_devices(lpar, hardware)
-    lpar.net_adap_uuids.each do |uuid|
-      build_ethernet_dev(collector.netadapters[uuid], hardware, "client network adapter")
+    if collector.netadapters.key?(lpar.uuid)
+      collector.netadapters[lpar.uuid].each do |ent|
+        build_ethernet_dev(lpar, ent, hardware, "client network adapter")
+      end
     end
 
-    lpar.sriov_elp_uuids.each do |uuid|
-      build_ethernet_dev(collector.sriov_elps[uuid], hardware, "sr-iov")
+    if collector.sriov_elps.key?(lpar.uuid)
+      collector.sriov_elps[lpar.uuid].each do |ent|
+        build_ethernet_dev(lpar, ent, hardware, "sr-iov")
+      end
     end
 
-    lpar.lhea_ports.each do |lhea|
-      build_ethernet_dev(lhea, hardware, "host ethernet adapter")
+    lpar.lhea_ports.each do |ent|
+      build_ethernet_dev(lpar, ent, hardware, "host ethernet adapter")
+    end
+
+    # Physical adapters can be assigned to VIOSes and LPARs using IOMMU.
+    lpar.io_adapters.each do |io|
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => io.dr_name,
+        :device_type     => "physical_port",
+        :controller_type => "IO",
+        :device_name     => "Adapter",
+        :location        => io.dr_name,
+        :model           => io.description,
+        :auto_detect     => true
+      )
     end
   end
 
   def parse_lpar_guest_devices(lpar, hardware)
-    lpar.vnic_dedicated_uuids.map do |uuid|
-      build_ethernet_dev(collector.vnics[uuid], hardware, "vnic")
+    if collector.vnics.key?(lpar.uuid)
+      collector.vnics[lpar.uuid].each do |ent|
+        build_ethernet_dev(lpar, ent, hardware, "vnic")
+      end
     end
-    parse_vm_disks(lpar, hardware)
+  end
+
+  def parse_vios_guest_devices(vios, hardware)
+    vios.trunks.each do |trunk|
+      vlan = vlan_by_tag(vios.sys_uuid, trunk.vswitch_uuid, trunk.vlan_id)
+
+      persister.guest_devices.build(
+        :hardware        => hardware,
+        :uid_ems         => trunk.location,
+        :device_name     => trunk.name,
+        :device_type     => "ethernet",
+        :controller_type => "trunk adapter",
+        :auto_detect     => true,
+        :address         => self.class.parse_macaddr(trunk.macaddr),
+        :location        => trunk.location,
+        :lan             => vlan
+      )
+    end
   end
 
   def parse_vm_advanced_settings(vm, lpar)
@@ -294,20 +486,61 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def build_ethernet_dev(device, hardware, controller_type)
-    unless device.nil?
-      mac_addr = device.macaddr.downcase.scan(/\w{2}/).join(':')
-      id = device.respond_to?(:uuid) ? device.uuid : device.macaddr
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => id,
-        :device_name     => mac_addr,
-        :device_type     => "ethernet",
-        :controller_type => controller_type,
-        :auto_detect     => true,
-        :address         => mac_addr,
-        :location        => device.location
-      )
+  def vlan_by_tag(sys_uuid, vswitch_uuid, vlan_id)
+    host = persister.hosts.lazy_find(sys_uuid)
+    vswitch = persister.host_virtual_switches.lazy_find(:host => host, :uid_ems => vswitch_uuid)
+    persister.lans.lazy_find({:switch => vswitch, :tag => vlan_id}, :ref => :by_tag)
+  end
+
+  def build_ethernet_dev(lpar, ent, hardware, controller_type)
+    id = ent.respond_to?(:uuid) ? ent.uuid : ent.macaddr
+
+    macaddr = self.class.parse_macaddr(ent.macaddr)
+    vlan = vlan_by_tag(lpar.sys_uuid, ent.vswitch_uuid, ent.vlan_id) if ent.kind_of?(IbmPowerHmc::ClientNetworkAdapter)
+
+    persister.guest_devices.build(
+      :hardware        => hardware,
+      :uid_ems         => id,
+      :device_name     => macaddr,
+      :device_type     => "ethernet",
+      :controller_type => controller_type,
+      :auto_detect     => true,
+      :address         => macaddr,
+      :location        => ent.location,
+      :lan             => vlan
+    )
+  end
+
+  def self.parse_macaddr(macaddr)
+    macaddr.downcase.scan(/\w{2}/).join(':') unless macaddr.nil?
+  end
+
+  def parse_resource_pools
+    collector.shared_processor_pools.each do |pool|
+      next if pool.name =~ /^SharedPool\d\d$/ && pool.max == "0"
+
+      ref = "#{pool.sys_uuid}_#{pool.uuid}"
+      params = {
+        :uid_ems => ref,
+        :ems_ref => ref,
+        :name    => pool.name,
+        :parent  => persister.hosts.lazy_find(pool.sys_uuid)
+      }
+      if pool.name == "DefaultPool"
+        params[:cpu_shares]         = 0
+        params[:cpu_reserve]        = 0
+        params[:cpu_reserve_expand] = false
+        params[:cpu_limit]          = -1
+        params[:is_default]         = true
+      else
+        params[:cpu_shares]         = pool.max.to_f - pool.available.to_f
+        params[:cpu_reserve]        = pool.available
+        params[:cpu_reserve_expand] = true
+        params[:cpu_limit]          = pool.max
+        params[:is_default]         = false
+      end
+
+      persister.resource_pools.build(params)
     end
   end
 end

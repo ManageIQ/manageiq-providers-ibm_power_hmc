@@ -3,135 +3,150 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
     super
 
     parse_targets!
-  end
 
-  def collect!
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-  end
-
-  def cecs
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     manager.with_provider_connection do |connection|
-      @cecs ||=
-        references(:hosts).map do |ems_ref|
-          connection.managed_system(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying managed system #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-
-      do_vswitches(connection)
-      do_vlans(connection)
-      do_pcm_preferences(connection)
+      @connection = connection
+      infer_related_ems_refs_api!
     end
-    @cecs || []
+
+    target.manager_refs_by_association_reset
+  end
+
+  def cecs_quick
+    @cecs_quick ||= references(:hosts).map do |ems_ref|
+      connection.managed_system_quick(ems_ref).merge("UUID" => ems_ref)
+    rescue IbmPowerHmc::Connection::HttpNotFound
+      nil
+    rescue => e
+      $ibm_power_hmc_log.error("managed systems quick query failed for #{ems_ref}: #{e}")
+      raise
+    end.compact
+  end
+
+  def cec_cpu_freqs_from_db
+    @cec_cpu_freqs_from_db ||= begin
+      # Limit DB query to hosts that are not being refreshed but for which we have VMs that are being refreshed.
+      # We don't want to use API calls for these as they are quite expensive.
+      host_ems_refs = lpars.collect(&:sys_uuid).concat(vioses.collect(&:sys_uuid)).compact.uniq - references(:hosts)
+      $ibm_power_hmc_log.debug("retrieving cpu_speed from db for hosts #{host_ems_refs}")
+      manager.hosts.where(:ems_ref => host_ems_refs).joins(:host_hardwares).pluck("hosts.ems_ref", "hardwares.cpu_speed").to_h
+    end
   end
 
   def lpars
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @lpars ||=
-        references(:vms).map do |ems_ref|
-          connection.lpar(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-
-      @lpars.each do |lpar|
-        do_netadapters_lpar(connection, lpar)
-        do_sriov_elps_lpar(connection, lpar)
-        do_vnics(connection, lpar)
-      end
-    end
-    @lpars || []
+    @lpars ||= references(:vms).map do |ems_ref|
+      connection.lpar(ems_ref, nil, "None")
+    rescue IbmPowerHmc::Connection::HttpNotFound
+      nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}")
+      raise
+    end.compact
   end
 
   def vioses
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @vioses ||=
-        references(:vms).map do |ems_ref|
-          connection.vios(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-
-      @vioses.each do |vios|
-        do_netadapters_vios(connection, vios)
-        do_sriov_elps_vios(connection, vios)
-      end
-    end
-    @vioses || []
+    @vioses ||= references(:vms).map do |ems_ref|
+      connection.vios(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpNotFound
+      nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}")
+      raise
+    end.compact
   end
 
   def templates
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @templates ||=
-        references(:miq_templates).map do |ems_ref|
-          connection.template(ems_ref)
-        rescue IbmPowerHmc::Connection::HttpError => e
-          $ibm_power_hmc_log.error("template query failed for #{ems_ref}: #{e}") unless e.status == 404
-          nil
-        end.compact
-    end
-    @templates || []
+    @templates ||= references(:miq_templates).map do |ems_ref|
+      connection.template(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpNotFound
+      nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying template #{ems_ref}: #{e}")
+      raise
+    end.compact
   end
+
+  def clusters
+    @clusters ||= references(:storages).map do |ems_ref|
+      connection.cluster(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpNotFound
+      nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying cluster #{ems_ref}: #{e}")
+      raise
+    end.compact
+  end
+  private :clusters
 
   def ssps
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-    manager.with_provider_connection do |connection|
-      @ssps = connection.ssps # we gather every ssp.
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error querying ssps: #{e}") unless e.status == 404
+    # NOTE: We're using cluster ID as ems_ref for shared storage pools.
+    @ssps ||= clusters.map do |cluster|
+      connection.ssp(cluster.ssp_uuid)
+    rescue IbmPowerHmc::Connection::HttpNotFound
       nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying ssp #{cluster.ssp_uuid}: #{e}")
+      raise
+    end.compact
+  end
+
+  def shared_processor_pools
+    @shared_processor_pools ||= references(:resource_pools).map do |ems_ref|
+      sys_uuid, pool_uuid = ems_ref.split("_")
+      connection.shared_processor_pool(sys_uuid, pool_uuid)
+    rescue IbmPowerHmc::Connection::HttpNotFound
+      nil
+    rescue => e
+      $ibm_power_hmc_log.error("error querying shared processor pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
+      raise
+    end.compact
+  end
+
+  def infer_related_ems_refs_api!
+    # Refresh LPARs that have disk paths going through any of the updated VIOSes.
+    vscsi_mappings.each do |m|
+      $ibm_power_hmc_log.debug("#{self.class}##{__method__} add LPAR target #{m.lpar_uuid}")
+      add_target!(:vms, m.lpar_uuid)
     end
-    @ssps || []
   end
 
-  def netadapters
-    @netadapters || {}
-  end
+  def lpar_disks_from_db
+    # Limit DB query to LPARs only (not VIOSes) and only for the ones that still have VSCSI client adapters.
+    @lpar_disks_from_db ||= manager.vms.where(:ems_ref => vscsi_client_adapters.keys).joins(:disks).select("vms.ems_ref as lpar_uuid", "disks.*").flat_map do |disk|
+      disk.location.split(",").map do |path|
+        # Preserve only paths to VIOSes that are not part of the target refresh.
+        next if vscsi_client_adapters[disk.lpar_uuid].any? { |c| c.location == path && references(:vms).include?(c.vios_uuid) }
 
-  def vswitches
-    @vswitches || {}
-  end
-
-  def vlans
-    @vlans || {}
-  end
-
-  def sriov_elps
-    @sriov_elps || {}
-  end
-
-  def vnics
-    @vnics || {}
+        {
+          :lpar_uuid  => disk.lpar_uuid,
+          :client_drc => path,
+          :udid       => disk.device_name,
+          :size       => disk.size,
+          :mode       => disk.mode,
+          :disk_type  => disk.disk_type,
+          :thin       => disk.thin,
+          :type       => disk.device_type,
+          :path       => disk.filename
+        }
+      end.compact
+    end
   end
 
   private
 
   def parse_targets!
-    $ibm_power_hmc_log.info("#{self.class}##{__method__}")
-
     target.targets.each do |target|
       case target
       when Host
         add_target!(:hosts, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios
         add_target!(:vms, target.ems_ref)
-      when HostSwitch
-        add_target!(:host_virtual_switches, target.ems_ref)
-      when Lan
-        add_target!(:lans, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Template
         add_target!(:miq_templates, target.ems_ref)
       when ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage
         add_target!(:storages, target.ems_ref)
-      else
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} WHAT IS THE CLASS NAME ? #{target.class.name} ")
+      when ManageIQ::Providers::IbmPowerHmc::InfraManager::ResourcePool
+        add_target!(:resource_pools, target.ems_ref)
       end
     end
   end
