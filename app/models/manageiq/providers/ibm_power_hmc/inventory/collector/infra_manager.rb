@@ -263,6 +263,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     end.compact
   end
 
+  def shared_memory_pools
+    @shared_memory_pools ||= cecs.flat_map do |sys|
+      connection.shared_memory_pool(sys.uuid)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("shared_memory_pool query failed for #{sys.uuid}: #{e}")
+      nil
+    end.compact
+  end
+
   private
 
   def cec_cpu_freq(sys)
