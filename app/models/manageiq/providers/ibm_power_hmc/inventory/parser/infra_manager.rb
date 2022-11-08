@@ -237,12 +237,30 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     )
     parse_vm_operating_system(vm, lpar)
     parse_vm_advanced_settings(vm, lpar)
+    parse_vm_labels(vm, lpar)
 
     hardware = parse_vm_hardware(vm, lpar)
     parse_vm_networks(lpar, hardware)
     parse_vm_guest_devices(lpar, hardware)
 
     [vm, hardware]
+  end
+
+  def parse_vm_labels(vm, lpar)
+    # Common code for LPARs and VIOSes.
+    lpar.group_uuids.each do |uuid|
+      next unless collector.groups.key?(uuid)
+
+      group = collector.groups[uuid]
+      persister.vm_and_template_labels.build(
+        :resource    => vm,
+        :name        => group.name,
+        :section     => "labels",
+        :source      => "ibm_power_hmc",
+        :value       => "",
+        :description => group.description
+      )
+    end
   end
 
   def parse_vm_hardware(vm, lpar)

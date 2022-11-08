@@ -33,5 +33,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
     add_collection(infra, :resource_pools)
     add_collection(infra, :vm_resource_pools)
     add_collection(infra, :parent_blue_folders)
+    add_collection(infra, :vm_and_template_labels)
   end
 end
