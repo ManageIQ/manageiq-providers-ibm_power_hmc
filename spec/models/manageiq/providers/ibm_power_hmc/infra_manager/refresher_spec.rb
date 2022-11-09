@@ -208,6 +208,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :read_only => true
     )
 
+    expect(vios.labels.count).to eq(1)
+    expect(vios.labels.first.name).to eq("ManageIQ")
+
     expect(vios.host).not_to be_nil
     expect(vios.host.name).to eq("aramis")
 
@@ -268,6 +271,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :value     => "uncapped",
       :read_only => true
     )
+
+    expect(lpar.labels.count).to eq(1)
+    expect(lpar.labels.first.name).to eq("ManageIQ")
 
     expect(lpar.host).not_to be_nil
     expect(lpar.host.ems_ref).to eq(host_uuid)
