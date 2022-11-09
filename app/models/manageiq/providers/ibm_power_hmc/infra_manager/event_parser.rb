@@ -25,7 +25,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser
     when "LogicalPartition", "VirtualIOServer"
       event_hash[:vm_ems_ref]   = uuid
       event_hash[:host_ems_ref] = host_uuid unless host_uuid.nil?
-    when "VirtualSwitch", "VirtualNetwork", "SharedProcessorPool"
+    when "VirtualSwitch", "VirtualNetwork", "SharedProcessorPool", "SharedMemoryPool"
       event_hash[:host_ems_ref] = host_uuid unless host_uuid.nil?
     when "UserTask"
       event_hash[:message] = event.usertask["key"]
