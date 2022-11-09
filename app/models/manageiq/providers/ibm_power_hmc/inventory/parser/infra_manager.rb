@@ -557,7 +557,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :ems_ref               => ref,
         :name                  => "DefaultMemPool",
         :parent                => persister.hosts.lazy_find(pool.sys_uuid),
-        :memory_shares         => pool.max_mb.to_i - pool.available_mb.to.i,
+        :memory_shares         => pool.max_mb.to_i - pool.available_mb.to_i,
         :memory_reserve        => pool.available_mb,
         :memory_reserve_expand => true,
         :memory_limit          => pool.max_mb,
