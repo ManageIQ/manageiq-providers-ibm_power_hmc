@@ -120,7 +120,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
 
   context "Ignored Usertasks" do
     it "Ignored key" do
-      assert_event_triggers_target("test_data/ignored_usertask.xml", nil,
+      assert_event_triggers_target(
+        "test_data/ignored_usertask.xml",
+        nil,
         {
           "uuid"           => "58ad2817-3365-4de4-a9fe-f0a587bfc326",
           "key"            => "CCFW_POOL_MANAGEMENT_TASK",
@@ -135,7 +137,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
       )
     end
     it "Running UserTask" do
-      assert_event_triggers_target("test_data/pcm_preferences.xml", nil,
+      assert_event_triggers_target(
+        "test_data/pcm_preferences.xml",
+        nil,
         {
           "uuid"           => "99630d72-36b7-4fa6-8307-b70aef13b0b0",
           "key"            => "PCM_PREFERENCE_UPDATE",
