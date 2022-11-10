@@ -118,14 +118,49 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
     end
   end
 
+  context "Ignored Usertasks" do
+    it "Ignored key" do
+      assert_event_triggers_target("test_data/ignored_usertask.xml", nil,
+        {
+          "uuid"           => "58ad2817-3365-4de4-a9fe-f0a587bfc326",
+          "key"            => "CCFW_POOL_MANAGEMENT_TASK",
+          "localizedLabel" => "Shared memory pool",
+          "labelParams"    => ["system 2022/11/07 08:44:10.022", "id 62"],
+          "initiator"      => "hscroot",
+          "timeStarted"    => 1_668_072_627_838,
+          "timeCompleted"  => 1_668_072_632_703,
+          "status"         => "Completed",
+          "visible"        => true
+        }
+      )
+    end
+    it "Running UserTask" do
+      assert_event_triggers_target("test_data/pcm_preferences.xml", nil,
+        {
+          "uuid"           => "99630d72-36b7-4fa6-8307-b70aef13b0b0",
+          "key"            => "PCM_PREFERENCE_UPDATE",
+          "localizedLabel" => "Update performance monitoring settings",
+          "labelParams"    => ["[aramis, porthos]"],
+          "initiator"      => "hscroot",
+          "timeStarted"    => 1_652_866_657_499,
+          "timeCompleted"  => 1_652_866_657_594,
+          "status"         => "Running",
+          "visible"        => true
+        }
+      )
+    end
+  end
+
   def assert_event_triggers_target(filename, expected_targets, usertask = nil)
     ems_event      = create_ems_event(filename, usertask)
     parsed_targets = described_class.new(ems_event).parse
 
-    expect(parsed_targets.size).to eq(expected_targets.count)
-    expect(target_references(parsed_targets)).to(
-      match_array(expected_targets)
-    )
+    aggregate_failures "expected_targets" do
+      expect(parsed_targets.size).to eq(expected_targets.count) unless expected_targets.nil?
+      expect(target_references(parsed_targets)).to(
+        match_array(expected_targets)
+      )
+    end
   end
 
   def target_references(parsed_targets)
