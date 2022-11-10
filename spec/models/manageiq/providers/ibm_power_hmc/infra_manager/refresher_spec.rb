@@ -234,7 +234,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
       expect(template.hardware).to have_attributes(
         :cpu_type        => "ppc64",
-        :memory_mb       => 16384,
+        :memory_mb       => 16_384,
         :cpu_total_cores => 4
       )
 
