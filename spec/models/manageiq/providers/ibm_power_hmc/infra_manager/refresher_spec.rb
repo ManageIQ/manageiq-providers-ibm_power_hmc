@@ -2,7 +2,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
   let(:host_uuid)     { "0685d4a6-2021-3044-84e3-59f44e9cc5d7" }
   let(:vios_uuid)     { "4165A16F-0766-40F3-B9E2-7272E1910F2E" }
   let(:lpar_uuid)     { "646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3" }
-  let(:template_uuid) { "3f109ae5-8553-4545-b211-c0de284c4872" }
+  let(:template_uuid) { "84f2d0b8-d86e-4a51-a012-8ddc4339c1f7" }
   let(:storage_uuid)  { "8f2a83e9-f4c7-35e5-987e-9ac54a498dab" }
   let(:respool_uuid)  { "d47a585d-eaa8-3a54-b4dc-93346276ea37_c41d8844-1d39-3512-944d-50f58de2d42d" }
 
@@ -27,6 +27,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       assert_specific_lan
       assert_specific_vios
       assert_specific_lpar
+      assert_specific_template
     end
 
     def assert_ems
@@ -219,6 +220,29 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
       expect(lpar.parent_resource_pool).not_to be_nil
       expect(lpar.parent_resource_pool.name).to eq("DefaultPool")
+    end
+
+    def assert_specific_template
+      template = ems.miq_templates.find_by(:ems_ref => template_uuid)
+      expect(template).to have_attributes(
+        :ems_ref  => template_uuid,
+        :vendor   => "ibm_power_hmc",
+        :type     => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Template",
+        :name     => "miq-template-test",
+        :template => true
+      )
+
+      expect(template.hardware).to have_attributes(
+        :cpu_type        => "ppc64",
+        :memory_mb       => 16384,
+        :cpu_total_cores => 4
+      )
+
+      setting = template.advanced_settings.find_by(:name => "processor_type")
+      expect(setting).to have_attributes(
+        :value     => "uncapped",
+        :read_only => true
+      )
     end
   end
 
