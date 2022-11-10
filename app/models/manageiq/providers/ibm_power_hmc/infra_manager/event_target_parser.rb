@@ -67,17 +67,15 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   end
 
   def handle_usertask(usertask)
-    if usertask["status"].eql?("Completed")
-      case usertask["key"]
-      when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
-        handle_usertask_template_save(usertask)
-      when "TEMPLATE_DELETE"
-        handle_usertask_template_delete(usertask)
-      when "PCM_PREFERENCE_UPDATE"
-        handle_usertask_pcm_preference(usertask)
-      else
-        []
-      end
+    return [] unless usertask["status"].eql?("Completed")
+
+    case usertask["key"]
+    when "TEMPLATE_PARTITION_SAVE", "TEMPLATE_PARTITION_SAVE_AS", "TEMPLATE_PARTITION_CAPTURE"
+      handle_usertask_template_save(usertask)
+    when "TEMPLATE_DELETE"
+      handle_usertask_template_delete(usertask)
+    when "PCM_PREFERENCE_UPDATE"
+      handle_usertask_pcm_preference(usertask)
     else
       []
     end
