@@ -78,8 +78,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
       else
         []
       end
-    else
-      []
     end
   end
 
