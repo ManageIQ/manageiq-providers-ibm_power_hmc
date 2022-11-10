@@ -1,0 +1,140 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: UTF-8
+      string: "<LogonRequest schemaVersion='V1_1_0' xmlns='http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/'><UserID>ibm-power-hmc-username</UserID><Password>ibm-power-hmc-password</Password></LogonRequest>"
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonRequest
+      X-Api-Session: xxx
+      Content-Length:
+      - '176'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      Content-Type:
+      - application/vnd.ibm.powervm.web+xml; type=LogonResponse
+      Content-Length:
+      - '576'
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <LogonResponse xmlns="http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom/>
+            </Metadata>
+            <X-API-Session>xxx</X-API-Session>
+        </LogonResponse>
+    http_version:
+  recorded_at: Thu, 10 Nov 2022 14:06:27 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedProcessorPool/557f7755-a4dc-30de-816d-387f42dd8fd3
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session: xxx
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      Content-Type:
+      - application/atom+xml
+      Content-Length:
+      - '1610'
+      Connection:
+      - Close
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>dd0ee12d-5019-47a4-bc2e-5b7dbb64d4ef</id>
+            <title>HttpErrorResponse</title>
+            <published>2022-11-10T15:37:36.215+01:00</published>
+            <author>
+                <name>IBM Power Systems Management Console</name>
+            </author>
+            <content type="application/vnd.ibm.powervm.web+xml; type=HttpErrorResponse">
+                <HttpErrorResponse:HttpErrorResponse xmlns:HttpErrorResponse="http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/web/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom/>
+            </Metadata>
+            <HTTPStatus kb="ROR" kxe="false">404</HTTPStatus>
+            <RequestURI kxe="false" kb="ROR">/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedProcessorPool/557f7755-a4dc-30de-816d-387f42dd8fd3</RequestURI>
+            <ReasonCode kb="ROR" kxe="false">The supplied URI does not identify a known resource.</ReasonCode>
+            <Message kb="ROO" kxe="false">REST000B The URL presented to the Management Console REST Web Services is not valid.</Message>
+            <RequestBody kb="ROO" kxe="false"/>
+            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT10054498, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
+        </HttpErrorResponse:HttpErrorResponse>
+            </content>
+        </entry>
+    http_version:
+  recorded_at: Thu, 10 Nov 2022 14:06:27 GMT
+- request:
+    method: delete
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session: xxx
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      Content-Language:
+      - en-US
+      Content-Length:
+      - '0'
+      Expires:
+      - Thu, 01 Dec 1994 16:00:00 GMT
+      Cache-Control:
+      - no-cache="set-cookie, set-cookie2"
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Thu, 10 Nov 2022 14:06:27 GMT
+recorded_with: VCR 5.1.0
