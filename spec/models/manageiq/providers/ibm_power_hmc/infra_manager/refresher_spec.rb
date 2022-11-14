@@ -1,10 +1,11 @@
 describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
-  let(:host_uuid)     { "0685d4a6-2021-3044-84e3-59f44e9cc5d7" }
-  let(:vios_uuid)     { "4165A16F-0766-40F3-B9E2-7272E1910F2E" }
-  let(:lpar_uuid)     { "646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3" }
-  let(:template_uuid) { "84f2d0b8-d86e-4a51-a012-8ddc4339c1f7" }
-  let(:storage_uuid)  { "8f2a83e9-f4c7-35e5-987e-9ac54a498dab" }
-  let(:respool_uuid)  { "d47a585d-eaa8-3a54-b4dc-93346276ea37_c41d8844-1d39-3512-944d-50f58de2d42d" }
+  let(:host_uuid)         { "0685d4a6-2021-3044-84e3-59f44e9cc5d7" }
+  let(:vios_uuid)         { "4165A16F-0766-40F3-B9E2-7272E1910F2E" }
+  let(:lpar_uuid)         { "646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3" }
+  let(:template_uuid)     { "84f2d0b8-d86e-4a51-a012-8ddc4339c1f7" }
+  let(:storage_uuid)      { "8f2a83e9-f4c7-35e5-987e-9ac54a498dab" }
+  let(:respool_cpu_uuid)  { "d47a585d-eaa8-3a54-b4dc-93346276ea37_c41d8844-1d39-3512-944d-50f58de2d42d" }
+  let(:respool_mem_uuid)  { "d47a585d-eaa8-3a54-b4dc-93346276ea37_557f7755-a4dc-30de-816d-387f42dd8fd3" }
 
   it ".ems_type" do
     expect(described_class.ems_type).to eq(:ibm_power_hmc)
@@ -28,6 +29,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       assert_specific_vios
       assert_specific_lpar
       assert_specific_template
+      assert_specific_resource_pool
     end
 
     def assert_ems
@@ -244,6 +246,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         :read_only => true
       )
     end
+
+    def assert_specific_resource_pool
+      cpu_pool = ems.resource_pools.find_by(:ems_ref => respool_cpu_uuid)
+      expect(cpu_pool).to have_attributes(
+        :type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::ProcessorResourcePool"
+      )
+      mem_pool = ems.resource_pools.find_by(:ems_ref => respool_mem_uuid)
+      expect(mem_pool).to have_attributes(
+        :type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::MemoryResourcePool"
+      )
+    end
   end
 
   context "#target_refresh" do
@@ -278,8 +291,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       target_refresh(ems.storages.find_by(:ems_ref => storage_uuid), example)
     end
 
-    it "resource_pool" do |example|
-      target_refresh(ems.resource_pools.find_by(:ems_ref => respool_uuid), example)
+    it "resource_pool (cpu)" do |example|
+      target_refresh(ems.resource_pools.find_by(:ems_ref => respool_cpu_uuid), example)
+    end
+
+    it "resource_pool (mem)" do |example|
+      target_refresh(ems.resource_pools.find_by(:ems_ref => respool_mem_uuid), example)
     end
   end
 

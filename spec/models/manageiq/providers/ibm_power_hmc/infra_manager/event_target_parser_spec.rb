@@ -116,6 +116,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         [[:resource_pools, {:ems_ref => 'd47a585d-eaa8-3a54-b4dc-93346276ea37_27aae064-2855-39a0-b4e6-e3c9b5572036'}]]
       )
     end
+    it "SharedMemoryPool" do
+      assert_event_triggers_target(
+        "test_data/shared_memory_pool.xml",
+        [[:resource_pools, {:ems_ref => 'd47a585d-eaa8-3a54-b4dc-93346276ea37_557f7755-a4dc-30de-816d-387f42dd8fd3'}]]
+      )
+    end
   end
 
   context "Ignored Usertasks" do

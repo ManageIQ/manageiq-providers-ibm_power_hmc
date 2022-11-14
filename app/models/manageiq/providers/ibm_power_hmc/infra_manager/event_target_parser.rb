@@ -48,7 +48,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         new_targets.concat(handle_usertask(raw_event[:usertask]))
       when "Cluster"
         new_targets << {:assoc => :storages, :ems_ref => elems[:uuid]}
-      when "SharedProcessorPool"
+      when "SharedProcessorPool", "SharedMemoryPool"
         new_targets << {:assoc => :resource_pools, :ems_ref => "#{elems[:manager_uuid]}_#{elems[:uuid]}"}
       end
 
