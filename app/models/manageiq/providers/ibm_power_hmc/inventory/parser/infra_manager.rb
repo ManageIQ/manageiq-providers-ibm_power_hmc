@@ -529,7 +529,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :uid_ems => ref,
         :ems_ref => ref,
         :name    => pool.name,
-        :parent  => persister.hosts.lazy_find(pool.sys_uuid)
+        :parent  => persister.hosts.lazy_find(pool.sys_uuid),
+        :type    => ManageIQ::Providers::IbmPowerHmc::InfraManager::ProcessorResourcePool.name
       }
       if pool.name == "DefaultPool"
         params[:cpu_shares]         = 0
@@ -557,6 +558,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :ems_ref               => ref,
         :name                  => "DefaultMemPool",
         :parent                => persister.hosts.lazy_find(pool.sys_uuid),
+        :type                  => ManageIQ::Providers::IbmPowerHmc::InfraManager::MemoryResourcePool.name,
         :memory_shares         => pool.max_mb.to_i - pool.available_mb.to_i,
         :memory_reserve        => pool.available_mb,
         :memory_reserve_expand => true,

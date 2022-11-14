@@ -29,6 +29,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       assert_specific_vios
       assert_specific_lpar
       assert_specific_template
+      assert_specific_resource_pool
     end
 
     def assert_ems
@@ -243,6 +244,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       expect(setting).to have_attributes(
         :value     => "uncapped",
         :read_only => true
+      )
+    end
+
+    def assert_specific_resource_pool
+      cpu_pool = ems.resource_pools.find_by(:ems_ref => respool_cpu_uuid)
+      expect(cpu_pool).to have_attributes(
+        :type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::ProcessorResourcePool"
+      )
+      mem_pool = ems.resource_pools.find_by(:ems_ref => respool_mem_uuid)
+      expect(mem_pool).to have_attributes(
+        :type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::MemoryResourcePool"
       )
     end
   end
