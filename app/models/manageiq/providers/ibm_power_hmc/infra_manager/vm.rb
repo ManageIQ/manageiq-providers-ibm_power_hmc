@@ -48,9 +48,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_destroy
-    ext_management_system.with_provider_connection do |connection|
-      connection.lpar_delete(ems_ref)
-    end
   end
 
   def raw_suspend
