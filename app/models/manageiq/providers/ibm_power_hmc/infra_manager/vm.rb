@@ -1,6 +1,8 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
+  include_concern "Reconfigure"
+
   virtual_delegate :hmc_managed, :to => :host, :prefix => true, :allow_nil => true, :type => :boolean
 
   supports :control do
@@ -46,17 +48,24 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   def raw_destroy
+    ext_management_system.with_provider_connection do |connection|
+      connection.lpar_delete(ems_ref)
+    end
   end
 
   def raw_suspend
   end
 
   def raw_rename(new_name)
-    modify_attrs(:name => new_name)
+    ext_management_system.with_provider_connection do |connection|
+      modify_attrs(connection, :name => new_name)
+    end
   end
 
   def raw_set_description(new_description)
-    modify_attrs(:description => new_description)
+    ext_management_system.with_provider_connection do |connection|
+      modify_attrs(connection, :description => new_description)
+    end
   end
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
@@ -116,18 +125,16 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   private
 
-  def modify_attrs(attrs = {})
-    ext_management_system.with_provider_connection do |connection|
-      connection.modify_object do
-        provider_object(connection).tap do |obj|
-          attrs.each do |key, value|
-            obj.send("#{key}=", value)
-          end
+  def modify_attrs(connection, attrs = {})
+    connection.modify_object do
+      provider_object(connection).tap do |obj|
+        attrs.each do |key, value|
+          obj.send("#{key}=", value)
         end
       end
-    rescue IbmPowerHmc::Connection::HttpError => e
-      $ibm_power_hmc_log.error("error setting attributes #{attrs} for partition #{ems_ref}: #{e}")
-      raise
     end
+  rescue IbmPowerHmc::Connection::HttpError => e
+    $ibm_power_hmc_log.error("error setting attributes #{attrs} for partition #{ems_ref}: #{e}")
+    raise
   end
 end
