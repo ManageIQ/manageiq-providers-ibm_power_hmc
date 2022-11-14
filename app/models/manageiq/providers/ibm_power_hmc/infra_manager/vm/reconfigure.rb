@@ -86,13 +86,8 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
     $ibm_power_hmc_log.debug("reconfiguring with spec=#{spec}")
 
     ext_management_system.with_provider_connection do |connection|
-      if spec.key?(:desired_memory) || spec.key?(:desired_vprocs)
-        modify_attrs(
-          connection,
-          :desired_memory => spec[:desired_memory],
-          :desired_vprocs => spec[:desired_vprocs]
-        )
-      end
+      attrs = spec.slice(:desired_memory, :desired_vprocs)
+      modify_attrs(connection, attrs) unless attrs.empty?
 
       spec[:netadap_delete].try(:each) do |uuid|
         connection.network_adapter_lpar_delete(ems_ref, uuid)
