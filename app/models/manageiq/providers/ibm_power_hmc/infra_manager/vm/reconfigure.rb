@@ -4,7 +4,10 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
   end
 
   def max_total_vcpus
-    host ? host.hardware.cpu_total_cores : 1
+    # This is based on CurrentMaximumVirtualProcessorsPerAIXOrLinuxPartition and
+    # CurrentMaximumVirtualProcessorsPerVirtualIOServerPartition settings for CECs.
+    # This can be further reduced by the partition's MaximumVirtualProcessors setting.
+    64
   end
 
   def max_vcpus
@@ -24,10 +27,13 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
 
     lpar = ext_management_system.with_provider_connection { |connection| provider_object(connection) }
 
+    # We do not support partitions with dedicated CPUs yet (would require changes to the SDK).
+    raise MiqException::MiqVmError, "Cannot change number of dedicated CPUs" if lpar.dedicated == "true" && options.key?(:number_of_cpus)
+
     # Dynamic Reconfiguration requires RMC to be active.
     raise MiqException::MiqVmError, "RMC is not active on target" if lpar.state == "running" && lpar.rmc_state != "active"
 
-    # HMC does not allow changing the VSWITCH or the VLAN of a client network adapter.
+    # The HMC does not allow changing the VSWITCH or the VLAN of a client network adapter.
     # It could be done by deleting and recreating the adapter with the same MAC and options.
     raise MiqException::MiqVmError, "Cannot edit existing network adapter" if options.key?(:network_adapter_edit)
 
