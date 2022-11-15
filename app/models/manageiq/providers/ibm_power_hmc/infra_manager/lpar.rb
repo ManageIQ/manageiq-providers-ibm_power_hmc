@@ -3,9 +3,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
     unsupported_reason_add(:provisioning, _('Not connected to ems')) if ext_management_system.nil?
   end
 
-  supports :reconfigure_network_adapters do
-    unsupported_reason_add(:reconfigure_network_adapters, _("Host is not HMC-managed")) unless host_hmc_managed
-  end
+  supports :reconfigure_network_adapters
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
