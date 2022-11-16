@@ -44,7 +44,7 @@ http_interactions:
             <X-API-Session>xxx</X-API-Session>
         </LogonResponse>
     http_version:
-  recorded_at: Thu, 10 Nov 2022 14:06:27 GMT
+  recorded_at: Wed, 16 Nov 2022 10:18:59 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedProcessorPool/557f7755-a4dc-30de-816d-387f42dd8fd3
@@ -81,9 +81,9 @@ http_interactions:
       string: |2
 
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
-            <id>dd0ee12d-5019-47a4-bc2e-5b7dbb64d4ef</id>
+            <id>c7685c7a-a38c-4b1e-ac0b-5cb879e36481</id>
             <title>HttpErrorResponse</title>
-            <published>2022-11-10T15:37:36.215+01:00</published>
+            <published>2022-11-16T11:50:14.445+01:00</published>
             <author>
                 <name>IBM Power Systems Management Console</name>
             </author>
@@ -97,12 +97,118 @@ http_interactions:
             <ReasonCode kb="ROR" kxe="false">The supplied URI does not identify a known resource.</ReasonCode>
             <Message kb="ROO" kxe="false">REST000B The URL presented to the Management Console REST Web Services is not valid.</Message>
             <RequestBody kb="ROO" kxe="false"/>
-            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT10054498, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
+            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT10105185, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
         </HttpErrorResponse:HttpErrorResponse>
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 10 Nov 2022 14:06:27 GMT
+  recorded_at: Wed, 16 Nov 2022 10:18:59 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedMemoryPool/557f7755-a4dc-30de-816d-387f42dd8fd3
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session: xxx
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      Content-Type:
+      - application/atom+xml
+      Etag:
+      - "-591226899"
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      X-Hmc-Schema-Version:
+      - V1_5_0
+      Content-Length:
+      - '4501'
+      Cache-Control:
+      - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>557f7755-a4dc-30de-816d-387f42dd8fd3</id>
+            <title>SharedMemoryPool</title>
+            <published>2022-11-16T11:50:16.270+01:00</published>
+            <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/SharedMemoryPool/557f7755-a4dc-30de-816d-387f42dd8fd3"/>
+            <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
+            <author>
+                <name>IBM Power Systems Management Console</name>
+            </author>
+            <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-591226899</etag:etag>
+            <content type="application/vnd.ibm.powervm.uom+xml; type=SharedMemoryPool">
+                <SharedMemoryPool:SharedMemoryPool xmlns:SharedMemoryPool="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>557f7755-a4dc-30de-816d-387f42dd8fd3</AtomID>
+                    <AtomCreated>1668499116606</AtomCreated>
+                </Atom>
+            </Metadata>
+            <CurrentAvailablePoolMemory kxe="false" kb="ROR">768</CurrentAvailablePoolMemory>
+            <CurrentMaximumPoolMemory kxe="false" kb="ROR">4096</CurrentMaximumPoolMemory>
+            <CurrentPoolMemory kb="ROR" kxe="false">1024</CurrentPoolMemory>
+            <MemoryDeduplicationEnabled kxe="false" kb="CUD">false</MemoryDeduplicationEnabled>
+            <PagingDevices kb="CUR" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <ReservedStorageDevice ns2:base="2" schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <DeviceName kxe="false" kb="CUR">hdisk5</DeviceName>
+                    <DeviceSelectionType kxe="false" kb="ROA">AUTO_SELECTION</DeviceSelectionType>
+                    <DeviceSize kxe="false" kb="CUR">100</DeviceSize>
+                    <DeviceState kb="ROR" kxe="false">Inactive</DeviceState>
+                    <DeviceType kxe="false" kb="ROR">Phys</DeviceType>
+                    <LocationCode kb="ROR" kxe="false">U78CB.001.WZS09SL-P1-C12-T2-W500507680B215660-L1000000000000</LocationCode>
+                    <RedundancyCapable kb="ROR" kxe="false">true</RedundancyCapable>
+                    <UniqueDeviceID kb="ROA" kxe="false">01M0lCTTIxNDU1MjQ2MDA1MDc2NDAwODEwMERDNDgwMDAwMDAwMDAwMkMwNg==</UniqueDeviceID>
+                </ReservedStorageDevice>
+            </PagingDevices>
+            <FreeMemoryDevicesFromPagingServicePartitionOne kb="ROR" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <ReservedStorageDevice schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <DeviceName kxe="false" kb="CUR">hdisk3</DeviceName>
+                    <DeviceSize kxe="false" kb="CUR">532.023438</DeviceSize>
+                    <DeviceType kxe="false" kb="ROR">Phys</DeviceType>
+                    <LocationCode kb="ROR" kxe="false">U78CB.001.WZS09SL-P1-C14-T1-L206AB40700-L0</LocationCode>
+                    <RedundancyCapable kb="ROR" kxe="false">true</RedundancyCapable>
+                    <UniqueDeviceID kb="ROA" kxe="false">01MUlCTSAgICAgSVBSLTAgICA2QUI0MDcwMDAwMDAwMDIw</UniqueDeviceID>
+                </ReservedStorageDevice>
+            </FreeMemoryDevicesFromPagingServicePartitionOne>
+            <PendingAvailablePoolMemory kb="ROR" kxe="false">768</PendingAvailablePoolMemory>
+            <PendingMaximumPoolMemory kxe="false" kb="CUD">4096</PendingMaximumPoolMemory>
+            <PendingPoolMemory kxe="false" kb="CUD">1024</PendingPoolMemory>
+            <PoolID kxe="false" kb="ROR">0</PoolID>
+            <PoolSize kb="CUR" kxe="false">1024</PoolSize>
+            <PagingServicePartitionOne kb="CUR" kxe="false" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/VirtualIOServer/0D323064-36E2-455A-AB06-46BD079AD545" rel="related"/>
+            <PagingServicePartitionTwo kb="CUR" kxe="false" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/VirtualIOServer/1ABB7000-4A15-4749-9EAE-CD0A0827CDFE" rel="related"/>
+            <SystemFirmwarePoolMemory kb="ROR" kxe="false">256</SystemFirmwarePoolMemory>
+        </SharedMemoryPool:SharedMemoryPool>
+            </content>
+        </entry>
+    http_version:
+  recorded_at: Wed, 16 Nov 2022 10:19:01 GMT
 - request:
     method: delete
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -136,5 +242,5 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version:
-  recorded_at: Thu, 10 Nov 2022 14:06:27 GMT
+  recorded_at: Wed, 16 Nov 2022 10:19:01 GMT
 recorded_with: VCR 5.1.0
