@@ -7,7 +7,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
     # 64 is based on the CEC's CurrentMaximumVirtualProcessorsPerAIXOrLinuxPartition and
     # CurrentMaximumVirtualProcessorsPerVirtualIOServerPartition settings.
     # This can be further reduced by the partition's MaximumVirtualProcessors setting.
-    host && processor_share_type == "dedicated" ? host.cpu_total_cores : 64
+    host && try(:processor_share_type) == "dedicated" ? host.cpu_total_cores : 64
   end
 
   def max_vcpus
@@ -36,8 +36,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
 
     spec = {}
     build_memory_config_spec(lpar, spec, options) if options.key?(:vm_memory)
-    build_proc_config_spec(lpar, spec, options) if options.key?(:number_of_cpus) && lpar.dedicated == "true"
-    build_vproc_config_spec(lpar, spec, options) if options.key?(:number_of_cpus) && lpar.dedicated != "true"
+    build_proc_config_spec(lpar, spec, options) if options.key?(:number_of_cpus)
     build_netadap_create_config_spec(spec, options) if options.key?(:network_adapter_add)
     build_netadap_delete_config_spec(spec, options) if options.key?(:network_adapter_remove)
 
@@ -56,19 +55,17 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
   def build_proc_config_spec(lpar, spec, options)
     desired_procs = options[:number_of_cpus].to_i
 
-    raise MiqException::MiqVmError, "Processor count cannot be lower than #{lpar.minimum_procs}"   if desired_procs < lpar.minimum_procs.to_i
-    raise MiqException::MiqVmError, "Processor count cannot be greater than #{lpar.maximum_procs}" if desired_procs > lpar.maximum_procs.to_i
+    if lpar.dedicated == "true"
+      raise MiqException::MiqVmError, "Processor count cannot be lower than #{lpar.minimum_procs}"   if desired_procs < lpar.minimum_procs.to_i
+      raise MiqException::MiqVmError, "Processor count cannot be greater than #{lpar.maximum_procs}" if desired_procs > lpar.maximum_procs.to_i
 
-    spec[:desired_procs] = desired_procs
-  end
+      spec[:desired_procs] = desired_procs
+    else
+      raise MiqException::MiqVmError, "Virtual processor count cannot be lower than #{lpar.minimum_vprocs}"   if desired_procs < lpar.minimum_vprocs.to_i
+      raise MiqException::MiqVmError, "Virtual processor count cannot be greater than #{lpar.maximum_vprocs}" if desired_procs > lpar.maximum_vprocs.to_i
 
-  def build_vproc_config_spec(lpar, spec, options)
-    desired_vprocs = options[:number_of_cpus].to_i
-
-    raise MiqException::MiqVmError, "Virtual processor count cannot be lower than #{lpar.minimum_vprocs}"   if desired_vprocs < lpar.minimum_vprocs.to_i
-    raise MiqException::MiqVmError, "Virtual processor count cannot be greater than #{lpar.maximum_vprocs}" if desired_vprocs > lpar.maximum_vprocs.to_i
-
-    spec[:desired_vprocs] = desired_vprocs
+      spec[:desired_vprocs] = desired_procs
+    end
   end
 
   def build_netadap_create_config_spec(spec, options)
