@@ -53,19 +53,20 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
   end
 
   def build_proc_config_spec(lpar, spec, options)
+    if lpar.dedicated == "true"
+      min, max = lpar.minimum_procs, lpar.maximum_procs
+      attr = :desired_procs
+    else
+      min, max = lpar.minimum_vprocs, lpar.maximum_vprocs
+      attr = :desired_vprocs
+    end
+
     desired_procs = options[:number_of_cpus].to_i
 
-    if lpar.dedicated == "true"
-      raise MiqException::MiqVmError, "Processor count cannot be lower than #{lpar.minimum_procs}"   if desired_procs < lpar.minimum_procs.to_i
-      raise MiqException::MiqVmError, "Processor count cannot be greater than #{lpar.maximum_procs}" if desired_procs > lpar.maximum_procs.to_i
+    raise MiqException::MiqVmError, "Processor count cannot be lower than #{min}"   if desired_procs < min.to_i
+    raise MiqException::MiqVmError, "Processor count cannot be greater than #{max}" if desired_procs > max.to_i
 
-      spec[:desired_procs] = desired_procs
-    else
-      raise MiqException::MiqVmError, "Virtual processor count cannot be lower than #{lpar.minimum_vprocs}"   if desired_procs < lpar.minimum_vprocs.to_i
-      raise MiqException::MiqVmError, "Virtual processor count cannot be greater than #{lpar.maximum_vprocs}" if desired_procs > lpar.maximum_vprocs.to_i
-
-      spec[:desired_vprocs] = desired_procs
-    end
+    spec[attr] = desired_procs
   end
 
   def build_netadap_create_config_spec(spec, options)
