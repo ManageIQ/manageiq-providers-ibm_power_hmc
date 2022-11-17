@@ -17,6 +17,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
     end
   end
 
+  def groups
+    @groups ||= connection.groups.index_by(&:uuid)
+  rescue => e
+    $ibm_power_hmc_log.error("groups query failed: #{e}")
+    raise
+  end
+
   def ssps
     @ssps ||= begin
       connection.ssps
