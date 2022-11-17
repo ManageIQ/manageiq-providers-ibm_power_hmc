@@ -28,6 +28,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       assert_specific_template
       assert_specific_resource_pool_cpu
       assert_specific_resource_pool_mem
+      assert_specific_storage
     end
   end
 
@@ -65,6 +66,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
     it "storage" do |example|
       target_refresh(ems.storages.find_by(:ems_ref => storage_uuid), example)
+      assert_specific_storage
     end
 
     it "resource_pool (cpu)" do |example|
@@ -310,6 +312,15 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     mem_pool = ems.resource_pools.find_by(:ems_ref => respool_mem_uuid)
     expect(mem_pool).to have_attributes(
       :type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::MemoryResourcePool"
+    )
+  end
+
+  def assert_specific_storage
+    storage = ems.storages.find_by(:ems_ref => storage_uuid)
+    expect(storage).to have_attributes(
+      :ems_ref => storage_uuid,
+      :name    => "SSP_1",
+      :type    => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage"
     )
   end
 end
