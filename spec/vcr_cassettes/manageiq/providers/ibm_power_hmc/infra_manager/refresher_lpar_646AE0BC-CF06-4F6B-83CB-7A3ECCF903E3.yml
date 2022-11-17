@@ -13,8 +13,7 @@ http_interactions:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
       Content-Type:
       - application/vnd.ibm.powervm.web+xml; type=LogonRequest
-      X-Api-Session:
-      - ''
+      X-Api-Session: xxx
       Content-Length:
       - '176'
       Accept-Encoding:
@@ -26,18 +25,10 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673385
       Content-Type:
       - application/vnd.ibm.powervm.web+xml; type=LogonResponse
       Content-Length:
       - '576'
-      Set-Cookie:
-      - CCFWSESSION=78D70F984263C0B066223EE70711896A; Path=/; Secure; HttpOnly
-      - JSESSIONID=0000jzkm9ajvQlYH3wCe7TdegDy:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      Date:
-      - Mon, 24 Oct 2022 13:47:38 GMT
       Expires:
       - Thu, 01 Dec 1994 16:00:00 GMT
       Cache-Control:
@@ -50,10 +41,10 @@ http_interactions:
             <Metadata>
                 <Atom/>
             </Metadata>
-            <X-API-Session kb="ROR" kxe="false">NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaA_9L3iioapNp1Gk4IcASJbPESlrTfSPiez_r8uB7NATmoSjDUBAcZACcgiYEkPtelfjLMB1dwzg71r3QwTA0pgdjPUCClKMjBAo65i6sWkBfyuFlKsGHOLq40aZFaIxf3E3390vcqAD2SsNfA285tc0dCfvfw0CQdNO2A0VMm7uZdacbvzgRRYMBkJTVsMza8=</X-API-Session>
+            <X-API-Session>xxx</X-API-Session>
         </LogonResponse>
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:15 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:17 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/VirtualIOServer/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3
@@ -65,8 +56,7 @@ http_interactions:
       - "*/*"
       User-Agent:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
-      X-Api-Session:
-      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaA_9L3iioapNp1Gk4IcASJbPESlrTfSPiez_r8uB7NATmoSjDUBAcZACcgiYEkPtelfjLMB1dwzg71r3QwTA0pgdjPUCClKMjBAo65i6sWkBfyuFlKsGHOLq40aZFaIxf3E3390vcqAD2SsNfA285tc0dCfvfw0CQdNO2A0VMm7uZdacbvzgRRYMBkJTVsMza8=
+      X-Api-Session: xxx
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -76,21 +66,12 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673386
       Content-Type:
       - application/atom+xml
-      X-Transactionrecord-Uuid:
-      - 6ce4e6bd-2676-4277-9407-6f9b594d2038
       Content-Length:
       - '1555'
-      Set-Cookie:
-      - JSESSIONID=0000R6difmhP_fUE_4E6NzbJwmP:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
       Connection:
       - Close
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       Expires:
       - Thu, 01 Dec 1994 16:00:00 GMT
       Cache-Control:
@@ -100,9 +81,9 @@ http_interactions:
       string: |2
 
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
-            <id>6dc9b37c-5a2e-4cfa-852f-4db6b59124a9</id>
+            <id>afb00aac-e5c8-4998-a13c-723be965bd39</id>
             <title>HttpErrorResponse</title>
-            <published>2022-10-24T14:47:39.006+01:00</published>
+            <published>2022-11-17T09:40:33.548+01:00</published>
             <author>
                 <name>IBM Power Systems Management Console</name>
             </author>
@@ -116,12 +97,12 @@ http_interactions:
             <ReasonCode kb="ROR" kxe="false">The supplied URI does not identify a known resource.</ReasonCode>
             <Message kb="ROO" kxe="false">REST000B The URL presented to the Management Console REST Web Services is not valid.</Message>
             <RequestBody kb="ROO" kxe="false"/>
-            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT12673386, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
+            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT10117435, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
         </HttpErrorResponse:HttpErrorResponse>
             </content>
         </entry>
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:15 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:17 GMT
 - request:
     method: delete
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -133,8 +114,7 @@ http_interactions:
       - "*/*"
       User-Agent:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
-      X-Api-Session:
-      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaA_9L3iioapNp1Gk4IcASJbPESlrTfSPiez_r8uB7NATmoSjDUBAcZACcgiYEkPtelfjLMB1dwzg71r3QwTA0pgdjPUCClKMjBAo65i6sWkBfyuFlKsGHOLq40aZFaIxf3E3390vcqAD2SsNfA285tc0dCfvfw0CQdNO2A0VMm7uZdacbvzgRRYMBkJTVsMza8=
+      X-Api-Session: xxx
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -144,21 +124,10 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673387
       Content-Language:
       - en-US
       Content-Length:
       - '0'
-      Set-Cookie:
-      - CCFWSESSION=78D70F984263C0B066223EE70711896A; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
-        Max-Age=0; Path="/"; Secure
-      - JSESSIONID=0000z_odWJNKsAljgWjRhvYNZkf:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      - JSESSIONID=78D70F984263C0B066223EE70711896A; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
-        Max-Age=0; Path="/hmc"; Secure
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       Expires:
       - Thu, 01 Dec 1994 16:00:00 GMT
       Cache-Control:
@@ -167,7 +136,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:15 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:17 GMT
 - request:
     method: put
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -181,8 +150,7 @@ http_interactions:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
       Content-Type:
       - application/vnd.ibm.powervm.web+xml; type=LogonRequest
-      X-Api-Session:
-      - ''
+      X-Api-Session: xxx
       Content-Length:
       - '176'
       Accept-Encoding:
@@ -194,18 +162,10 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673388
       Content-Type:
       - application/vnd.ibm.powervm.web+xml; type=LogonResponse
       Content-Length:
       - '576'
-      Set-Cookie:
-      - CCFWSESSION=4AFC07D447A7269F103320F695B145AF; Path=/; Secure; HttpOnly
-      - JSESSIONID=0000-_4wER7bAdWKqvbWQVz5dcL:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       Expires:
       - Thu, 01 Dec 1994 16:00:00 GMT
       Cache-Control:
@@ -218,10 +178,10 @@ http_interactions:
             <Metadata>
                 <Atom/>
             </Metadata>
-            <X-API-Session kb="ROR" kxe="false">NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaDa9TzFA0h4WDtk9OZ1ZyjJ8yc6wLrNETmG7V8SpKfKV8kOq7dlxBXDKnmeZJvgy05lsLWybS_TGPIQQTIfEs_h_WcV1EsctVQMs31ISnxPUO5knmUXrcKCJYhO52t3Oncq26YeqnNRn7Ar8AyyG69T0ZjwRMlkShGPow21KC67bS7ElPcR3m8oJduMIBdk_54=</X-API-Session>
+            <X-API-Session>xxx</X-API-Session>
         </LogonResponse>
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:16 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:18 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3?group=None
@@ -233,8 +193,7 @@ http_interactions:
       - "*/*"
       User-Agent:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
-      X-Api-Session:
-      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaDa9TzFA0h4WDtk9OZ1ZyjJ8yc6wLrNETmG7V8SpKfKV8kOq7dlxBXDKnmeZJvgy05lsLWybS_TGPIQQTIfEs_h_WcV1EsctVQMs31ISnxPUO5knmUXrcKCJYhO52t3Oncq26YeqnNRn7Ar8AyyG69T0ZjwRMlkShGPow21KC67bS7ElPcR3m8oJduMIBdk_54=
+      X-Api-Session: xxx
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -244,27 +203,16 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673389
       Content-Type:
       - application/atom+xml
       Etag:
-      - "-496987924"
+      - "-1585670656"
       Expires:
       - Thu, 01 Jan 1970 00:00:00 GMT
-      Last-Modified:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       X-Hmc-Schema-Version:
       - V1_5_0
-      X-Transactionrecord-Uuid:
-      - 02a07d0c-e857-4f4c-9f26-e1365dc098c2
       Content-Length:
-      - '12874'
-      Set-Cookie:
-      - JSESSIONID=0000CYBPyyMV37NVdi9LzUF4GIV:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
+      - '13192'
       Cache-Control:
       - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
     body:
@@ -274,19 +222,19 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3</id>
             <title>LogicalPartition</title>
-            <published>2022-10-24T14:47:39.487+01:00</published>
+            <published>2022-11-17T09:40:34.040+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3?group=None"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
                 <name>IBM Power Systems Management Console</name>
             </author>
-            <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-496987924</etag:etag>
+            <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-1585670656</etag:etag>
             <content type="application/vnd.ibm.powervm.uom+xml; type=LogicalPartition">
                 <LogicalPartition:LogicalPartition xmlns:LogicalPartition="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
             <Metadata>
                 <Atom>
                     <AtomID>646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3</AtomID>
-                    <AtomCreated>1665051502752</AtomCreated>
+                    <AtomCreated>1667813811261</AtomCreated>
                 </Atom>
             </Metadata>
             <AllowPerformanceDataCollection kxe="false" kb="CUD">false</AllowPerformanceDataCollection>
@@ -423,9 +371,11 @@ http_interactions:
             <IsServicePartition kxe="false" kb="CUD">false</IsServicePartition>
             <PowerVMManagementCapable ksv="V1_5_0" kb="ROR" kxe="false">false</PowerVMManagementCapable>
             <ReferenceCode kb="ROO" kxe="true"/>
+            <AssociatedGroups ksv="V1_2_0" kb="ROO" kxe="false">
+                <link href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/Group/73254f6f-5977-4642-92cd-3cdc8a0632a0" rel="related"/>
+            </AssociatedGroups>
             <PowerOnWithHypervisor ksv="V1_2_0" kxe="false" kb="CUD">false</PowerOnWithHypervisor>
-            <MigrationStorageViosDataStatus ksv="V1_3_0" kb="ROR" kxe="false">Valid</MigrationStorageViosDataStatus>
-            <MigrationStorageViosDataTimestamp ksv="V1_3_0" kb="ROR" kxe="false">Thu Oct 06 12:20:07 CEST 2022</MigrationStorageViosDataTimestamp>
+            <MigrationStorageViosDataStatus ksv="V1_3_0" kb="ROR" kxe="false">Update_Failed</MigrationStorageViosDataStatus>
             <RemoteRestartCapable kxe="false" kb="CUA">false</RemoteRestartCapable>
             <SimplifiedRemoteRestartCapable ksv="V1_2_0" kb="CUD" kxe="false">false</SimplifiedRemoteRestartCapable>
             <HasDedicatedProcessorsForMigration kxe="false" kb="ROR">false</HasDedicatedProcessorsForMigration>
@@ -437,13 +387,123 @@ http_interactions:
                 <link href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualFibreChannelClientAdapter/a8906786-1431-39c3-b7e3-db0b579377e1" rel="related"/>
             </VirtualFibreChannelClientAdapters>
             <VirtualSCSIClientAdapters kb="CUR" kxe="false">
+                <link href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualSCSIClientAdapter/9a2b986f-51be-3d49-83ef-dce935677b18" rel="related"/>
                 <link href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualSCSIClientAdapter/8ad1e9da-34aa-30f4-b9b4-274b9598ae8a" rel="related"/>
             </VirtualSCSIClientAdapters>
         </LogicalPartition:LogicalPartition>
             </content>
         </entry>
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:16 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:18 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/Group
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session: xxx
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      Content-Type:
+      - application/atom+xml
+      Etag:
+      - "-1146424212"
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      X-Hmc-Schema-Version:
+      - V1_5_0
+      Content-Length:
+      - '4659'
+      Cache-Control:
+      - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>3d9231ee-e5bc-38e7-b59c-00f9a1384022</id>
+            <updated>2022-11-17T09:40:34.135+01:00</updated>
+            <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Group"/>
+            <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
+            <generator>IBM Power Systems Management Console</generator>
+            <entry>
+                <id>24f0e0fe-7879-4050-be45-a6e76426423d</id>
+                <title>Group</title>
+                <published>2022-11-17T09:40:34.137+01:00</published>
+                <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Group/24f0e0fe-7879-4050-be45-a6e76426423d"/>
+                <author>
+                    <name>IBM Power Systems Management Console</name>
+                </author>
+                <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-1676141590</etag:etag>
+                <content type="application/vnd.ibm.powervm.uom+xml; type=Group">
+                    <Group:Group xmlns:Group="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_2_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>24f0e0fe-7879-4050-be45-a6e76426423d</AtomID>
+                    <AtomCreated>1668674434136</AtomCreated>
+                </Atom>
+            </Metadata>
+            <GroupUUID ksv="V1_2_0" kb="ROR" kxe="false">24f0e0fe-7879-4050-be45-a6e76426423d</GroupUUID>
+            <GroupName ksv="V1_2_0" kb="COR" kxe="false">mon_groupe</GroupName>
+            <GroupDescription ksv="V1_2_0" kxe="false" kb="COR"/>
+            <GroupColor ksv="V1_2_0" kb="COR" kxe="false">Grey</GroupColor>
+            <AssociatedLogicalPartitions ksv="V1_2_0" kb="COD" kxe="false">
+                <link href="https://ibm-power-hmc-hostname/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/LogicalPartition/256B63BC-868F-4CB8-AB00-94387264B66A" rel="related"/>
+                <link href="https://ibm-power-hmc-hostname/rest/api/uom/ManagedSystem/d47a585d-eaa8-3a54-b4dc-93346276ea37/LogicalPartition/00000000-0000-0000-0000-000000000000" rel="related"/>
+            </AssociatedLogicalPartitions>
+            <AssociatedVirtualIOServers ksv="V1_2_0" kxe="false" kb="COD">
+                <link href="https://ibm-power-hmc-hostname/rest/api/uom/VirtualIOServer/722B9A3A-15DC-4BE1-AAFE-ED5D17C70371" rel="related"/>
+            </AssociatedVirtualIOServers>
+            <AssociatedManagedSystems ksv="V1_2_0" kb="COD" kxe="false"/>
+        </Group:Group>
+                </content>
+            </entry>
+            <entry>
+                <id>73254f6f-5977-4642-92cd-3cdc8a0632a0</id>
+                <title>Group</title>
+                <published>2022-11-17T09:40:34.138+01:00</published>
+                <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Group/73254f6f-5977-4642-92cd-3cdc8a0632a0"/>
+                <author>
+                    <name>IBM Power Systems Management Console</name>
+                </author>
+                <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-725643435</etag:etag>
+                <content type="application/vnd.ibm.powervm.uom+xml; type=Group">
+                    <Group:Group xmlns:Group="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_2_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>73254f6f-5977-4642-92cd-3cdc8a0632a0</AtomID>
+                    <AtomCreated>1668674434136</AtomCreated>
+                </Atom>
+            </Metadata>
+            <GroupUUID ksv="V1_2_0" kb="ROR" kxe="false">73254f6f-5977-4642-92cd-3cdc8a0632a0</GroupUUID>
+            <GroupName ksv="V1_2_0" kb="COR" kxe="false">ManageIQ</GroupName>
+            <GroupDescription ksv="V1_2_0" kxe="false" kb="COR"/>
+            <GroupColor ksv="V1_2_0" kb="COR" kxe="false">Orange</GroupColor>
+            <AssociatedLogicalPartitions ksv="V1_2_0" kb="COD" kxe="false">
+                <link href="https://ibm-power-hmc-hostname/rest/api/uom/ManagedSystem/0685d4a6-2021-3044-84e3-59f44e9cc5d7/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3" rel="related"/>
+            </AssociatedLogicalPartitions>
+            <AssociatedVirtualIOServers ksv="V1_2_0" kxe="false" kb="COD">
+                <link href="https://ibm-power-hmc-hostname/rest/api/uom/VirtualIOServer/4165A16F-0766-40F3-B9E2-7272E1910F2E" rel="related"/>
+            </AssociatedVirtualIOServers>
+            <AssociatedManagedSystems ksv="V1_2_0" kb="COD" kxe="false"/>
+        </Group:Group>
+                </content>
+            </entry>
+        </feed>
+    http_version:
+  recorded_at: Thu, 17 Nov 2022 08:09:18 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/ClientNetworkAdapter
@@ -455,8 +515,7 @@ http_interactions:
       - "*/*"
       User-Agent:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
-      X-Api-Session:
-      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaDa9TzFA0h4WDtk9OZ1ZyjJ8yc6wLrNETmG7V8SpKfKV8kOq7dlxBXDKnmeZJvgy05lsLWybS_TGPIQQTIfEs_h_WcV1EsctVQMs31ISnxPUO5knmUXrcKCJYhO52t3Oncq26YeqnNRn7Ar8AyyG69T0ZjwRMlkShGPow21KC67bS7ElPcR3m8oJduMIBdk_54=
+      X-Api-Session: xxx
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -466,27 +525,16 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673390
       Content-Type:
       - application/atom+xml
       Etag:
       - "-759463070"
       Expires:
       - Thu, 01 Jan 1970 00:00:00 GMT
-      Last-Modified:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       X-Hmc-Schema-Version:
       - V1_5_0
-      X-Transactionrecord-Uuid:
-      - 158981f4-ede1-41a1-9463-d1131caaae76
       Content-Length:
       - '3288'
-      Set-Cookie:
-      - JSESSIONID=0000T0DP_c3XhCe5dM-nj1DDwF_:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       Cache-Control:
       - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
     body:
@@ -495,14 +543,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>e3f2bc22-7672-3b34-9540-db3e249c0e02</id>
-            <updated>2022-10-24T14:47:39.601+01:00</updated>
+            <updated>2022-11-17T09:40:34.195+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/ClientNetworkAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>343b5c2d-f80e-3749-9f28-47881f8fb814</id>
                 <title>ClientNetworkAdapter</title>
-                <published>2022-10-24T14:47:39.622+01:00</published>
+                <published>2022-11-17T09:40:34.216+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/ClientNetworkAdapter/343b5c2d-f80e-3749-9f28-47881f8fb814"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -513,7 +561,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>343b5c2d-f80e-3749-9f28-47881f8fb814</AtomID>
-                    <AtomCreated>1665051576423</AtomCreated>
+                    <AtomCreated>1668431880221</AtomCreated>
                 </Atom>
             </Metadata>
             <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.103341V-V16-C2</DynamicReconfigurationConnectorName>
@@ -539,7 +587,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:16 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:18 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualSCSIClientAdapter
@@ -551,8 +599,7 @@ http_interactions:
       - "*/*"
       User-Agent:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
-      X-Api-Session:
-      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaDa9TzFA0h4WDtk9OZ1ZyjJ8yc6wLrNETmG7V8SpKfKV8kOq7dlxBXDKnmeZJvgy05lsLWybS_TGPIQQTIfEs_h_WcV1EsctVQMs31ISnxPUO5knmUXrcKCJYhO52t3Oncq26YeqnNRn7Ar8AyyG69T0ZjwRMlkShGPow21KC67bS7ElPcR3m8oJduMIBdk_54=
+      X-Api-Session: xxx
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -562,27 +609,16 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673392
       Content-Type:
       - application/atom+xml
       Etag:
-      - "-782040701"
+      - "-597406687"
       Expires:
       - Thu, 01 Jan 1970 00:00:00 GMT
-      Last-Modified:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       X-Hmc-Schema-Version:
       - V1_5_0
-      X-Transactionrecord-Uuid:
-      - 98788847-b257-40d9-90cf-0418a8c0be8b
       Content-Length:
-      - '3817'
-      Set-Cookie:
-      - JSESSIONID=0000y2098_m0pkz2wD7VlvRpcTa:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
+      - '7034'
       Cache-Control:
       - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
     body:
@@ -591,14 +627,60 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>7c9b36e0-4e8a-3fa5-af20-6776553f7b33</id>
-            <updated>2022-10-24T14:47:39.676+01:00</updated>
+            <updated>2022-11-17T09:40:34.270+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualSCSIClientAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
+                <id>9a2b986f-51be-3d49-83ef-dce935677b18</id>
+                <title>VirtualSCSIClientAdapter</title>
+                <published>2022-11-17T09:40:34.290+01:00</published>
+                <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualSCSIClientAdapter/9a2b986f-51be-3d49-83ef-dce935677b18"/>
+                <author>
+                    <name>IBM Power Systems Management Console</name>
+                </author>
+                <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">-2072254076</etag:etag>
+                <content type="application/vnd.ibm.powervm.uom+xml; type=VirtualSCSIClientAdapter">
+                    <VirtualSCSIClientAdapter:VirtualSCSIClientAdapter xmlns:VirtualSCSIClientAdapter="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>9a2b986f-51be-3d49-83ef-dce935677b18</AtomID>
+                    <AtomCreated>1668674434284</AtomCreated>
+                </Atom>
+            </Metadata>
+            <AdapterType kb="ROR" kxe="false">Client</AdapterType>
+            <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.103341V-V16-C5</DynamicReconfigurationConnectorName>
+            <LocationCode kxe="false" kb="ROR">U8286.42A.103341V-V16-C5</LocationCode>
+            <LocalPartitionID kxe="false" kb="CUR">16</LocalPartitionID>
+            <RequiredAdapter kb="CUD" kxe="false">false</RequiredAdapter>
+            <VariedOn kxe="true" kb="CUD">true</VariedOn>
+            <VirtualSlotNumber kb="COD" kxe="false">5</VirtualSlotNumber>
+            <RemoteLogicalPartitionID kxe="false" kb="CUR">1</RemoteLogicalPartitionID>
+            <RemoteSlotNumber kxe="false" kb="CUA">8</RemoteSlotNumber>
+            <ServerLocationCode kb="CUR" kxe="false">U8286.42A.103341V-V1-C8</ServerLocationCode>
+            <ServerAdapter kb="CUD" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <AdapterType kb="ROR" kxe="false">Server</AdapterType>
+                <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.103341V-V1-C8</DynamicReconfigurationConnectorName>
+                <LocationCode kxe="false" kb="ROR">U8286.42A.103341V-V1-C8</LocationCode>
+                <LocalPartitionID kxe="false" kb="CUR">1</LocalPartitionID>
+                <RequiredAdapter kb="CUD" kxe="false">false</RequiredAdapter>
+                <VariedOn kxe="true" kb="CUD">true</VariedOn>
+                <VirtualSlotNumber kb="COD" kxe="false">8</VirtualSlotNumber>
+                <RemoteLogicalPartitionID kxe="false" kb="CUR">16</RemoteLogicalPartitionID>
+                <RemoteSlotNumber kxe="false" kb="CUA">5</RemoteSlotNumber>
+                <ServerLocationCode kb="CUR" kxe="false">U8286.42A.103341V-V16-C5</ServerLocationCode>
+            </ServerAdapter>
+            <ConnectingPartition ksv="V1_3_0" kxe="false" kb="CUR" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/0685d4a6-2021-3044-84e3-59f44e9cc5d7/VirtualIOServer/4154B185-22EB-4D16-B1F4-D9F714496C98" rel="related"/>
+        </VirtualSCSIClientAdapter:VirtualSCSIClientAdapter>
+                </content>
+            </entry>
+            <entry>
                 <id>8ad1e9da-34aa-30f4-b9b4-274b9598ae8a</id>
                 <title>VirtualSCSIClientAdapter</title>
-                <published>2022-10-24T14:47:39.695+01:00</published>
+                <published>2022-11-17T09:40:34.291+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/646AE0BC-CF06-4F6B-83CB-7A3ECCF903E3/VirtualSCSIClientAdapter/8ad1e9da-34aa-30f4-b9b4-274b9598ae8a"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -609,7 +691,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>8ad1e9da-34aa-30f4-b9b4-274b9598ae8a</AtomID>
-                    <AtomCreated>1666619259688</AtomCreated>
+                    <AtomCreated>1668674434289</AtomCreated>
                 </Atom>
             </Metadata>
             <AdapterType kb="ROR" kxe="false">Client</AdapterType>
@@ -643,7 +725,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:16 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:18 GMT
 - request:
     method: delete
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -655,8 +737,7 @@ http_interactions:
       - "*/*"
       User-Agent:
       - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
-      X-Api-Session:
-      - NQRhXlVLNA-LHjCKlHePedfCvv1MuN4BH1aJiiRWZaDa9TzFA0h4WDtk9OZ1ZyjJ8yc6wLrNETmG7V8SpKfKV8kOq7dlxBXDKnmeZJvgy05lsLWybS_TGPIQQTIfEs_h_WcV1EsctVQMs31ISnxPUO5knmUXrcKCJYhO52t3Oncq26YeqnNRn7Ar8AyyG69T0ZjwRMlkShGPow21KC67bS7ElPcR3m8oJduMIBdk_54=
+      X-Api-Session: xxx
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -666,21 +747,10 @@ http_interactions:
     headers:
       X-Powered-By:
       - Servlet/3.0
-      X-Transaction-Id:
-      - XT12673394
       Content-Language:
       - en-US
       Content-Length:
       - '0'
-      Set-Cookie:
-      - CCFWSESSION=4AFC07D447A7269F103320F695B145AF; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
-        Max-Age=0; Path="/"; Secure
-      - JSESSIONID=0000NymtB5F9ftDgzJKwDDiDQGW:8c7885c5-2b0c-4564-8d2d-59c6417de7a1;
-        Path=/; Secure; HttpOnly
-      - JSESSIONID=4AFC07D447A7269F103320F695B145AF; Version=1; Domain=coophmc2.coopibm.frec.bull.fr;
-        Max-Age=0; Path="/hmc"; Secure
-      Date:
-      - Mon, 24 Oct 2022 13:47:39 GMT
       Expires:
       - Thu, 01 Dec 1994 16:00:00 GMT
       Cache-Control:
@@ -689,5 +759,5 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version:
-  recorded_at: Mon, 24 Oct 2022 13:16:16 GMT
+  recorded_at: Thu, 17 Nov 2022 08:09:18 GMT
 recorded_with: VCR 5.1.0
