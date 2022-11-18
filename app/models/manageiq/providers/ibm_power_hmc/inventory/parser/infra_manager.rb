@@ -469,6 +469,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :value        => proc_type,
       :read_only    => true
     )
+
+    mem_type = lpar.shared_mem == "true" ? "shared" : "dedicated"
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => 'memory_type',
+      :display_name => _('Memory type'),
+      :description  => _('Dedicated or shared'),
+      :value        => mem_type,
+      :read_only    => true
+    )
   end
 
   def parse_templates
