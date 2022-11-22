@@ -1,6 +1,15 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Providers::InfraManager::Template
-  supports :provisioning
-  supports :clone
+  supports :provisioning do
+    if ext_management_system
+      unsupported_reason_add(:provisioning, ext_management_system.unsupported_reason(:provisioning)) unless ext_management_system.supports?(:provisioning)
+    else
+      unsupported_reason_add(:provisioning, _('Not connected to ems'))
+    end
+  end
+
+  supports :clone do
+    unsupported_reason_add(:clone, _('Not connected to ems')) if ext_management_system.nil?
+  end
 
   def do_request(request_type, options)
     case request_type
