@@ -406,6 +406,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         build_ethernet_dev(lpar, ent, hardware, "vnic")
       end
     end
+
+    if collector.vfc_client_adapters.key?(lpar.uuid)
+      collector.vfc_client_adapters[lpar.uuid].each do |vfc|
+        persister.guest_devices.build(
+          :hardware        => hardware,
+          :uid_ems         => vfc.uuid,
+          :device_name     => vfc.dr_name,
+          :device_type     => "physical_port",
+          :controller_type => "vfc client adapter",
+          :auto_detect     => true,
+          :address         => vfc.wwpns.join(","),
+          :location        => vfc.location
+        )
+      end
+    end
   end
 
   def parse_vios_guest_devices(vios, hardware)

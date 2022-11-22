@@ -219,6 +219,18 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::InfraManager < Man
       end.compact.to_h
   end
 
+  def vfc_client_adapters
+    @vfc_client_adapters ||=
+      lpars.map do |lpar|
+        [lpar.uuid, connection.vfc_client_adapter(lpar.uuid)] unless lpar.vfc_client_uuids.empty?
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("vfc client adapters query failed for #{lpar.uuid}: #{e}")
+        raise
+      end.compact.to_h
+  end
+
   def vscsi_client_adapters
     @vscsi_client_adapters ||=
       lpars.map do |lpar|
