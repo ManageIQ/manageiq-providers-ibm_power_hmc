@@ -13,14 +13,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   end
 
   def cecs_quick
-    @cecs_quick ||= references(:hosts).map do |ems_ref|
-      connection.managed_system_quick(ems_ref).merge("UUID" => ems_ref)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("managed systems quick query failed for #{ems_ref}: #{e}")
-      raise
-    end.compact
+    @cecs_quick ||=
+      references(:hosts).map do |ems_ref|
+        connection.managed_system_quick(ems_ref).merge("UUID" => ems_ref)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("managed systems quick query failed for #{ems_ref}: #{e}")
+        raise
+      end.compact
   end
 
   def cec_cpu_freqs_from_db
@@ -34,84 +35,91 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Collector::TargetCollection <
   end
 
   def lpars
-    @lpars ||= references(:vms).map do |ems_ref|
-      connection.lpar(ems_ref, nil, "None")
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}")
-      raise
-    end.compact
+    @lpars ||=
+      references(:vms).map do |ems_ref|
+        connection.lpar(ems_ref, nil, "None")
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying lpar #{ems_ref}: #{e}")
+        raise
+      end.compact
   end
 
   def vioses
-    @vioses ||= references(:vms).map do |ems_ref|
-      connection.vios(ems_ref)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}")
-      raise
-    end.compact
+    @vioses ||=
+      references(:vms).map do |ems_ref|
+        connection.vios(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying vios #{ems_ref}: #{e}")
+        raise
+      end.compact
   end
 
   def templates
-    @templates ||= references(:miq_templates).map do |ems_ref|
-      connection.template(ems_ref)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying template #{ems_ref}: #{e}")
-      raise
-    end.compact
+    @templates ||=
+      references(:miq_templates).map do |ems_ref|
+        connection.template(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying template #{ems_ref}: #{e}")
+        raise
+      end.compact
   end
 
   def clusters
-    @clusters ||= references(:storages).map do |ems_ref|
-      connection.cluster(ems_ref)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying cluster #{ems_ref}: #{e}")
-      raise
-    end.compact
+    @clusters ||=
+      references(:storages).map do |ems_ref|
+        connection.cluster(ems_ref)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying cluster #{ems_ref}: #{e}")
+        raise
+      end.compact
   end
   private :clusters
 
   def ssps
     # NOTE: We're using cluster ID as ems_ref for shared storage pools.
-    @ssps ||= clusters.map do |cluster|
-      connection.ssp(cluster.ssp_uuid)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying ssp #{cluster.ssp_uuid}: #{e}")
-      raise
-    end.compact
+    @ssps ||=
+      clusters.map do |cluster|
+        connection.ssp(cluster.ssp_uuid)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying ssp #{cluster.ssp_uuid}: #{e}")
+        raise
+      end.compact
   end
 
   def shared_processor_pools
-    @shared_processor_pools ||= references(:resource_pools).map do |ems_ref|
-      sys_uuid, pool_uuid = ems_ref.split("_")
-      connection.shared_processor_pool(sys_uuid, pool_uuid)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying shared processor pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
-      raise
-    end.compact
+    @shared_processor_pools ||=
+      references(:resource_pools).map do |ems_ref|
+        sys_uuid, pool_uuid = ems_ref.split("_")
+        connection.shared_processor_pool(sys_uuid, pool_uuid)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying shared processor pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
+        raise
+      end.compact
   end
 
   def shared_memory_pools
-    @shared_memory_pools ||= references(:resource_pools).map do |ems_ref|
-      sys_uuid, pool_uuid = ems_ref.split("_")
-      connection.shared_memory_pool(sys_uuid, pool_uuid)
-    rescue IbmPowerHmc::Connection::HttpNotFound
-      nil
-    rescue => e
-      $ibm_power_hmc_log.error("error querying shared memory pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
-      raise
-    end.compact
+    @shared_memory_pools ||=
+      references(:resource_pools).map do |ems_ref|
+        sys_uuid, pool_uuid = ems_ref.split("_")
+        connection.shared_memory_pool(sys_uuid, pool_uuid)
+      rescue IbmPowerHmc::Connection::HttpNotFound
+        nil
+      rescue => e
+        $ibm_power_hmc_log.error("error querying shared memory pool #{pool_uuid} on cec #{sys_uuid}: #{e}")
+        raise
+      end.compact
   end
 
   def infer_related_ems_refs_api!
