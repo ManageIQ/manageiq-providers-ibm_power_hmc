@@ -1,5 +1,7 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
-  supports :publish
+  supports :publish do
+    unsupported_reason_add(:provisioning, _('Not connected to ems')) if ext_management_system.nil?
+  end
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
