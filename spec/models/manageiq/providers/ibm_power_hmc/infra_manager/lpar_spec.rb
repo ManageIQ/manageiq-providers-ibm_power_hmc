@@ -20,14 +20,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
   end
 
   context "lpar" do
+    let(:archived_vm) { FactoryBot.create(:ibm_power_hmc_lpar, :ext_management_system => nil, :ems_ref => "3F3D399B-DFF3-4977-8881-C194AA47CD3A", :host => host) }
+
     it "supports clone" do
-      expect(described_class.supports?(:clone)).to be false
+      expect(vm.supports?(:clone)).to be false
     end
     it "supports publish" do
-      expect(described_class.supports?(:publish)).to (be true), "unsupported reason: #{described_class.unsupported_reason(:publish)}"
+      expect(vm.supports?(:publish)).to (be true), "unsupported reason: #{described_class.unsupported_reason(:publish)}"
+      expect(archived_vm.supports?(:publish)).to be false
     end
     it "supports migrate" do
-      expect(described_class.supports?(:migrate)).to be false
+      expect(vm.supports?(:migrate)).to be false
     end
     it "supports power operations" do
       host.advanced_settings.create!(:name => "hmc_managed", :value => "true")
