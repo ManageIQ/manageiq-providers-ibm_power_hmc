@@ -414,7 +414,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
           :uid_ems         => vfc.uuid,
           :device_name     => vfc.dr_name,
           :device_type     => "physical_port",
-          :controller_type => "vfc client adapter",
+          :controller_type => "client VFC adapter",
           :auto_detect     => true,
           :address         => vfc.wwpns.join(","),
           :location        => vfc.location
