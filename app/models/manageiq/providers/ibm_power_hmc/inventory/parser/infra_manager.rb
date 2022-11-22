@@ -52,14 +52,16 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :build_number => sys["SystemFirmware"]
       )
       persister.host_hardwares.build(
-        :host            => host,
-        :cpu_type        => "ppc64",
-        :bitness         => 64,
-        :manufacturer    => "IBM",
-        :model           => mtype_model,
-        :memory_mb       => sys["InstalledSystemMemory"],
-        :cpu_total_cores => sys["InstalledSystemProcessorUnits"],
-        :serial_number   => serial
+        :host                 => host,
+        :cpu_type             => "ppc64",
+        :bitness              => 64,
+        :manufacturer         => "IBM",
+        :model                => mtype_model,
+        :memory_mb            => sys["InstalledSystemMemory"],
+        :cpu_sockets          => sys["InstalledSystemProcessorUnits"],
+        :cpu_total_cores      => sys["InstalledSystemProcessorUnits"],
+        :cpu_cores_per_socket => 1,
+        :serial_number        => serial
       )
     end
   end
@@ -151,15 +153,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_host_hardware(host, sys)
     hardware = persister.host_hardwares.build(
-      :host            => host,
-      :cpu_type        => "ppc64",
-      :bitness         => 64,
-      :manufacturer    => "IBM",
-      :model           => "#{sys.mtype}#{sys.model}",
-      :cpu_speed       => collector.cec_cpu_freqs[sys.uuid],
-      :memory_mb       => sys.memory,
-      :cpu_total_cores => sys.cpus,
-      :serial_number   => sys.serial
+      :host                 => host,
+      :cpu_type             => "ppc64",
+      :bitness              => 64,
+      :manufacturer         => "IBM",
+      :model                => "#{sys.mtype}#{sys.model}",
+      :cpu_speed            => collector.cec_cpu_freqs[sys.uuid],
+      :memory_mb            => sys.memory,
+      :cpu_sockets          => sys.cpus,
+      :cpu_total_cores      => sys.cpus,
+      :cpu_cores_per_socket => 1,
+      :serial_number        => sys.serial
     )
     parse_host_guest_devices(hardware, sys)
   end
@@ -265,12 +269,15 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def parse_vm_hardware(vm, lpar)
     # Common code for LPARs, VIOSes and templates.
+    num_cpus = lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
     persister.hardwares.build(
-      :vm_or_template  => vm,
-      :memory_mb       => lpar.memory,
-      :cpu_type        => "ppc64",
-      :cpu_speed       => lpar.respond_to?(:sys_uuid) ? collector.cec_cpu_freqs[lpar.sys_uuid] : nil,
-      :cpu_total_cores => lpar.dedicated.eql?("true") ? lpar.procs.to_i : lpar.vprocs.to_i
+      :vm_or_template       => vm,
+      :memory_mb            => lpar.memory,
+      :cpu_type             => "ppc64",
+      :cpu_speed            => lpar.respond_to?(:sys_uuid) ? collector.cec_cpu_freqs[lpar.sys_uuid] : nil,
+      :cpu_sockets          => num_cpus,
+      :cpu_total_cores      => num_cpus,
+      :cpu_cores_per_socket => 1
     )
   end
 
