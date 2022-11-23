@@ -397,6 +397,22 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :model           => io.description,
         :auto_detect     => true
       )
+
+      if io.kind_of?(IbmPowerHmc::PhysicalFibreChannelAdapter)
+        io.slots.each do |fcs|
+          persister.guest_devices.build(
+            :hardware        => hardware,
+            :uid_ems         => fcs.location,
+            :device_type     => "physical_port",
+            :controller_type => "Fibre channel port",
+            :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
+            :address         => fcs.wwpn,
+            :location        => fcs.location,
+            :model           => io.description,
+            :auto_detect     => true
+          )
+        end
+      end
     end
   end
 
