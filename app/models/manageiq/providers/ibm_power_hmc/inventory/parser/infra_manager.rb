@@ -398,7 +398,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :auto_detect     => true
       )
 
-      if io.kind_of?(IbmPowerHmc::PhysicalFibreChannelAdapter)
+      # Add physical adapter ports, if any.
+      case io
+      when IbmPowerHmc::PhysicalFibreChannelAdapter
         io.slots.each do |fcs|
           persister.guest_devices.build(
             :hardware        => hardware,
