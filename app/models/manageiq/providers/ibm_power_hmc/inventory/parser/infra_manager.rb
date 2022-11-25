@@ -403,39 +403,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
     # Physical adapters can be assigned to VIOSes and LPARs.
     lpar.io_slots.each do |slot|
-      io = slot.io_adapter
-      next if io.nil?
-
-      # Add physical adapter ports, if any.
-      child_devices =
-        case io
-        when IbmPowerHmc::PhysicalFibreChannelAdapter
-          io.ports.map do |fcs|
-            persister.guest_devices.build(
-              :hardware        => hardware,
-              :uid_ems         => fcs.location,
-              :device_type     => "physical_port",
-              :controller_type => "Fibre channel port",
-              :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
-              :address         => fcs.wwpn,
-              :location        => fcs.location,
-              :model           => io.description,
-              :auto_detect     => true
-            )
-          end
-        end || []
-
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => io.dr_name,
-        :device_type     => "physical_port",
-        :controller_type => "IO",
-        :device_name     => "Adapter",
-        :location        => io.dr_name,
-        :model           => io.description,
-        :auto_detect     => true,
-        :child_devices   => child_devices
-      )
+      build_io_adapter(slot.io_adapter, hardware) unless slot.io_adapter.nil?
     end
   end
 
@@ -597,6 +565,39 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :address         => macaddr,
       :location        => ent.location,
       :lan             => vlan
+    )
+  end
+
+  def build_io_adapter(io, hardware)
+    # Parse physical adapter ports, if any.
+    child_devices =
+      case io
+      when IbmPowerHmc::PhysicalFibreChannelAdapter
+        io.ports.map do |fcs|
+          persister.guest_devices.build(
+            :hardware        => hardware,
+            :uid_ems         => fcs.location,
+            :device_type     => "physical_port",
+            :controller_type => "Fibre channel port",
+            :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
+            :address         => fcs.wwpn,
+            :location        => fcs.location,
+            :model           => io.description,
+            :auto_detect     => true
+          )
+        end
+      end || []
+
+    persister.guest_devices.build(
+      :hardware        => hardware,
+      :uid_ems         => io.dr_name,
+      :device_type     => "physical_port",
+      :controller_type => "IO",
+      :device_name     => "Adapter",
+      :location        => io.dr_name,
+      :model           => io.description,
+      :auto_detect     => true,
+      :child_devices   => child_devices
     )
   end
 
