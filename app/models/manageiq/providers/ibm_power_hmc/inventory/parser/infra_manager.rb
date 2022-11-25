@@ -568,12 +568,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     )
   end
 
-  def build_io_adapter(io, hardware)
+  def build_io_adapter(adapter, hardware)
     # Parse physical adapter ports, if any.
     child_devices =
-      case io
+      case adapter
       when IbmPowerHmc::PhysicalFibreChannelAdapter
-        io.ports.map do |fcs|
+        adapter.ports.map do |fcs|
           persister.guest_devices.build(
             :hardware        => hardware,
             :uid_ems         => fcs.location,
@@ -582,7 +582,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
             :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
             :address         => fcs.wwpn,
             :location        => fcs.location,
-            :model           => io.description,
+            :model           => adapter.description,
             :auto_detect     => true
           )
         end
@@ -590,12 +590,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
     persister.guest_devices.build(
       :hardware        => hardware,
-      :uid_ems         => io.dr_name,
+      :uid_ems         => adapter.dr_name,
       :device_type     => "physical_port",
       :controller_type => "IO",
       :device_name     => "Adapter",
-      :location        => io.dr_name,
-      :model           => io.description,
+      :location        => adapter.dr_name,
+      :model           => adapter.description,
       :auto_detect     => true,
       :child_devices   => child_devices
     )
