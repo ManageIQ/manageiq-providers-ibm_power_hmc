@@ -169,8 +169,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_guest_devices(hardware, sys)
-    sys.io_adapters.each do |io|
-      next if io.udid.to_i == 65_535 # Skip empty slots
+    sys.io_slots.each do |slot|
+      io = slot.io_adapter
+      next if io.nil? || io.udid.to_i == 65_535 # Skip empty slots
+
+      child_devices = slot.ior_devices.map do |port|
+        persister.host_guest_devices.build(
+          :hardware        => hardware,
+          :uid_ems         => port.location,
+          :device_type     => "physical_port",
+          :controller_type => "IO",
+          :device_name     => "Port",
+          :location        => port.location,
+          :model           => port.description,
+          :address         => port.macaddr.nil? ? port.wwpn : self.class.parse_macaddr(port.macaddr),
+          :auto_detect     => true
+        )
+      end
 
       persister.host_guest_devices.build(
         :hardware        => hardware,
@@ -180,7 +195,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :device_name     => "Adapter",
         :location        => io.dr_name,
         :model           => io.description,
-        :auto_detect     => true
+        :auto_detect     => true,
+        :child_devices   => child_devices
       )
     end
   end
@@ -385,8 +401,30 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       build_ethernet_dev(lpar, ent, hardware, "host ethernet adapter")
     end
 
-    # Physical adapters can be assigned to VIOSes and LPARs using IOMMU.
-    lpar.io_adapters.each do |io|
+    # Physical adapters can be assigned to VIOSes and LPARs.
+    lpar.io_slots.each do |slot|
+      io = slot.io_adapter
+      next if io.nil?
+
+      # Add physical adapter ports, if any.
+      child_devices =
+        case io
+        when IbmPowerHmc::PhysicalFibreChannelAdapter
+          io.ports.map do |fcs|
+            persister.guest_devices.build(
+              :hardware        => hardware,
+              :uid_ems         => fcs.location,
+              :device_type     => "physical_port",
+              :controller_type => "Fibre channel port",
+              :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
+              :address         => fcs.wwpn,
+              :location        => fcs.location,
+              :model           => io.description,
+              :auto_detect     => true
+            )
+          end
+        end || []
+
       persister.guest_devices.build(
         :hardware        => hardware,
         :uid_ems         => io.dr_name,
@@ -395,26 +433,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :device_name     => "Adapter",
         :location        => io.dr_name,
         :model           => io.description,
-        :auto_detect     => true
+        :auto_detect     => true,
+        :child_devices   => child_devices
       )
-
-      # Add physical adapter ports, if any.
-      case io
-      when IbmPowerHmc::PhysicalFibreChannelAdapter
-        io.ports.each do |fcs|
-          persister.guest_devices.build(
-            :hardware        => hardware,
-            :uid_ems         => fcs.location,
-            :device_type     => "physical_port",
-            :controller_type => "Fibre channel port",
-            :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
-            :address         => fcs.wwpn,
-            :location        => fcs.location,
-            :model           => io.description,
-            :auto_detect     => true
-          )
-        end
-      end
     end
   end
 
