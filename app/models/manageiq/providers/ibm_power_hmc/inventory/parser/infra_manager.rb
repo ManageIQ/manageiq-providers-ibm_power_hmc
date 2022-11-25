@@ -577,11 +577,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
           persister.guest_devices.build(
             :hardware        => hardware,
             :uid_ems         => fcs.location,
+            :location        => fcs.location,
             :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
             :device_type     => "physical_port",
             :controller_type => "Fibre channel port",
             :address         => fcs.wwpn,
-            :location        => fcs.location,
             :model           => adapter.description,
             :auto_detect     => true
           )
@@ -591,10 +591,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     persister.guest_devices.build(
       :hardware        => hardware,
       :uid_ems         => adapter.dr_name,
+      :location        => adapter.dr_name,
       :device_name     => "Adapter",
       :device_type     => "physical_port",
       :controller_type => "IO",
-      :location        => adapter.dr_name,
       :model           => adapter.description,
       :auto_detect     => true,
       :child_devices   => child_devices
