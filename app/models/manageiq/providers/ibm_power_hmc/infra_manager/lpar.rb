@@ -38,19 +38,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
   def raw_destroy
     ext_management_system.with_provider_connection do |connection|
-      # Delete associated VIOS VSCSI and VFC mappings.
+      # Delete associated VIOS VSCSI and VFC server adapters.
       adapters_by_vios = connection.vscsi_client_adapter(ems_ref).group_by(&:vios_uuid)
       adapters_by_vios.merge!(connection.vfc_client_adapter(ems_ref).group_by(&:lpar_uuid)) { |_, v1, v2| v1.concat(v2) }
 
       adapters_by_vios.each do |vios_uuid, adapters|
         connection.modify_object do
-          connection.vios(vios_uuid).tap do |vios|
-            adapters.each do |adapt|
-              case adapt
-              when IbmPowerHmc::VirtualSCSIClientAdapter
-                vios.vscsi_mapping_delete!(adapt.server.location)
-              when IbmPowerHmc::VirtualFibreChannelClientAdapter
-                vios.vfc_mapping_delete!(adapt.server.location)
+          connection.vios(vios_uuid, nil, "ViosSCSIMapping,ViosFCMapping").tap do |vios|
+            adapters.collect(&:server).each do |server|
+              case server
+              when IbmPowerHmc::VirtualSCSIServerAdapter
+                vios.vscsi_mapping_delete!(server.location)
+              when IbmPowerHmc::VirtualFibreChannelServerAdapter
+                vios.vfc_mapping_delete!(server.location)
               end
             end
           end
