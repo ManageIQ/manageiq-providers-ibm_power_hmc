@@ -5,6 +5,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
   supports :reconfigure_network_adapters
 
+  supports :terminate do
+    unsupported_reason_add(:terminate, unsupported_reason(:control)) unless supports_control?
+  end
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.lpar(ems_ref)
@@ -28,6 +32,35 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
       connection.poweroff_lpar(ems_ref, params)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      raise
+    end
+  end
+
+  def raw_destroy
+    ext_management_system.with_provider_connection do |connection|
+      # Delete associated VIOS VSCSI and VFC mappings.
+      adapters_by_vios = connection.vscsi_client_adapter(ems_ref).group_by(&:vios_uuid)
+      adapters_by_vios.merge!(connection.vfc_client_adapter(ems_ref).group_by(&:lpar_uuid)) { |_, v1, v2| v1.concat(v2) }
+
+      adapters_by_vios.each do |vios_uuid, adapters|
+        connection.modify_object do
+          connection.vios(vios_uuid).tap do |vios|
+            adapters.each do |adapt|
+              case adapt
+              when IbmPowerHmc::VirtualSCSIClientAdapter
+                vios.vscsi_mapping_delete!(adapt.server.location)
+              when IbmPowerHmc::VirtualFibreChannelClientAdapter
+                vios.vfc_mapping_delete!(adapt.server.location)
+              end
+            end
+          end
+        end
+      end
+
+      # Delete LPAR.
+      connection.lpar_delete(ems_ref)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error deleting LPAR #{ems_ref}: #{e}")
       raise
     end
   end
