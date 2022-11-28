@@ -44,7 +44,7 @@ http_interactions:
             <X-API-Session>xxx</X-API-Session>
         </LogonResponse>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:36 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:01 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/VirtualIOServer/4165A16F-0766-40F3-B9E2-7272E1910F2E
@@ -85,7 +85,7 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>4165A16F-0766-40F3-B9E2-7272E1910F2E</id>
             <title>VirtualIOServer</title>
-            <published>2022-11-17T09:40:53.060+01:00</published>
+            <published>2022-11-22T17:26:25.244+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/VirtualIOServer/4165A16F-0766-40F3-B9E2-7272E1910F2E"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
@@ -97,7 +97,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>4165A16F-0766-40F3-B9E2-7272E1910F2E</AtomID>
-                    <AtomCreated>1667815510498</AtomCreated>
+                    <AtomCreated>1668778642817</AtomCreated>
                 </Atom>
             </Metadata>
             <AllowPerformanceDataCollection kxe="false" kb="CUD">false</AllowPerformanceDataCollection>
@@ -2062,7 +2062,7 @@ http_interactions:
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:37 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:04 GMT
 - request:
     method: delete
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -2096,7 +2096,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:37 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:04 GMT
 - request:
     method: put
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -2141,7 +2141,7 @@ http_interactions:
             <X-API-Session>xxx</X-API-Session>
         </LogonResponse>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4165A16F-0766-40F3-B9E2-7272E1910F2E?group=None
@@ -2178,9 +2178,9 @@ http_interactions:
       string: |2
 
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
-            <id>32a61c86-d8f9-4073-80a0-e0fe61f23223</id>
+            <id>19029c9e-88d2-4ec5-8831-344741bbaf66</id>
             <title>HttpErrorResponse</title>
-            <published>2022-11-17T09:40:53.895+01:00</published>
+            <published>2022-11-22T17:26:26.041+01:00</published>
             <author>
                 <name>IBM Power Systems Management Console</name>
             </author>
@@ -2194,12 +2194,12 @@ http_interactions:
             <ReasonCode kb="ROR" kxe="false">The supplied URI does not identify a known resource.</ReasonCode>
             <Message kb="ROO" kxe="false">REST000B The URL presented to the Management Console REST Web Services is not valid.</Message>
             <RequestBody kb="ROO" kxe="false"/>
-            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT10117449, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
+            <RequestHeaders kxe="false" kb="ROO">{Accept=*/*, X-API-Session=*******, X-Transaction-ID=XT10198903, User-Agent=rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137, Host=ibm-power-hmc-hostname:12443, Accept-Encoding=gzip;q=1.0,deflate;q=0.6,identity;q=0.3}</RequestHeaders>
         </HttpErrorResponse:HttpErrorResponse>
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874?group=None
@@ -2240,7 +2240,7 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>4636108C-4424-4490-808A-9C6764F2B874</id>
             <title>LogicalPartition</title>
-            <published>2022-11-17T09:40:54.018+01:00</published>
+            <published>2022-11-22T17:26:26.172+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874?group=None"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
@@ -2404,7 +2404,7 @@ http_interactions:
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE?group=None
@@ -2445,7 +2445,7 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>7F840DA7-9563-40B0-B913-DDDF3368BCEE</id>
             <title>LogicalPartition</title>
-            <published>2022-11-17T09:40:54.190+01:00</published>
+            <published>2022-11-22T17:26:26.353+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE?group=None"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
@@ -2608,7 +2608,7 @@ http_interactions:
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C?group=None
@@ -2649,7 +2649,7 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>51B91FAB-1C58-4B9C-B239-878C01D5089C</id>
             <title>LogicalPartition</title>
-            <published>2022-11-17T09:40:54.359+01:00</published>
+            <published>2022-11-22T17:26:26.541+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C?group=None"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
@@ -2812,7 +2812,7 @@ http_interactions:
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0?group=None
@@ -2853,7 +2853,7 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>1A5797C3-595D-4B52-A217-1C6A75B4F4C0</id>
             <title>LogicalPartition</title>
-            <published>2022-11-17T09:40:54.529+01:00</published>
+            <published>2022-11-22T17:26:26.710+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0?group=None"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
@@ -3020,7 +3020,7 @@ http_interactions:
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC?group=None
@@ -3061,7 +3061,7 @@ http_interactions:
         <entry xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>29368E9C-E187-435C-8BA7-43770478B9BC</id>
             <title>LogicalPartition</title>
-            <published>2022-11-17T09:40:54.700+01:00</published>
+            <published>2022-11-22T17:26:26.889+01:00</published>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC?group=None"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <author>
@@ -3224,7 +3224,7 @@ http_interactions:
             </content>
         </entry>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:38 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:05 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874/ClientNetworkAdapter
@@ -3264,14 +3264,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>73b49412-0de4-3ecc-9294-d9bb75a214d5</id>
-            <updated>2022-11-17T09:40:54.801+01:00</updated>
+            <updated>2022-11-22T17:26:27.009+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874/ClientNetworkAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>56639748-8ecc-3726-811e-59b4e173e28d</id>
                 <title>ClientNetworkAdapter</title>
-                <published>2022-11-17T09:40:54.821+01:00</published>
+                <published>2022-11-22T17:26:27.029+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874/ClientNetworkAdapter/56639748-8ecc-3726-811e-59b4e173e28d"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3282,7 +3282,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>56639748-8ecc-3726-811e-59b4e173e28d</AtomID>
-                    <AtomCreated>1668431880650</AtomCreated>
+                    <AtomCreated>1668779663667</AtomCreated>
                 </Atom>
             </Metadata>
             <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V22-C2</DynamicReconfigurationConnectorName>
@@ -3309,7 +3309,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE/ClientNetworkAdapter
@@ -3349,14 +3349,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>6235d777-99d2-3122-bca6-f4c7f7201d60</id>
-            <updated>2022-11-17T09:40:54.878+01:00</updated>
+            <updated>2022-11-22T17:26:27.076+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE/ClientNetworkAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>70f053eb-39f6-3c5d-b2e2-4237990de986</id>
                 <title>ClientNetworkAdapter</title>
-                <published>2022-11-17T09:40:54.899+01:00</published>
+                <published>2022-11-22T17:26:27.097+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE/ClientNetworkAdapter/70f053eb-39f6-3c5d-b2e2-4237990de986"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3367,7 +3367,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>70f053eb-39f6-3c5d-b2e2-4237990de986</AtomID>
-                    <AtomCreated>1668431880875</AtomCreated>
+                    <AtomCreated>1668779662774</AtomCreated>
                 </Atom>
             </Metadata>
             <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V18-C3</DynamicReconfigurationConnectorName>
@@ -3393,7 +3393,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C/ClientNetworkAdapter
@@ -3433,14 +3433,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>c3170c58-b788-3572-8f33-4e7e86eaf3cb</id>
-            <updated>2022-11-17T09:40:54.946+01:00</updated>
+            <updated>2022-11-22T17:26:27.147+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C/ClientNetworkAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>246855ec-9d32-38af-aca5-644c04cdae95</id>
                 <title>ClientNetworkAdapter</title>
-                <published>2022-11-17T09:40:54.982+01:00</published>
+                <published>2022-11-22T17:26:27.167+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C/ClientNetworkAdapter/246855ec-9d32-38af-aca5-644c04cdae95"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3451,7 +3451,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>246855ec-9d32-38af-aca5-644c04cdae95</AtomID>
-                    <AtomCreated>1668431880803</AtomCreated>
+                    <AtomCreated>1668779662704</AtomCreated>
                 </Atom>
             </Metadata>
             <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V19-C2</DynamicReconfigurationConnectorName>
@@ -3477,7 +3477,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/ClientNetworkAdapter
@@ -3517,14 +3517,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>89104412-efce-3857-9796-4545310edd09</id>
-            <updated>2022-11-17T09:40:55.031+01:00</updated>
+            <updated>2022-11-22T17:26:27.217+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/ClientNetworkAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>8fa4f3d2-92c8-3b2c-a113-106a1cb79a81</id>
                 <title>ClientNetworkAdapter</title>
-                <published>2022-11-17T09:40:55.052+01:00</published>
+                <published>2022-11-22T17:26:27.238+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/ClientNetworkAdapter/8fa4f3d2-92c8-3b2c-a113-106a1cb79a81"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3535,7 +3535,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>8fa4f3d2-92c8-3b2c-a113-106a1cb79a81</AtomID>
-                    <AtomCreated>1668431881609</AtomCreated>
+                    <AtomCreated>1668779663313</AtomCreated>
                 </Atom>
             </Metadata>
             <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V9-C2</DynamicReconfigurationConnectorName>
@@ -3561,7 +3561,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC/ClientNetworkAdapter
@@ -3601,14 +3601,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>8af8e120-8c21-3028-872e-fed5d6ccb149</id>
-            <updated>2022-11-17T09:40:55.101+01:00</updated>
+            <updated>2022-11-22T17:26:27.287+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC/ClientNetworkAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>81be3e5e-f516-37d1-8737-e5f57c7f93d7</id>
                 <title>ClientNetworkAdapter</title>
-                <published>2022-11-17T09:40:55.122+01:00</published>
+                <published>2022-11-22T17:26:27.308+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC/ClientNetworkAdapter/81be3e5e-f516-37d1-8737-e5f57c7f93d7"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3619,7 +3619,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>81be3e5e-f516-37d1-8737-e5f57c7f93d7</AtomID>
-                    <AtomCreated>1668431880944</AtomCreated>
+                    <AtomCreated>1668779662840</AtomCreated>
                 </Atom>
             </Metadata>
             <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V17-C2</DynamicReconfigurationConnectorName>
@@ -3645,7 +3645,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874/VirtualSCSIClientAdapter
@@ -3685,14 +3685,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>0f2fd7b5-3011-37db-a26f-071602798abd</id>
-            <updated>2022-11-17T09:40:55.367+01:00</updated>
+            <updated>2022-11-22T17:26:27.557+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874/VirtualSCSIClientAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>b62db2fa-d7e6-37c4-8a0c-acb10d0b24c6</id>
                 <title>VirtualSCSIClientAdapter</title>
-                <published>2022-11-17T09:40:55.386+01:00</published>
+                <published>2022-11-22T17:26:27.575+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/4636108C-4424-4490-808A-9C6764F2B874/VirtualSCSIClientAdapter/b62db2fa-d7e6-37c4-8a0c-acb10d0b24c6"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3703,7 +3703,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>b62db2fa-d7e6-37c4-8a0c-acb10d0b24c6</AtomID>
-                    <AtomCreated>1668674055880</AtomCreated>
+                    <AtomCreated>1669134387570</AtomCreated>
                 </Atom>
             </Metadata>
             <AdapterType kb="ROR" kxe="false">Client</AdapterType>
@@ -3737,7 +3737,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE/VirtualSCSIClientAdapter
@@ -3777,14 +3777,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>69edf663-e12a-3e7c-ad86-d626803f9053</id>
-            <updated>2022-11-17T09:40:55.433+01:00</updated>
+            <updated>2022-11-22T17:26:27.629+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE/VirtualSCSIClientAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>ce95dcfc-1ecb-3e50-9e72-eb2c7c235ad1</id>
                 <title>VirtualSCSIClientAdapter</title>
-                <published>2022-11-17T09:40:55.451+01:00</published>
+                <published>2022-11-22T17:26:27.646+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/7F840DA7-9563-40B0-B913-DDDF3368BCEE/VirtualSCSIClientAdapter/ce95dcfc-1ecb-3e50-9e72-eb2c7c235ad1"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3795,7 +3795,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>ce95dcfc-1ecb-3e50-9e72-eb2c7c235ad1</AtomID>
-                    <AtomCreated>1668674056028</AtomCreated>
+                    <AtomCreated>1669134387640</AtomCreated>
                 </Atom>
             </Metadata>
             <AdapterType kb="ROR" kxe="false">Client</AdapterType>
@@ -3829,7 +3829,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C/VirtualSCSIClientAdapter
@@ -3869,14 +3869,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>25787342-ddb3-3fba-b7de-8f9aa421bc01</id>
-            <updated>2022-11-17T09:40:55.500+01:00</updated>
+            <updated>2022-11-22T17:26:27.696+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C/VirtualSCSIClientAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>fd2f524f-1408-301f-bbb0-771904a4fde1</id>
                 <title>VirtualSCSIClientAdapter</title>
-                <published>2022-11-17T09:40:55.518+01:00</published>
+                <published>2022-11-22T17:26:27.715+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/51B91FAB-1C58-4B9C-B239-878C01D5089C/VirtualSCSIClientAdapter/fd2f524f-1408-301f-bbb0-771904a4fde1"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3887,7 +3887,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>fd2f524f-1408-301f-bbb0-771904a4fde1</AtomID>
-                    <AtomCreated>1668674056096</AtomCreated>
+                    <AtomCreated>1669134387710</AtomCreated>
                 </Atom>
             </Metadata>
             <AdapterType kb="ROR" kxe="false">Client</AdapterType>
@@ -3921,7 +3921,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualSCSIClientAdapter
@@ -3961,14 +3961,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>bbd8ed0a-5619-3532-a70c-29350b1d4756</id>
-            <updated>2022-11-17T09:40:55.568+01:00</updated>
+            <updated>2022-11-22T17:26:27.768+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualSCSIClientAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>6da40781-1389-38c0-ab6f-fd52dfa9117a</id>
                 <title>VirtualSCSIClientAdapter</title>
-                <published>2022-11-17T09:40:55.587+01:00</published>
+                <published>2022-11-22T17:26:27.786+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualSCSIClientAdapter/6da40781-1389-38c0-ab6f-fd52dfa9117a"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -3979,7 +3979,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>6da40781-1389-38c0-ab6f-fd52dfa9117a</AtomID>
-                    <AtomCreated>1668674056168</AtomCreated>
+                    <AtomCreated>1669134387780</AtomCreated>
                 </Atom>
             </Metadata>
             <AdapterType kb="ROR" kxe="false">Client</AdapterType>
@@ -4013,7 +4013,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC/VirtualSCSIClientAdapter
@@ -4053,14 +4053,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>ed484f7c-fb94-345d-a7a2-67fcd22aafb8</id>
-            <updated>2022-11-17T09:40:55.632+01:00</updated>
+            <updated>2022-11-22T17:26:27.838+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC/VirtualSCSIClientAdapter"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>4ad1d348-c6df-39f6-8126-e6211548046e</id>
                 <title>VirtualSCSIClientAdapter</title>
-                <published>2022-11-17T09:40:55.649+01:00</published>
+                <published>2022-11-22T17:26:27.856+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/29368E9C-E187-435C-8BA7-43770478B9BC/VirtualSCSIClientAdapter/4ad1d348-c6df-39f6-8126-e6211548046e"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -4071,7 +4071,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>4ad1d348-c6df-39f6-8126-e6211548046e</AtomID>
-                    <AtomCreated>1668674056235</AtomCreated>
+                    <AtomCreated>1669134387851</AtomCreated>
                 </Atom>
             </Metadata>
             <AdapterType kb="ROR" kxe="false">Client</AdapterType>
@@ -4105,7 +4105,189 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:39 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:06 GMT
+- request:
+    method: get
+    uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualFibreChannelClientAdapter
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu powerpc64le) ruby/2.7.2p137
+      X-Api-Session: xxx
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Servlet/3.0
+      Content-Type:
+      - application/atom+xml
+      Etag:
+      - '1791917305'
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      X-Hmc-Schema-Version:
+      - V1_5_0
+      Content-Length:
+      - '9561'
+      Cache-Control:
+      - no-transform, must-revalidate, proxy-revalidate, no-cache=set-cookie
+    body:
+      encoding: UTF-8
+      string: |2
+
+        <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
+            <id>a8d0a647-fe73-3526-9cfa-eb897c1d69a7</id>
+            <updated>2022-11-22T17:26:27.920+01:00</updated>
+            <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualFibreChannelClientAdapter"/>
+            <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
+            <generator>IBM Power Systems Management Console</generator>
+            <entry>
+                <id>c387a945-509b-32a4-9a53-1ecc2c43e013</id>
+                <title>VirtualFibreChannelClientAdapter</title>
+                <published>2022-11-22T17:26:28.009+01:00</published>
+                <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualFibreChannelClientAdapter/c387a945-509b-32a4-9a53-1ecc2c43e013"/>
+                <author>
+                    <name>IBM Power Systems Management Console</name>
+                </author>
+                <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">1936978362</etag:etag>
+                <content type="application/vnd.ibm.powervm.uom+xml; type=VirtualFibreChannelClientAdapter">
+                    <VirtualFibreChannelClientAdapter:VirtualFibreChannelClientAdapter xmlns:VirtualFibreChannelClientAdapter="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>c387a945-509b-32a4-9a53-1ecc2c43e013</AtomID>
+                    <AtomCreated>1669133995580</AtomCreated>
+                </Atom>
+            </Metadata>
+            <AdapterType kb="ROR" kxe="false">Client</AdapterType>
+            <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V9-C5</DynamicReconfigurationConnectorName>
+            <LocationCode kxe="false" kb="ROR">U8286.42A.214D29V-V9-C5</LocationCode>
+            <LocalPartitionID kxe="false" kb="CUR">9</LocalPartitionID>
+            <RequiredAdapter kb="CUD" kxe="false">true</RequiredAdapter>
+            <VariedOn kxe="true" kb="CUD">false</VariedOn>
+            <VirtualSlotNumber kb="COD" kxe="false">5</VirtualSlotNumber>
+            <ConnectingPartition kxe="false" kb="CUR" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/e4acf909-6d0b-3c03-b75a-4d8495e5fc49/VirtualIOServer/4165A16F-0766-40F3-B9E2-7272E1910F2E" rel="related"/>
+            <ConnectingPartitionID kxe="false" kb="CUR">1</ConnectingPartitionID>
+            <ConnectingVirtualSlotNumber kb="CUR" kxe="false">6</ConnectingVirtualSlotNumber>
+            <ServerAdapter kb="CUR" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <AdapterType kb="ROR" kxe="false">Server</AdapterType>
+                <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V1-C6</DynamicReconfigurationConnectorName>
+                <LocationCode kxe="false" kb="ROR">U8286.42A.214D29V-V1-C6</LocationCode>
+                <LocalPartitionID kxe="false" kb="CUR">1</LocalPartitionID>
+                <RequiredAdapter kb="CUD" kxe="false">false</RequiredAdapter>
+                <VariedOn kxe="true" kb="CUD">true</VariedOn>
+                <VirtualSlotNumber kb="COD" kxe="false">6</VirtualSlotNumber>
+                <ConnectingPartitionID kxe="false" kb="CUR">9</ConnectingPartitionID>
+                <ConnectingVirtualSlotNumber kb="CUR" kxe="false">5</ConnectingVirtualSlotNumber>
+            </ServerAdapter>
+            <WWPNs kxe="false" kb="CUR">c0507607d7e20018 c0507607d7e20019</WWPNs>
+            <NportLoggedInStatus kxe="false" kb="UOD" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <VirtualFibreChannelNPortLoginStatus schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <WWPN kxe="false" kb="ROR">c0507607d7e20018</WWPN>
+                    <WWPNStatus kb="UOD" kxe="false">Unknown</WWPNStatus>
+                    <LoggedInBy kb="ROR" kxe="true">Unknown</LoggedInBy>
+                    <StatusReason kxe="true" kb="ROR">MIG_PROP_DEFAULT_ENGLISH_MESSAGE=null, MIG_PROP_MESSAGE_ID=null, MIG_PROP_MESSAGE_PARMS=null, MIG_PROP_NLS_ENCODED_MSG_STRING=</StatusReason>
+                </VirtualFibreChannelNPortLoginStatus>
+                <VirtualFibreChannelNPortLoginStatus schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <WWPN kxe="false" kb="ROR">c0507607d7e20019</WWPN>
+                    <WWPNStatus kb="UOD" kxe="false">Unknown</WWPNStatus>
+                    <LoggedInBy kb="ROR" kxe="true">Unknown</LoggedInBy>
+                    <StatusReason kxe="true" kb="ROR">MIG_PROP_DEFAULT_ENGLISH_MESSAGE=null, MIG_PROP_MESSAGE_ID=null, MIG_PROP_MESSAGE_PARMS=null, MIG_PROP_NLS_ENCODED_MSG_STRING=</StatusReason>
+                </VirtualFibreChannelNPortLoginStatus>
+            </NportLoggedInStatus>
+        </VirtualFibreChannelClientAdapter:VirtualFibreChannelClientAdapter>
+                </content>
+            </entry>
+            <entry>
+                <id>08b3a093-f6b9-3a37-b92c-931850e29086</id>
+                <title>VirtualFibreChannelClientAdapter</title>
+                <published>2022-11-22T17:26:28.010+01:00</published>
+                <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/LogicalPartition/1A5797C3-595D-4B52-A217-1C6A75B4F4C0/VirtualFibreChannelClientAdapter/08b3a093-f6b9-3a37-b92c-931850e29086"/>
+                <author>
+                    <name>IBM Power Systems Management Console</name>
+                </author>
+                <etag:etag xmlns:etag="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/">1875129266</etag:etag>
+                <content type="application/vnd.ibm.powervm.uom+xml; type=VirtualFibreChannelClientAdapter">
+                    <VirtualFibreChannelClientAdapter:VirtualFibreChannelClientAdapter xmlns:VirtualFibreChannelClientAdapter="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns="http://www.ibm.com/xmlns/systems/power/firmware/uom/mc/2012_10/" xmlns:ns2="http://www.w3.org/XML/1998/namespace/k2" schemaVersion="V1_5_0">
+            <Metadata>
+                <Atom>
+                    <AtomID>08b3a093-f6b9-3a37-b92c-931850e29086</AtomID>
+                    <AtomCreated>1669133995587</AtomCreated>
+                </Atom>
+            </Metadata>
+            <AdapterType kb="ROR" kxe="false">Client</AdapterType>
+            <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V9-C3</DynamicReconfigurationConnectorName>
+            <LocationCode kxe="false" kb="ROR">U8286.42A.214D29V-V9-C3</LocationCode>
+            <LocalPartitionID kxe="false" kb="CUR">9</LocalPartitionID>
+            <RequiredAdapter kb="CUD" kxe="false">true</RequiredAdapter>
+            <VariedOn kxe="true" kb="CUD">false</VariedOn>
+            <VirtualSlotNumber kb="COD" kxe="false">3</VirtualSlotNumber>
+            <ConnectingPartition kxe="false" kb="CUR" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagedSystem/e4acf909-6d0b-3c03-b75a-4d8495e5fc49/VirtualIOServer/4165A16F-0766-40F3-B9E2-7272E1910F2E" rel="related"/>
+            <ConnectingPartitionID kxe="false" kb="CUR">1</ConnectingPartitionID>
+            <ConnectingVirtualSlotNumber kb="CUR" kxe="false">4</ConnectingVirtualSlotNumber>
+            <ServerAdapter kb="CUR" kxe="false" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <AdapterType kb="ROR" kxe="false">Server</AdapterType>
+                <DynamicReconfigurationConnectorName kb="CUD" kxe="false">U8286.42A.214D29V-V1-C4</DynamicReconfigurationConnectorName>
+                <LocationCode kxe="false" kb="ROR">U8286.42A.214D29V-V1-C4</LocationCode>
+                <LocalPartitionID kxe="false" kb="CUR">1</LocalPartitionID>
+                <RequiredAdapter kb="CUD" kxe="false">false</RequiredAdapter>
+                <VariedOn kxe="true" kb="CUD">true</VariedOn>
+                <VirtualSlotNumber kb="COD" kxe="false">4</VirtualSlotNumber>
+                <ConnectingPartitionID kxe="false" kb="CUR">9</ConnectingPartitionID>
+                <ConnectingVirtualSlotNumber kb="CUR" kxe="false">3</ConnectingVirtualSlotNumber>
+            </ServerAdapter>
+            <WWPNs kxe="false" kb="CUR">c0507607d7e2000c c0507607d7e2000d</WWPNs>
+            <NportLoggedInStatus kxe="false" kb="UOD" schemaVersion="V1_5_0">
+                <Metadata>
+                    <Atom/>
+                </Metadata>
+                <VirtualFibreChannelNPortLoginStatus schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <WWPN kxe="false" kb="ROR">c0507607d7e2000c</WWPN>
+                    <WWPNStatus kb="UOD" kxe="false">Unknown</WWPNStatus>
+                    <LoggedInBy kb="ROR" kxe="true">Unknown</LoggedInBy>
+                    <StatusReason kxe="true" kb="ROR">MIG_PROP_DEFAULT_ENGLISH_MESSAGE=null, MIG_PROP_MESSAGE_ID=null, MIG_PROP_MESSAGE_PARMS=null, MIG_PROP_NLS_ENCODED_MSG_STRING=</StatusReason>
+                </VirtualFibreChannelNPortLoginStatus>
+                <VirtualFibreChannelNPortLoginStatus schemaVersion="V1_5_0">
+                    <Metadata>
+                        <Atom/>
+                    </Metadata>
+                    <WWPN kxe="false" kb="ROR">c0507607d7e2000d</WWPN>
+                    <WWPNStatus kb="UOD" kxe="false">Unknown</WWPNStatus>
+                    <LoggedInBy kb="ROR" kxe="true">Unknown</LoggedInBy>
+                    <StatusReason kxe="true" kb="ROR">MIG_PROP_DEFAULT_ENGLISH_MESSAGE=null, MIG_PROP_MESSAGE_ID=null, MIG_PROP_MESSAGE_PARMS=null, MIG_PROP_NLS_ENCODED_MSG_STRING=</StatusReason>
+                </VirtualFibreChannelNPortLoginStatus>
+            </NportLoggedInStatus>
+        </VirtualFibreChannelClientAdapter:VirtualFibreChannelClientAdapter>
+                </content>
+            </entry>
+        </feed>
+    http_version:
+  recorded_at: Tue, 22 Nov 2022 15:55:07 GMT
 - request:
     method: get
     uri: https://ibm-power-hmc-hostname:12443/rest/api/uom/Group
@@ -4145,14 +4327,14 @@ http_interactions:
 
         <feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns2="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns3="http://www.w3.org/1999/xhtml">
             <id>3d9231ee-e5bc-38e7-b59c-00f9a1384022</id>
-            <updated>2022-11-17T09:40:55.739+01:00</updated>
+            <updated>2022-11-22T17:26:28.103+01:00</updated>
             <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Group"/>
             <link rel="MANAGEMENT_CONSOLE" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/ManagementConsole/67c67e9a-c027-3a3d-9399-ebe6aa14e12e"/>
             <generator>IBM Power Systems Management Console</generator>
             <entry>
                 <id>24f0e0fe-7879-4050-be45-a6e76426423d</id>
                 <title>Group</title>
-                <published>2022-11-17T09:40:55.741+01:00</published>
+                <published>2022-11-22T17:26:28.105+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Group/24f0e0fe-7879-4050-be45-a6e76426423d"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -4163,7 +4345,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>24f0e0fe-7879-4050-be45-a6e76426423d</AtomID>
-                    <AtomCreated>1668674455740</AtomCreated>
+                    <AtomCreated>1669134388103</AtomCreated>
                 </Atom>
             </Metadata>
             <GroupUUID ksv="V1_2_0" kb="ROR" kxe="false">24f0e0fe-7879-4050-be45-a6e76426423d</GroupUUID>
@@ -4184,7 +4366,7 @@ http_interactions:
             <entry>
                 <id>73254f6f-5977-4642-92cd-3cdc8a0632a0</id>
                 <title>Group</title>
-                <published>2022-11-17T09:40:55.742+01:00</published>
+                <published>2022-11-22T17:26:28.106+01:00</published>
                 <link rel="SELF" href="https://ibm-power-hmc-hostname:12443/rest/api/uom/Group/73254f6f-5977-4642-92cd-3cdc8a0632a0"/>
                 <author>
                     <name>IBM Power Systems Management Console</name>
@@ -4195,7 +4377,7 @@ http_interactions:
             <Metadata>
                 <Atom>
                     <AtomID>73254f6f-5977-4642-92cd-3cdc8a0632a0</AtomID>
-                    <AtomCreated>1668674455740</AtomCreated>
+                    <AtomCreated>1669134388103</AtomCreated>
                 </Atom>
             </Metadata>
             <GroupUUID ksv="V1_2_0" kb="ROR" kxe="false">73254f6f-5977-4642-92cd-3cdc8a0632a0</GroupUUID>
@@ -4214,7 +4396,7 @@ http_interactions:
             </entry>
         </feed>
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:40 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:07 GMT
 - request:
     method: delete
     uri: https://ibm-power-hmc-hostname:12443/rest/api/web/Logon
@@ -4248,5 +4430,5 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version:
-  recorded_at: Thu, 17 Nov 2022 08:09:40 GMT
+  recorded_at: Tue, 22 Nov 2022 15:55:07 GMT
 recorded_with: VCR 5.1.0

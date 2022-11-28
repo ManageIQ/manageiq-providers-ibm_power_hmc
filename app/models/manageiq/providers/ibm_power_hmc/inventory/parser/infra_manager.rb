@@ -169,8 +169,23 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_host_guest_devices(hardware, sys)
-    sys.io_adapters.each do |io|
-      next if io.udid.to_i == 65_535 # Skip empty slots
+    sys.io_slots.each do |slot|
+      io = slot.io_adapter
+      next if io.nil? || io.udid.to_i == 65_535 # Skip empty slots
+
+      child_devices = slot.ior_devices.map do |port|
+        persister.host_guest_devices.build(
+          :hardware        => hardware,
+          :uid_ems         => port.location,
+          :device_type     => "physical_port",
+          :controller_type => "IO",
+          :device_name     => "Port",
+          :location        => port.location,
+          :model           => port.description,
+          :address         => port.macaddr.nil? ? port.wwpn : self.class.parse_macaddr(port.macaddr),
+          :auto_detect     => true
+        )
+      end
 
       persister.host_guest_devices.build(
         :hardware        => hardware,
@@ -180,7 +195,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :device_name     => "Adapter",
         :location        => io.dr_name,
         :model           => io.description,
-        :auto_detect     => true
+        :auto_detect     => true,
+        :child_devices   => child_devices
       )
     end
   end
@@ -385,18 +401,9 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       build_ethernet_dev(lpar, ent, hardware, "host ethernet adapter")
     end
 
-    # Physical adapters can be assigned to VIOSes and LPARs using IOMMU.
-    lpar.io_adapters.each do |io|
-      persister.guest_devices.build(
-        :hardware        => hardware,
-        :uid_ems         => io.dr_name,
-        :device_type     => "physical_port",
-        :controller_type => "IO",
-        :device_name     => "Adapter",
-        :location        => io.dr_name,
-        :model           => io.description,
-        :auto_detect     => true
-      )
+    # Physical adapters can be assigned to VIOSes and LPARs.
+    lpar.io_slots.each do |slot|
+      build_io_adapter(slot.io_adapter, hardware) unless slot.io_adapter.nil?
     end
   end
 
@@ -404,6 +411,21 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     if collector.vnics.key?(lpar.uuid)
       collector.vnics[lpar.uuid].each do |ent|
         build_ethernet_dev(lpar, ent, hardware, "vnic")
+      end
+    end
+
+    if collector.vfc_client_adapters.key?(lpar.uuid)
+      collector.vfc_client_adapters[lpar.uuid].each do |vfc|
+        persister.guest_devices.build(
+          :hardware        => hardware,
+          :uid_ems         => vfc.uuid,
+          :device_name     => vfc.dr_name,
+          :device_type     => "physical_port",
+          :controller_type => "client VFC adapter",
+          :auto_detect     => true,
+          :address         => vfc.wwpns.join(","),
+          :location        => vfc.location
+        )
       end
     end
   end
@@ -543,6 +565,39 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :address         => macaddr,
       :location        => ent.location,
       :lan             => vlan
+    )
+  end
+
+  def build_io_adapter(adapter, hardware)
+    # Parse physical adapter ports, if any.
+    child_devices =
+      case adapter
+      when IbmPowerHmc::PhysicalFibreChannelAdapter
+        adapter.ports.map do |fcs|
+          persister.guest_devices.build(
+            :hardware        => hardware,
+            :uid_ems         => fcs.location,
+            :location        => fcs.location,
+            :device_name     => fcs.name.nil? ? fcs.location : fcs.name,
+            :device_type     => "physical_port",
+            :controller_type => "Fibre channel port",
+            :address         => fcs.wwpn,
+            :model           => adapter.description,
+            :auto_detect     => true
+          )
+        end
+      end || []
+
+    persister.guest_devices.build(
+      :hardware        => hardware,
+      :uid_ems         => adapter.dr_name,
+      :location        => adapter.dr_name,
+      :device_name     => "Adapter",
+      :device_type     => "physical_port",
+      :controller_type => "IO",
+      :model           => adapter.description,
+      :auto_detect     => true,
+      :child_devices   => child_devices
     )
   end
 
