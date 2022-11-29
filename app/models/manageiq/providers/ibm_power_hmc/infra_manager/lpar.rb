@@ -38,27 +38,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
   def raw_destroy
     ext_management_system.with_provider_connection do |connection|
-      # Delete associated VIOS VSCSI and VFC server adapters.
-      adapters_by_vios = connection.vscsi_client_adapter(ems_ref).group_by(&:vios_uuid)
-      adapters_by_vios.merge!(connection.vfc_client_adapter(ems_ref).group_by(&:lpar_uuid)) { |_, v1, v2| v1.concat(v2) }
-
-      adapters_by_vios.each do |vios_uuid, adapters|
-        connection.modify_object do
-          connection.vios(vios_uuid, nil, "ViosSCSIMapping,ViosFCMapping").tap do |vios|
-            adapters.collect(&:server).each do |server|
-              case server
-              when IbmPowerHmc::VirtualSCSIServerAdapter
-                vios.vscsi_mapping_delete!(server.location)
-              when IbmPowerHmc::VirtualFibreChannelServerAdapter
-                vios.vfc_mapping_delete!(server.location)
-              end
-            end
-          end
-        end
-      end
-
-      # Delete LPAR.
-      connection.lpar_delete(ems_ref)
+      # Delete LPAR and associated VIOS VSCSI and VFC server adapters.
+      connection.lpar_delete(ems_ref, :delete_vios_mappings => true)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error deleting LPAR #{ems_ref}: #{e}")
       raise
