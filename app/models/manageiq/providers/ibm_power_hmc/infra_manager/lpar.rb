@@ -7,6 +7,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
   supports :terminate do
     unsupported_reason_add(:terminate, unsupported_reason(:control)) unless supports_control?
+    unsupported_reason_add(:terminate, _("Cannot delete a running partition")) unless power_state == "off"
   end
 
   def provider_object(connection = nil)
