@@ -5,6 +5,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
 
   supports :reconfigure_network_adapters
 
+  supports :terminate do
+    unsupported_reason_add(:terminate, unsupported_reason(:control)) unless supports_control?
+    unsupported_reason_add(:terminate, _("Cannot delete a running partition")) unless power_state == "off"
+  end
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.lpar(ems_ref)
@@ -28,6 +33,16 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers
       connection.poweroff_lpar(ems_ref, params)
     rescue IbmPowerHmc::Connection::HttpError => e
       $ibm_power_hmc_log.error("error powering off LPAR #{ems_ref} with params=#{params}: #{e}")
+      raise
+    end
+  end
+
+  def raw_destroy
+    ext_management_system.with_provider_connection do |connection|
+      # Delete LPAR and associated VIOS VSCSI and VFC server adapters.
+      connection.lpar_delete(ems_ref, :delete_vios_mappings => true)
+    rescue IbmPowerHmc::Connection::HttpError => e
+      $ibm_power_hmc_log.error("error deleting LPAR #{ems_ref}: #{e}")
       raise
     end
   end
