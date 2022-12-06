@@ -68,7 +68,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
   def self.storage_capacity(storage)
     case storage
-    when IbmPowerHmc::VirtualOpticalMedia
+    when IbmPowerHmc::VirtualMediaRepository, IbmPowerHmc::VirtualOpticalMedia
       storage.size.to_f.gigabytes.to_i
     when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit, IbmPowerHmc::VirtualDisk
       storage.capacity.to_f.gigabytes.to_i
@@ -236,6 +236,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_vios_disks(vios, hardware)
       parse_vios_networks(vios, hardware)
       parse_vios_guest_devices(vios, hardware)
+      parse_media_repository(vios)
     end
   end
 
@@ -318,6 +319,25 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :subnet_mask     => iface.netmask,
         :hostname        => iface.hostname,
         :default_gateway => iface.gateway
+      )
+    end
+  end
+
+  def parse_media_repository(vios)
+    return if vios.rep.nil?
+
+    storage = persister.storages.build(
+      :ems_ref     => vios.uuid,
+      :type        => ManageIQ::Providers::IbmPowerHmc::InfraManager::MediaRepository.name,
+      :store_type  => "ISO",
+      :name        => vios.rep.name,
+      :total_space => self.class.storage_capacity(vios.rep)
+    )
+
+    vios.rep.vopts.each do |vopt|
+      persister.iso_images.build(
+        :storage => storage,
+        :name    => vopt.name
       )
     end
   end

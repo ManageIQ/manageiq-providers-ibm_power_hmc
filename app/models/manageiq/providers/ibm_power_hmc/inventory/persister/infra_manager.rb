@@ -34,5 +34,12 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
     add_collection(infra, :vm_resource_pools)
     add_collection(infra, :parent_blue_folders)
     add_collection(infra, :vm_and_template_labels)
+    add_collection(infra, :iso_images) do |builder|
+      builder.add_properties(
+        :manager_ref                  => %i[storage name],
+        :model_class                  => ::IsoImage,
+        :parent_inventory_collections => %i[storages]
+      )
+    end
   end
 end
