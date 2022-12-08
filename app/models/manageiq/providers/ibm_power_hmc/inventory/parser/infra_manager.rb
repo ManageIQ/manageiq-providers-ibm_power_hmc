@@ -93,6 +93,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_ssps
     collector.ssps.each do |ssp|
       persister.storages.build(
+        :store_type  => "SSP",
         :name        => ssp.name,
         :total_space => self.class.storage_capacity(ssp),
         :ems_ref     => ssp.cluster_uuid,
@@ -236,7 +237,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       parse_vios_disks(vios, hardware)
       parse_vios_networks(vios, hardware)
       parse_vios_guest_devices(vios, hardware)
-      parse_media_repository(vios)
+      parse_vios_media_repository(vios)
     end
   end
 
@@ -323,7 +324,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     end
   end
 
-  def parse_media_repository(vios)
+  def parse_vios_media_repository(vios)
     return if vios.rep.nil?
 
     storage = persister.storages.build(
@@ -333,7 +334,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :name        => vios.rep.name,
       :total_space => self.class.storage_capacity(vios.rep)
     )
-
+    # Populate with ISO images.
     vios.rep.vopts.each do |vopt|
       persister.iso_images.build(
         :storage => storage,
