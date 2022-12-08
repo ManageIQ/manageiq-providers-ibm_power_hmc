@@ -224,6 +224,15 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
     # VMs with dedicated CPUs have no shared processor pool.
     expect(vios.parent_resource_pool).to be_nil
+
+    repo = ems.media_repositories.find_by(:store_type => "ISO", :ems_ref => vios_uuid)
+    expect(repo).to have_attributes(
+      :store_type  => "ISO",
+      :name        => "VMLibrary",
+      :total_space => 45.gigabytes
+    )
+    iso = repo.iso_images.find_by(:name => "rhel84")
+    expect(iso).not_to be nil
   end
 
   def assert_specific_lpar
@@ -342,9 +351,10 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
   def assert_specific_storage
     storage = ems.storages.find_by(:ems_ref => storage_uuid)
     expect(storage).to have_attributes(
-      :ems_ref => storage_uuid,
-      :name    => "SSP_1",
-      :type    => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage"
+      :ems_ref    => storage_uuid,
+      :store_type => "SSP",
+      :name       => "SSP_1",
+      :type       => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Storage"
     )
   end
 end
