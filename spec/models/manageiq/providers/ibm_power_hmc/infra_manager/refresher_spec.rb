@@ -225,7 +225,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     # VMs with dedicated CPUs have no shared processor pool.
     expect(vios.parent_resource_pool).to be_nil
 
-    repo = ems.media_repositories.find_by(:store_type => "ISO", :ems_ref => vios_uuid)
+    repo = ems.media_repositories.find_by(:ems_ref => vios_uuid)
     expect(repo).to have_attributes(
       :store_type  => "ISO",
       :name        => "VMLibrary",
