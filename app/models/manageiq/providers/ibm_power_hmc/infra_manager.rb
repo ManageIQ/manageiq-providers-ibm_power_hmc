@@ -17,6 +17,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :ResourcePool
   require_nested :MemoryResourcePool
   require_nested :ProcessorResourcePool
+  require_nested :MediaRepository
 
   supports :create
   supports :metrics
@@ -24,6 +25,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   supports :provisioning
 
   has_many :hosts_advanced_settings, :through => :hosts, :source => :advanced_settings
+  has_many :media_repositories, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :iso_images, :through => :media_repositories
 
   def self.params_for_create
     {
