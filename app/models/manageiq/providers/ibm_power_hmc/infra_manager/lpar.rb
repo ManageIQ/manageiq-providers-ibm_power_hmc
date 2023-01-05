@@ -1,6 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
   supports :publish do
-    unsupported_reason_add(:provisioning, _('Not connected to ems')) if ext_management_system.nil?
+    unsupported_reason_add(:provisioning, _('The LPAR is not connected to an active Provider')) if ext_management_system.nil?
   end
 
   supports :reconfigure_network_adapters
