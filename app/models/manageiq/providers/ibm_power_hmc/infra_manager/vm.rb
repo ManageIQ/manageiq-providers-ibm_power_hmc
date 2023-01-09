@@ -5,6 +5,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   virtual_delegate :hmc_managed, :to => :host, :prefix => true, :allow_nil => true, :type => :boolean
 
+  supports :capture
+
   supports :control do
     unsupported_reason_add(:control, _("Host is not HMC-managed")) unless host_hmc_managed
   end
