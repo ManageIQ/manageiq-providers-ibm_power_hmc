@@ -1,6 +1,7 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
+  supports :update
   supports :capture do
     unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless pcm_enabled
   end
@@ -112,6 +113,59 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
 
   def self.display_name(number = 1)
     n_("Managed System", "Managed Systems", number)
+  end
+
+  def params_for_update
+    {
+      :fields => [
+        {
+          :component => 'sub-form',
+          :id        => 'endpoints-subform',
+          :name      => 'endpoints-subform',
+          :title     => _("Endpoints"),
+          :fields    => [
+            :component => 'tabs',
+            :name      => 'tabs',
+            :fields    => [
+              {
+                :component => 'tab-item',
+                :id        => 'default-tab',
+                :name      => 'default-tab',
+                :title     => _('Default'),
+                :fields    => [
+                  {
+                    :component  => 'validate-host-credentials',
+                    :id         => 'endpoints.default.valid',
+                    :name       => 'endpoints.default.valid',
+                    :skipSubmit => true,
+                    :isRequired => true,
+                    :fields     => [
+                      {
+                        :component  => "text-field",
+                        :id         => "authentications.default.userid",
+                        :name       => "authentications.default.userid",
+                        :label      => _("Username"),
+                        :isRequired => true,
+                        :validate   => [{:type => "required"}],
+                      },
+                      {
+                        :component  => "password-field",
+                        :id         => "authentications.default.password",
+                        :name       => "authentications.default.password",
+                        :label      => _("Password"),
+                        :type       => "password",
+                        :isRequired => true,
+                        :validate   => [{:type => "required"}],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ]
+          ]
+        },
+      ]
+    }
   end
 
   private
