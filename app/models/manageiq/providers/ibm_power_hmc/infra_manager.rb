@@ -19,6 +19,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   require_nested :ProcessorResourcePool
   require_nested :MediaRepository
 
+  supports :catalog
   supports :create
   supports :metrics
   supports :native_console
@@ -177,5 +178,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
 
   def self.description
     @description ||= "IBM Power HMC".freeze
+  end
+
+  def self.catalog_types
+    {"ibm_power_hmc" => N_("IBM Power HMC")}
   end
 end
