@@ -25,4 +25,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow < Manage
       host_to_hash_struct(h)
     end
   end
+
+  def self.provider_model
+    ManageIQ::Providers::IbmPowerHmc::InfraManager
+  end
 end
