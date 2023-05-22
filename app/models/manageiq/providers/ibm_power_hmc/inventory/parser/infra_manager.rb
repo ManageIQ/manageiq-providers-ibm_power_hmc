@@ -1,4 +1,8 @@
 class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < ManageIQ::Providers::IbmPowerHmc::Inventory::Parser
+  OS_MAP = {
+    'phyp' => 'IBM PowerVM hypervisor (PHYP)'
+  }.freeze
+
   def parse
     $ibm_power_hmc_log.info("#{self.class}##{__method__} start")
     collector.collect! do
@@ -48,7 +52,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       )
       persister.host_operating_systems.build(
         :host         => host,
-        :product_name => "phyp",
+        :product_name => OS_MAP['phyp'],
         :build_number => sys["SystemFirmware"]
       )
       persister.host_hardwares.build(
@@ -147,7 +151,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   def parse_host_operating_system(host, sys)
     persister.host_operating_systems.build(
       :host         => host,
-      :product_name => "phyp",
+      :product_name => OS_MAP['phyp'],
       :build_number => sys.fwversion
     )
   end
