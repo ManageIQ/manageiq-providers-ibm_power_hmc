@@ -105,7 +105,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :vmm_vendor  => "ibm_power_hmc"
     )
     expect(host.operating_system).to have_attributes(
-      :product_name => "phyp",
+      :product_name => "IBM PowerVM hypervisor (PHYP)",
       :build_number => "SV860_FW860.61 (185)"
     )
     expect(host.hardware).to have_attributes(
