@@ -6,7 +6,7 @@ end
 Dir[Rails.root.join("spec/shared/**/*.rb")].sort.each { |f| require f }
 Dir[File.join(__dir__, "support/**/*.rb")].sort.each { |f| require f }
 
-require "manageiq-providers-ibm_power_hmc"
+require "manageiq/providers/ibm_power_hmc"
 
 def sanitizer(interaction)
   # Mask API session token in recorded file even though the logoff invalidates it.

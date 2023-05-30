@@ -10,4 +10,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager do
   it "returns the expected value for the hostname_required? method" do
     expect(described_class.hostname_required?).to eq(true)
   end
+
+  describe "#catalog_types" do
+    let(:ems) { FactoryBot.create(:ems_ibm_power_hmc_infra) }
+
+    it "catalog_types" do
+      expect(ems.catalog_types["ibm_power_hmc"]).to eq "IBM Power HMC"
+    end
+  end
 end
