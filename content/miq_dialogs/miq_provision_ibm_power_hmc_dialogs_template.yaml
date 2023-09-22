@@ -23,6 +23,11 @@
           :display: :hide
           :data_type: :string
         :src_vm_id:
+          :values_from:
+            :options:
+              :tag_filters: []
+
+            :method: :allowed_templates
           :description: Name
           :required: true
           :notes:
