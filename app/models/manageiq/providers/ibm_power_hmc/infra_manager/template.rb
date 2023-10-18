@@ -49,4 +49,16 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Provi
       raise
     end
   end
+
+  def memory_for_request(request)
+    template = ManageIQ::Providers::IbmPowerHmc::InfraManager::Template.find(request.src_vm_id)
+    hardware = Hardware.find_by(:vm_or_template_id => template.id)
+    hardware.memory_mb.megabytes
+  end
+
+  def number_of_cpus_for_request(request)
+    template = ManageIQ::Providers::IbmPowerHmc::InfraManager::Template.find(request.src_vm_id)
+    hardware = Hardware.find_by(:vm_or_template_id => template.id)
+    hardware.cpu_total_cores
+  end
 end
