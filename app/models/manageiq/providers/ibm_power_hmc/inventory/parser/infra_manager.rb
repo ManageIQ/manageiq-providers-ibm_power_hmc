@@ -648,17 +648,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :type    => ManageIQ::Providers::IbmPowerHmc::InfraManager::ProcessorResourcePool.name
       }
       if pool.name == "DefaultPool"
-        params[:cpu_shares]         = 0
-        params[:cpu_reserve]        = 0
-        params[:cpu_reserve_expand] = false
-        params[:cpu_limit]          = -1
-        params[:is_default]         = true
+        params[:cpu_cores_reserve]   = 0
+        params[:cpu_reserve_expand]  = false
+        params[:cpu_cores_limit]     = -1
+        params[:cpu_cores_available] = nil
+        params[:is_default]          = true
       else
-        params[:cpu_shares]         = pool.max.to_f - pool.available.to_f
-        params[:cpu_reserve]        = pool.available
-        params[:cpu_reserve_expand] = true
-        params[:cpu_limit]          = pool.max
-        params[:is_default]         = false
+        params[:cpu_cores_reserve]   = pool.reserved
+        params[:cpu_reserve_expand]  = true
+        params[:cpu_cores_limit]     = pool.max
+        params[:cpu_cores_available] = pool.available
+        params[:is_default]          = false
       end
 
       persister.resource_pools.build(params)
