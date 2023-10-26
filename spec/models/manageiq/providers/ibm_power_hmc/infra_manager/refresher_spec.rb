@@ -337,7 +337,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
   def assert_specific_resource_pool_cpu
     cpu_pool = ems.resource_pools.find_by(:ems_ref => respool_cpu_uuid)
     expect(cpu_pool).to have_attributes(
-      :type => "ManageIQ::Providers::IbmPowerHmc::InfraManager::ProcessorResourcePool"
+      :type                => "ManageIQ::Providers::IbmPowerHmc::InfraManager::ProcessorResourcePool",
+      :name                => "sloane",
+      :cpu_shares          => nil,
+      :cpu_reserve         => nil,
+      :cpu_limit           => nil,
+      :cpu_reserve_expand  => true,
+      :is_default          => false,
+      :cpu_cores_available => 2.0,
+      :cpu_cores_reserve   => 0,
+      :cpu_cores_limit     => 2.0
     )
   end
 
