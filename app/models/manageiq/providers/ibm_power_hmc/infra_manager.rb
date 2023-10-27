@@ -79,7 +79,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
                   :name         => "endpoints.default.port",
                   :label        => _("API Port"),
                   :type         => "number",
-                  :initialValue => 12_443,
+                  :initialValue => 443,
                   :isRequired   => true,
                   :validate     => [{:type => "required"}],
                 },
