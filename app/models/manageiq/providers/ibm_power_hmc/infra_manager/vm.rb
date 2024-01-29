@@ -1,7 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
-
-  include_concern "Reconfigure"
+  include Reconfigure
 
   virtual_delegate :hmc_managed, :to => :host, :prefix => true, :allow_nil => true, :type => :boolean
 

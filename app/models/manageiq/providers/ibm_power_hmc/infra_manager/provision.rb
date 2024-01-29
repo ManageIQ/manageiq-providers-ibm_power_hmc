@@ -1,6 +1,6 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision < MiqProvision
-  include_concern 'Cloning'
-  include_concern 'StateMachine'
+  include Cloning
+  include StateMachine
 
   VALID_REQUEST_TYPES = %w[clone_to_template template].freeze
   validates :request_type, :inclusion => {:in => VALID_REQUEST_TYPES, :message => "should be one of: #{VALID_REQUEST_TYPES.join(', ')}"}
