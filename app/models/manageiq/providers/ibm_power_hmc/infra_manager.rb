@@ -1,24 +1,4 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::InfraManager
-  require_nested :EventCatcher
-  require_nested :EventParser
-  require_nested :EventTargetParser
-  require_nested :Host
-  require_nested :MetricsCapture
-  require_nested :MetricsCollectorWorker
-  require_nested :Provision
-  require_nested :ProvisionWorkflow
-  require_nested :Refresher
-  require_nested :RefreshWorker
-  require_nested :Template
-  require_nested :Vm
-  require_nested :Lpar
-  require_nested :Vios
-  require_nested :Storage
-  require_nested :ResourcePool
-  require_nested :MemoryResourcePool
-  require_nested :ProcessorResourcePool
-  require_nested :MediaRepository
-
   supports :catalog
   supports :create
   supports :metrics
