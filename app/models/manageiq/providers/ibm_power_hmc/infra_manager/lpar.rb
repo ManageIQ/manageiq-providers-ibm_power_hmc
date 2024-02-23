@@ -1,13 +1,16 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar < ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm
   supports :publish do
-    unsupported_reason_add(:provisioning, _('The LPAR is not connected to an active Provider')) if ext_management_system.nil?
+    _('The LPAR is not connected to an active Provider') if ext_management_system.nil?
   end
 
   supports :reconfigure_network_adapters
 
   supports :terminate do
-    unsupported_reason_add(:terminate, unsupported_reason(:control)) unless supports_control?
-    unsupported_reason_add(:terminate, _("Cannot delete a running partition")) unless power_state == "off"
+    if power_state == "off"
+      unsupported_reason(:control)
+    else
+      _("Cannot delete a running partition")
+    end
   end
 
   def provider_object(connection = nil)

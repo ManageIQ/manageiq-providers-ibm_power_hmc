@@ -2,23 +2,23 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   include ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
 
   supports :capture do
-    unsupported_reason_add(:capture, _("PCM not enabled for this Host")) unless pcm_enabled
+    _("PCM not enabled for this Host") unless pcm_enabled
   end
 
   supports :stop do
-    unsupported_reason_add(:stop, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
-    unsupported_reason_add(:stop, _("Cannot shutdown a host that is not HMC-managed")) unless hmc_managed
+    return _("Cannot shutdown a host that is powered off") unless power_state == "on"
+    return _("Cannot shutdown a host that is not HMC-managed") unless hmc_managed
   end
 
   supports :shutdown do
-    unsupported_reason_add(:shutdown, _("Cannot shutdown a host that is powered off")) unless power_state == "on"
-    unsupported_reason_add(:shutdown, _("Cannot shutdown a host with running vms")) if vms.where(:power_state => "on").any?
-    unsupported_reason_add(:shutdown, _("Cannot shutdown a host that is not HMC-managed")) unless hmc_managed
+    return _("Cannot shutdown a host that is powered off") unless power_state == "on"
+    return _("Cannot shutdown a host with running vms") if vms.where(:power_state => "on").any?
+    return _("Cannot shutdown a host that is not HMC-managed") unless hmc_managed
   end
 
   supports :start do
-    unsupported_reason_add(:start, _("Cannot start a host that is already powered on")) unless power_state == "off"
-    unsupported_reason_add(:start, _("Cannot start a host that is not HMC-managed")) unless hmc_managed
+    return _("Cannot start a host that is already powered on") unless power_state == "off"
+    return _("Cannot start a host that is not HMC-managed") unless hmc_managed
   end
 
   def shutdown

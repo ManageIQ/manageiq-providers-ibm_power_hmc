@@ -1,14 +1,14 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::Template < ManageIQ::Providers::InfraManager::Template
   supports :provisioning do
     if ext_management_system
-      unsupported_reason_add(:provisioning, ext_management_system.unsupported_reason(:provisioning)) unless ext_management_system.supports?(:provisioning)
+      ext_management_system.unsupported_reason(:provisioning)
     else
-      unsupported_reason_add(:provisioning, _('The Template is not connected to an active Provider'))
+      _('The Template is not connected to an active Provider')
     end
   end
 
   supports :clone do
-    unsupported_reason_add(:clone, _('The Template is not connected to an active Provider')) if ext_management_system.nil?
+    _('The Template is not connected to an active Provider') if ext_management_system.nil?
   end
 
   def do_request(request_type, options)

@@ -7,21 +7,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   supports :capture
 
   supports :control do
-    unsupported_reason_add(:control, _("Host is not HMC-managed")) unless host_hmc_managed
+    _("Host is not HMC-managed") unless host_hmc_managed
   end
 
   supports :rename do
-    unsupported_reason_add(:rename, _("Host is not HMC-managed")) unless host_hmc_managed
+    _("Host is not HMC-managed") unless host_hmc_managed
   end
 
   supports :set_description do
-    unsupported_reason_add(:set_description, _("Host is not HMC-managed")) unless host_hmc_managed
+    _("Host is not HMC-managed") unless host_hmc_managed
   end
 
   supports :native_console do
-    reason ||= _("VM Console not supported because VM is orphaned") if orphaned?
-    reason ||= _("VM Console not supported because VM is archived") if archived?
-    unsupported_reason_add(:native_console, reason) if reason
+    unsupported_reason(:action)
   end
 
   def provider_object(_connection = nil)
