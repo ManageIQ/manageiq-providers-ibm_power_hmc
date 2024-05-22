@@ -36,39 +36,39 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
       host.advanced_settings.create!(:name => "hmc_managed", :value => "true")
       vm.raw_power_state = "running"
       expect(vm.vm_powered_on?).to be true
-      expect(vm.supports_start?).to be false
-      expect(vm.supports_stop?).to (be true), "unsupported reason: #{vm.unsupported_reason(:stop)}"
-      expect(vm.supports_suspend?).to (be true), "unsupported reason: #{vm.unsupported_reason(:suspend)}"
+      expect(vm.supports?(:start)).to be false
+      expect(vm.supports?(:stop)).to (be true), "unsupported reason: #{vm.unsupported_reason(:stop)}"
+      expect(vm.supports?(:suspend)).to (be true), "unsupported reason: #{vm.unsupported_reason(:suspend)}"
       vm.raw_power_state = "not activated"
       expect(vm.vm_powered_on?).to be false
-      expect(vm.supports_start?).to (be true), "unsupported reason: #{vm.unsupported_reason(:start)}"
-      expect(vm.supports_stop?).to be false
-      expect(vm.supports_suspend?).to be false
+      expect(vm.supports?(:start)).to (be true), "unsupported reason: #{vm.unsupported_reason(:start)}"
+      expect(vm.supports?(:stop)).to be false
+      expect(vm.supports?(:suspend)).to be false
     end
     it "does not support power operations" do
       host.advanced_settings.create!(:name => "hmc_managed", :value => "false")
       vm.raw_power_state = "running"
       expect(vm.vm_powered_on?).to be true
-      expect(vm.supports_start?).to be false
-      expect(vm.supports_stop?).to be false
-      expect(vm.supports_suspend?).to be false
+      expect(vm.supports?(:start)).to be false
+      expect(vm.supports?(:stop)).to be false
+      expect(vm.supports?(:suspend)).to be false
       vm.raw_power_state = "not activated"
       expect(vm.vm_powered_on?).to be false
-      expect(vm.supports_start?).to be false
-      expect(vm.supports_stop?).to be false
-      expect(vm.supports_suspend?).to be false
+      expect(vm.supports?(:start)).to be false
+      expect(vm.supports?(:stop)).to be false
+      expect(vm.supports?(:suspend)).to be false
     end
     it "does not support power operations (no advanced setting)" do
       vm.raw_power_state = "running"
       expect(vm.vm_powered_on?).to be true
-      expect(vm.supports_start?).to be false
-      expect(vm.supports_stop?).to be false
-      expect(vm.supports_suspend?).to be false
+      expect(vm.supports?(:start)).to be false
+      expect(vm.supports?(:stop)).to be false
+      expect(vm.supports?(:suspend)).to be false
       vm.raw_power_state = "not activated"
       expect(vm.vm_powered_on?).to be false
-      expect(vm.supports_start?).to be false
-      expect(vm.supports_stop?).to be false
-      expect(vm.supports_suspend?).to be false
+      expect(vm.supports?(:start)).to be false
+      expect(vm.supports?(:stop)).to be false
+      expect(vm.supports?(:suspend)).to be false
     end
   end
 
