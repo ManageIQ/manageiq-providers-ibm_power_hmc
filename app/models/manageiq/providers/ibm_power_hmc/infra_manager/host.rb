@@ -6,19 +6,29 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Host < ::Host
   end
 
   supports :stop do
-    return _("Cannot shutdown a host that is powered off") unless power_state == "on"
-    return _("Cannot shutdown a host that is not HMC-managed") unless hmc_managed
+    if power_state != "on"
+      _("Cannot shutdown a host that is powered off")
+    elsif !hmc_managed
+      _("Cannot shutdown a host that is not HMC-managed")
+    end
   end
 
   supports :shutdown do
-    return _("Cannot shutdown a host that is powered off") unless power_state == "on"
-    return _("Cannot shutdown a host with running vms") if vms.where(:power_state => "on").any?
-    return _("Cannot shutdown a host that is not HMC-managed") unless hmc_managed
+    if power_state != "on"
+      _("Cannot shutdown a host that is powered off")
+    elsif vms.where(:power_state => "on").any?
+      _("Cannot shutdown a host with running vms")
+    elsif !hmc_managed
+      _("Cannot shutdown a host that is not HMC-managed")
+    end
   end
 
   supports :start do
-    return _("Cannot start a host that is already powered on") unless power_state == "off"
-    return _("Cannot start a host that is not HMC-managed") unless hmc_managed
+    if power_state != "off"
+      _("Cannot start a host that is already powered on")
+    elsif !hmc_managed
+      _("Cannot start a host that is not HMC-managed")
+    end
   end
 
   def shutdown
