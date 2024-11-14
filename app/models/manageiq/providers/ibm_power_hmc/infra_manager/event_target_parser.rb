@@ -1,6 +1,8 @@
 class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   attr_reader :ems_event
 
+  NO_UUID_VALUE = "88888888-8888-8888-8888-888888888888" # Returned when no UUID assigned to LPAR
+
   def initialize(ems_event)
     @ems_event = ems_event
   end
@@ -39,7 +41,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
-        new_targets << {:assoc => :vms, :ems_ref => elems[:uuid]}
+        if elems[:uuid].eql?(NO_UUID_VALUE)
+          new_targets << ems_event.ext_management_system
+        else
+          new_targets << {:assoc => :vms, :ems_ref => elems[:uuid]}
+        end
       when "VirtualSwitch", "VirtualNetwork"
         if elems.key?(:manager_uuid)
           new_targets << {:assoc => :hosts, :ems_ref => elems[:manager_uuid]}
