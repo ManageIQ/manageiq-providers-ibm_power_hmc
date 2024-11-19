@@ -42,7 +42,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
-        if elems[:uuid].eql?(NO_UUID_VALUE)
+        if elems[:uuid] == NO_UUID_VALUE
           $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} Missing LPAR UUID.  Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
           target_collection << ems
         else
