@@ -12,11 +12,22 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         [[:hosts, {:ems_ref => '977848c8-3bed-360a-c9d2-ae4b7e46b5d1'}]]
       )
     end
-    it "LogicalPartition" do
-      assert_event_triggers_target(
-        "test_data/logical_partition_long_url.xml",
-        [[:vms, {:ems_ref => '74CC38E2-C6DD-4B03-A0C6-088F7882EF0E'}]]
-      )
+    context "LogicalPartition" do
+      it "targets the logical partition" do
+        assert_event_triggers_target(
+          "test_data/logical_partition_long_url.xml",
+          [[:vms, {:ems_ref => '74CC38E2-C6DD-4B03-A0C6-088F7882EF0E'}]]
+        )
+      end
+
+      context "with a missing LPAR UUID" do
+        it "targets the whole EMS" do
+          ems_event      = create_ems_event("test_data/logical_partition_invalid_uuid.xml")
+          parsed_targets = described_class.new(ems_event).parse
+
+          expect(parsed_targets).to eq([@ems])
+        end
+      end
     end
     it "VirtualIOServer" do
       assert_event_triggers_target(
