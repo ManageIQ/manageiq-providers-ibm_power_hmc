@@ -27,6 +27,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     )
     new_targets = []
 
+    ems       = ems_event.ext_management_system
     raw_event = ems_event.full_data
 
     case ems_event.event_type
@@ -42,7 +43,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
         if elems[:uuid].eql?(NO_UUID_VALUE)
-          new_targets << ems_event.ext_management_system
+          $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} Missing LPAR UUID.  Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
+          target_collection << ems
         else
           new_targets << {:assoc => :vms, :ems_ref => elems[:uuid]}
         end
