@@ -7,19 +7,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     @ems_event = ems_event
   end
 
-  def elem(url)
-    uri = URI(url)
-    tokens = uri.path.split('/')
-    elems = {
-      :type => tokens[-2],
-      :uuid => tokens[-1]
-    }
-    if tokens.length >= 4 && tokens[-4] == "ManagedSystem"
-      elems[:manager_uuid] = tokens[-3]
-    end
-    elems
-  end
-
   def parse
     target_collection = InventoryRefresh::TargetCollection.new(
       :manager => ems_event.ext_management_system,
@@ -72,6 +59,21 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
 
     # Return the set of targets from this event
     target_collection.targets
+  end
+
+  private
+
+  def elem(url)
+    uri = URI(url)
+    tokens = uri.path.split('/')
+    elems = {
+      :type => tokens[-2],
+      :uuid => tokens[-1]
+    }
+    if tokens.length >= 4 && tokens[-4] == "ManagedSystem"
+      elems[:manager_uuid] = tokens[-3]
+    end
+    elems
   end
 
   def handle_usertask(usertask)
