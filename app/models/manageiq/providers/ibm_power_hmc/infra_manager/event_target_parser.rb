@@ -20,35 +20,37 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     case ems_event.event_type
     when "MODIFY_URI", "ADD_URI", "DELETE_URI" # Damien: INVALID_URI?
       $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event.event_type} #{ems_event.full_data}")
-      elems = elem(raw_event[:data])
-      case elems[:type]
+      elems = raw_event[:data]
+        .match(%r{/rest/api/uom/(?:ManagedSystem/(?<manager_uuid>[^/]+)/)?(?<type>[^/]+)/(?<uuid>[^/]+)$})
+        &.named_captures || {}
+      case elems["type"]
       when "ManagedSystem"
-        new_targets << {:assoc => :hosts, :ems_ref => elems[:uuid]}
+        new_targets << {:assoc => :hosts, :ems_ref => elems["uuid"]}
       when "LogicalPartition", "VirtualIOServer"
         # raw_event[:detail] contains information about the properties that
         # have changed (e.g. RMCState, PartitionName, PartitionState etc...)
         # This may be used to perform quick property REST API calls to the HMC
         # instead of querying the full LPAR data.
-        if elems[:uuid] == NO_UUID_VALUE
-          $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} Missing LPAR UUID.  Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
+        if elems["uuid"] == NO_UUID_VALUE
+          $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems["type"]} Missing LPAR UUID.  Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
           target_collection << ems
         else
-          new_targets << {:assoc => :vms, :ems_ref => elems[:uuid]}
+          new_targets << {:assoc => :vms, :ems_ref => elems["uuid"]}
         end
       when "VirtualSwitch", "VirtualNetwork"
-        if elems.key?(:manager_uuid)
-          new_targets << {:assoc => :hosts, :ems_ref => elems[:manager_uuid]}
+        if elems["manager_uuid"]
+          new_targets << {:assoc => :hosts, :ems_ref => elems["manager_uuid"]}
         end
       when "UserTask"
         new_targets.concat(handle_usertask(raw_event[:usertask]))
       when "Cluster"
-        new_targets << {:assoc => :storages, :ems_ref => elems[:uuid]}
+        new_targets << {:assoc => :storages, :ems_ref => elems["uuid"]}
       when "SharedProcessorPool", "SharedMemoryPool"
-        new_targets << {:assoc => :resource_pools, :ems_ref => "#{elems[:manager_uuid]}_#{elems[:uuid]}"}
+        new_targets << {:assoc => :resource_pools, :ems_ref => "#{elems["manager_uuid"]}_#{elems["uuid"]}"}
       end
 
       new_targets.each do |t|
-        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems[:type]} uuid #{t[:ems_ref]}")
+        $ibm_power_hmc_log.info("#{self.class}##{__method__} #{elems["type"]} uuid #{t[:ems_ref]}")
         target_collection.add_target(
           :association => t[:assoc],
           :manager_ref => {:ems_ref => t[:ems_ref]}
@@ -62,19 +64,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
   end
 
   private
-
-  def elem(url)
-    uri = URI(url)
-    tokens = uri.path.split('/')
-    elems = {
-      :type => tokens[-2],
-      :uuid => tokens[-1]
-    }
-    if tokens.length >= 4 && tokens[-4] == "ManagedSystem"
-      elems[:manager_uuid] = tokens[-3]
-    end
-    elems
-  end
 
   def handle_usertask(usertask)
     return [] unless usertask["status"].eql?("Completed")

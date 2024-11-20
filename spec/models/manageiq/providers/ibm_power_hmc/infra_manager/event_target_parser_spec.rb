@@ -28,6 +28,15 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
           expect(parsed_targets).to eq([@ems])
         end
       end
+
+      context "with an invalid EventData url" do
+        it "returns an empty target set" do
+          ems_event      = create_ems_event("test_data/logical_partition_invalid_event_data.xml")
+          parsed_targets = described_class.new(ems_event).parse
+
+          expect(parsed_targets).to be_empty
+        end
+      end
     end
     it "VirtualIOServer" do
       assert_event_triggers_target(
