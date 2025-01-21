@@ -21,7 +21,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser
     when "MODIFY_URI", "ADD_URI", "DELETE_URI" # Damien: INVALID_URI?
       $ibm_power_hmc_log.info("#{self.class}##{__method__} #{ems_event.event_type} #{ems_event.full_data}")
       elems = raw_event[:data]
-        .match(%r{/rest/api/uom/(?:ManagedSystem/(?<manager_uuid>[^/]+)/)?(?<type>[^/]+)/(?<uuid>[^/]+)$})
+        .match(%r{/rest/api/uom/(?:ManagedSystem/(?<manager_uuid>[^/]+)/)?(?<type>[^/]+)/(?<uuid>[^/]+)})
         &.named_captures || {}
       case elems["type"]
       when "ManagedSystem"
