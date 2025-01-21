@@ -29,6 +29,15 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         end
       end
 
+      context "with a missing LPAR UUID and LogicalPartitionProfile included in path" do
+        it "targets the whole EMS" do
+          ems_event      = create_ems_event("test_data/logical_partition_profile_invalid_uuid.xml")
+          parsed_targets = described_class.new(ems_event).parse
+
+          expect(parsed_targets).to eq([@ems])
+        end
+      end
+
       context "with an invalid EventData url" do
         it "returns an empty target set" do
           ems_event      = create_ems_event("test_data/logical_partition_invalid_event_data.xml")
