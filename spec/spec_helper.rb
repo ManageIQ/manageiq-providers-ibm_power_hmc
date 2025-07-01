@@ -33,19 +33,14 @@ def sanitizer(interaction)
 end
 
 VCR.configure do |config|
-  # Configure VCR to use rspec metadata.
-  config.hook_into(:webmock)
-  config.configure_rspec_metadata!
-
   config.ignore_hosts('codeclimate.com') if ENV['CI']
   config.cassette_library_dir = File.join(ManageIQ::Providers::IbmPowerHmc::Engine.root, 'spec/vcr_cassettes')
+  config.hook_into(:webmock)
+  config.configure_rspec_metadata! # Auto-detects the cassette name based on the example's full description
 
   config.before_record do |i|
     sanitizer(i)
   end
 
-  secrets = Rails.application.secrets
-  secrets.ibm_power_hmc.each_key do |secret|
-    config.define_cassette_placeholder(secrets.ibm_power_hmc_defaults[secret]) { secrets.ibm_power_hmc[secret] }
-  end
+  VcrSecrets.define_all_cassette_placeholders(config, :ibm_power_hmc)
 end
