@@ -14,7 +14,7 @@ FactoryBot.define do
       [
         FactoryBot.create(:endpoint,
           :role     => "default",
-          :hostname => Rails.application.secrets.ibm_power_hmc[:hostname],
+          :hostname => VcrSecrets.ibm_power_hmc.hostname,
           :port     => 12_443
         )
       ]
@@ -22,8 +22,8 @@ FactoryBot.define do
 
     after(:create) do |ems|
       ems.authentications << FactoryBot.create(:authentication,
-        :userid   => Rails.application.secrets.ibm_power_hmc[:username],
-        :password => Rails.application.secrets.ibm_power_hmc[:password]
+        :userid   => VcrSecrets.ibm_power_hmc.username,
+        :password => VcrSecrets.ibm_power_hmc.password
       )
     end
   end
