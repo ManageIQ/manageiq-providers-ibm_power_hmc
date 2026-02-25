@@ -132,6 +132,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :value     => "false",
       :read_only => true
     )
+
+    setting = host.advanced_settings.find_by(:name => "memory_mirroring_enabled")
+    expect(setting).to have_attributes(
+      :value     => "false",
+      :read_only => true
+    )
   end
 
   def assert_specific_switch
@@ -294,6 +300,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     setting = lpar.advanced_settings.find_by(:name => "memory_type")
     expect(setting).to have_attributes(
       :value     => "dedicated",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "srr_capable")
+    expect(setting).to have_attributes(
+      :value     => "false",
       :read_only => true
     )
 

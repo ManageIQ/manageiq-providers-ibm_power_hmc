@@ -229,6 +229,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :value        => sys.is_classic_hmc_mgmt.eql?("true") ? sys.is_classic_hmc_mgmt : sys.is_hmc_mgmt_master,
       :read_only    => true
     )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "memory_mirroring_enabled",
+      :display_name => _("Memory Mirroring"),
+      :description  => _("Memory Mirroring capability of the Host."),
+      :value        => !sys.is_mem_mirroring_enabled.eql?("none") ? "true" : "false",
+      :read_only    => true
+    )
   end
 
   def parse_lpars
@@ -530,6 +538,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :value        => mem_type,
       :read_only    => true
     )
+
+    if lpar.kind_of?(IbmPowerHmc::LogicalPartition)
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => 'srr_capable',
+        :display_name => _('Simplified Remote Restart'),
+        :description  => _('Simplified Remote Restart Cabaility'),
+        :value        => lpar.srr,
+        :read_only    => true
+      )
+    end
   end
 
   def parse_templates
