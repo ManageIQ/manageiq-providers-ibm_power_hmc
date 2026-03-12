@@ -10,6 +10,8 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     _("Host is not HMC-managed") unless host_hmc_managed
   end
 
+  supports_not :suspend
+
   supports :rename do
     _("Host is not HMC-managed") unless host_hmc_managed
   end
