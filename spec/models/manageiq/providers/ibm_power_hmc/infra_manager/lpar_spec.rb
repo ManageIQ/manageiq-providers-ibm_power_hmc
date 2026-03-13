@@ -38,7 +38,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
       expect(vm.vm_powered_on?).to be true
       expect(vm.supports?(:start)).to be false
       expect(vm.supports?(:stop)).to (be true), "unsupported reason: #{vm.unsupported_reason(:stop)}"
-      expect(vm.supports?(:suspend)).to be false
+      expect(vm.supports?(:suspend)).to (be true), "unsupported reason: #{vm.unsupported_reason(:suspend)}"
       vm.raw_power_state = "not activated"
       expect(vm.vm_powered_on?).to be false
       expect(vm.supports?(:start)).to (be true), "unsupported reason: #{vm.unsupported_reason(:start)}"
