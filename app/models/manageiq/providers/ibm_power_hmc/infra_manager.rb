@@ -5,6 +5,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   supports :native_console
   supports :provisioning
 
+  belongs_to :parent_manager,
+             :class_name  => "ManageIQ::Providers::IbmPowerVc::CloudManager",
+             :foreign_key => :parent_ems_id,
+             :inverse_of  => :ibm_power_hmcs,
+             :autosave    => true
+
   has_many :hosts_advanced_settings, :through => :hosts, :source => :advanced_settings
   has_many :media_repositories, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :iso_images, :through => :media_repositories
@@ -24,8 +30,17 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
               :name                   => 'authentications.default.valid',
               :skipSubmit             => true,
               :isRequired             => true,
-              :validationDependencies => %w[type zone_id],
+              :validationDependencies => %w[type zone_id parent_ems_id],
               :fields                 => [
+                {
+                  :component   => "select",
+                  :id          => "parent_ems_id",
+                  :name        => "parent_ems_id",
+                  :label       => _("IBM PowerVC Cloud Provider"),
+                  :isClearable => true,
+                  :simpleValue => true,
+                  :options     => parent_ems_id_options
+                },
                 {
                   :component    => "select",
                   :id           => "endpoints.default.security_protocol",
@@ -87,6 +102,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
         }
       ]
     }
+  end
+
+  private_class_method def self.parent_ems_id_options
+    t = ManageIQ::Providers::IbmPowerVc::CloudManager
+    Rbac
+      .filtered(t.order(t.arel_table[:name].lower))
+      .pluck(:name, :id)
+      .map do |name, id|
+        {
+          :label => name,
+          :value => id.to_s,
+        }
+      end
   end
 
   def self.verify_credentials(args)
