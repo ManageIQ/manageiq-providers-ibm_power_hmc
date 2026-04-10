@@ -17,18 +17,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       2.times do
         full_refresh(ems)
         ems.reload
-      end
 
-      assert_ems
-      assert_specific_host
-      assert_specific_switch
-      assert_specific_lan
-      assert_specific_vios
-      assert_specific_lpar
-      assert_specific_template
-      assert_specific_resource_pool_cpu
-      assert_specific_resource_pool_mem
-      assert_specific_storage
+        assert_ems
+        assert_specific_host
+        assert_specific_switch
+        assert_specific_lan
+        assert_specific_vios
+        assert_specific_lpar
+        assert_specific_template
+        assert_specific_resource_pool_cpu
+        assert_specific_resource_pool_mem
+        assert_specific_storage
+      end
     end
   end
 
