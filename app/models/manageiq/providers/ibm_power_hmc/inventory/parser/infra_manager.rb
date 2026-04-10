@@ -248,6 +248,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vioses
+    return if persister.manager.parent_manager.present?
+
     collector.vioses.each do |vios|
       _vm, hardware = parse_lpar_common(vios, ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios.name)
       parse_vios_disks(vios, hardware)
