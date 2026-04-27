@@ -102,6 +102,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :name            => "porthos",
       :ipaddress       => "10.197.64.46",
       :power_state     => "on",
+      :raw_power_state => "operating",
       :vmm_vendor      => "ibm_power_hmc",
       :vmm_version     => "V8R8.6.0 0",
       :vmm_buildnumber => "20161101.1"
