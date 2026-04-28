@@ -181,6 +181,28 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager do
     end
   end
 
+
+  describe "#queue_name_for_ems_refresh" do
+    let(:zone) { EvmSpecHelper.local_miq_server.zone }
+
+    context "without a parent manager" do
+      let(:ems) { FactoryBot.create(:ems_ibm_power_hmc_infra, :zone => zone) }
+
+      it "uses its own refresh queue name" do
+        expect(ems.queue_name_for_ems_refresh).to eq(ems.queue_name)
+      end
+    end
+
+    context "with a parent manager" do
+      let(:parent_ems) { FactoryBot.create(:ems_ibm_power_vc, :zone => zone) }
+      let(:ems) { FactoryBot.create(:ems_ibm_power_hmc_infra, :zone => zone, :parent_manager => parent_ems) }
+
+      it "uses the parent manager refresh queue name" do
+        expect(ems.queue_name_for_ems_refresh).to eq(parent_ems.queue_name_for_ems_refresh)
+      end
+    end
+  end
+
   describe "#parse_hmc_version" do
     let(:ems) { FactoryBot.create(:ems_ibm_power_hmc_infra) }
 
