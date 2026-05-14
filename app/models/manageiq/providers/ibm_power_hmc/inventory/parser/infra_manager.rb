@@ -27,6 +27,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :hostname            => sys.hostname,
         :ipaddress           => sys.ipaddr,
         :power_state         => lookup_power_state(sys.state),
+        :raw_power_state     => sys.state,
         :vmm_vendor          => "ibm_power_hmc",
         :vmm_version         => [collector.hmc.version, collector.hmc.sp_name].compact.join(' '),
         :vmm_buildnumber     => collector.hmc.build_level
@@ -50,6 +51,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :hypervisor_hostname => sys["MTMS"],
         :ipaddress           => sys["IPAddress"],
         :power_state         => lookup_power_state(sys["State"]),
+        :raw_power_state     => sys["State"],
         :vmm_vendor          => "ibm_power_hmc",
         :vmm_version         => [collector.hmc.version, collector.hmc.sp_name].compact.join(' '),
         :vmm_buildnumber     => collector.hmc.build_level
