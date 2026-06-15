@@ -45,6 +45,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
       expect(vm.supports?(:stop)).to be false
       expect(vm.supports?(:suspend)).to be false
     end
+    it "supports guest operations" do
+      host.advanced_settings.create!(:name => "hmc_managed", :value => "true")
+      vm.raw_power_state = "running"
+      expect(vm.supports?(:shutdown_guest)).to (be true), "unsupported reason: #{vm.unsupported_reason(:shutdown_guest)}"
+      expect(vm.supports?(:reboot_guest)).to (be true), "unsupported reason: #{vm.unsupported_reason(:reboot_guest)}"
+    end
+    it "does not support guest operations" do
+      host.advanced_settings.create!(:name => "hmc_managed", :value => "false")
+      vm.raw_power_state = "running"
+      expect(vm.supports?(:shutdown_guest)).to be false
+      expect(vm.supports?(:reboot_guest)).to be false
+    end
     it "does not support power operations" do
       host.advanced_settings.create!(:name => "hmc_managed", :value => "false")
       vm.raw_power_state = "running"

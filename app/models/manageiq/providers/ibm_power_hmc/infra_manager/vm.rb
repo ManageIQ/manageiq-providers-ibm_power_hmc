@@ -20,6 +20,14 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     _("Host is not HMC-managed") unless host_hmc_managed
   end
 
+  supports :shutdown_guest do
+    unsupported_reason(:control)
+  end
+
+  supports :reboot_guest do
+    unsupported_reason(:control)
+  end
+
   supports :native_console do
     unsupported_reason(:action)
   end
