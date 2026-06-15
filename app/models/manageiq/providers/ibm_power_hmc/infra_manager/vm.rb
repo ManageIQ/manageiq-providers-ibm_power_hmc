@@ -21,11 +21,19 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
   end
 
   supports :shutdown_guest do
-    unsupported_reason(:control)
+    if !vm_powered_on?
+      _("The VM is not powered on")
+    else
+      unsupported_reason(:control)
+    end
   end
 
   supports :reboot_guest do
-    unsupported_reason(:control)
+    if !vm_powered_on?
+      _("The VM is not powered on")
+    else
+      unsupported_reason(:control)
+    end
   end
 
   supports :native_console do
