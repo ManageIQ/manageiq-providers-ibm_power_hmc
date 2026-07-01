@@ -62,8 +62,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
     it "does not support guest operations when host not HMC-managed" do
       host.advanced_settings.create!(:name => "hmc_managed", :value => "false")
       vm.raw_power_state = "running"
-      expect(vm.supports?(:shutdown_guest)).to be false
-      expect(vm.supports?(:reboot_guest)).to be false
+      expect(vm.vm_powered_on?).to be_truthy
+      expect(vm.supports?(:shutdown_guest)).to be_falsey
+      expect(vm.supports?(:reboot_guest)).to be_falsey
     end
     it "does not support power operations" do
       host.advanced_settings.create!(:name => "hmc_managed", :value => "false")
