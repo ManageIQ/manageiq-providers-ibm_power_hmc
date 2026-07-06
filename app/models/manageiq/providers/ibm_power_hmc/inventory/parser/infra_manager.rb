@@ -82,6 +82,8 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       storage.size.to_f.gigabytes.to_i
     when IbmPowerHmc::SharedStoragePool, IbmPowerHmc::LogicalUnit, IbmPowerHmc::VirtualDisk
       storage.capacity.to_f.gigabytes.to_i
+    when IbmPowerHmc::SharedFileSystemFile
+      nil
     else
       storage.capacity.to_f.megabytes.to_i
     end
