@@ -1,5 +1,7 @@
 module ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser
   def self.event_to_hash(event, ems_id)
+    return nil if event.detail.include?('"messageID":"FCS.0021"')
+
     event_hash = {
       :event_type => event.type,
       :source     => 'IBM_POWER_HMC',

@@ -133,8 +133,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def verify_credentials(_auth_type = nil, _options = {})
     begin
       connection = connect(:validate => true)
-      fetch_and_store_hmc_version(connection)
-      update_dashboard_capability
     rescue => err
       raise MiqException::MiqInvalidCredentialsError, err.message
     end
@@ -179,89 +177,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   end
 
   def console_url
-    dashboard_path = use_legacy_dashboard? ? "dashboard" : "newdashboard"
-    "https://#{hostname}/#{dashboard_path}/"
-  end
-
-  def update_dashboard_capability
-    if api_version.present?
-      begin
-        current_version = parse_hmc_version(api_version)
-        threshold_version = parse_hmc_version("V10R2 1020")
-        legacy_dashboard = current_version <= threshold_version
-      rescue ArgumentError
-        $ibm_power_hmc_log.warn("Failed to parse HMC version '#{hmc_version_string}' for dashboard comparison")
-        legacy_dashboard = true
-      end
-    else
-      legacy_dashboard = true
-    end
-    # Store in capabilities hash
-    self.capabilities = (capabilities || {}).merge(:legacy_dashboard => legacy_dashboard)
-    save! if changed?
-  end
-
-  def use_legacy_dashboard?
-    # Simply read from cached capabilities
-    !!capabilities["legacy_dashboard"]
-  end
-
-  def parse_hmc_version(version_string)
-    # Handle IBM HMC version formats:
-    # - Numeric: "10.2.1030.0" -> [10, 2, 1030, 0]
-    # - IBM format: "V11R1 1110" -> [11, 1, 1110]
-    # - IBM format: "V10R2 1020" -> [10, 2, 1020]
-    version_string = version_string.to_s.strip
-    # Validate input is not empty
-    raise ArgumentError, "Invalid IBM HMC version format: empty string" if version_string.empty?
-
-    if version_string.match?(/^V\d+R\d+/)
-      # IBM format: extract numbers from "V<major>R<minor> <build>"
-      # e.g., "V11R1 1110" -> "11.1.1110"
-      version_parts = version_string.match(/V(?<major>\d+)R(?<minor>\d+)\s*(?<build>\d+)?/)&.named_captures
-      if version_parts
-        version = version_parts.values_at("major", "minor", "build")
-                               .compact.map(&:to_i).join(".")
-        Gem::Version.new(version)
-      else
-        raise ArgumentError, "Invalid IBM HMC version format: #{version_string}"
-      end
-    else
-      # Standard numeric format: "10.2.1030.0"
-      # Validate that it only contains digits and dots
-      unless version_string.match?(/^\d+(\.\d+)*$/)
-        raise ArgumentError, "Invalid IBM HMC version format: #{version_string}"
-
-      end
-
-      begin
-        Gem::Version.new(version_string)
-      rescue ArgumentError => e
-        raise ArgumentError, "Invalid IBM HMC version format: #{e.message}"
-      end
-    end
-  end
-
-  def fetch_and_store_hmc_version(connection)
-    return unless connection
-
-    begin
-      hmc_console = connection.management_console
-      # HMC version is split across two attributes:
-      # - hmc_console.version contains release (e.g., "V11R1")
-      # - hmc_console.sp_name contains service pack/build (e.g., "1110")
-      version_part = hmc_console.version
-      sp_part = hmc_console.sp_name
-      # Combine both parts to form complete version (e.g., "V11R1 1110")
-      hmc_version = [version_part, sp_part].join(" ")
-      if hmc_version.present?
-        self.api_version = hmc_version
-        save! if changed?
-      end
-    rescue => e
-      $ibm_power_hmc_log.warn("Failed to fetch HMC version: #{e.message}")
-      # Don't fail credential verification if version fetch fails
-    end
+    "https://#{hostname}/newdashboard/"
   end
 
   def self.ems_type
