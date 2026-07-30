@@ -275,4 +275,12 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.catalog_types
     {"ibm_power_hmc" => N_("IBM Power HMC")}
   end
+
+  def orchestrate_destroy(task_id = nil)
+    if Settings.ems.ems_ibm_power_hmc.delete_inventory_on_provider_remove
+      VmOrTemplate.where(:ems_id => id).find_each(&:destroy)
+      Host.where(:ems_id => id).find_each(&:destroy)
+    end
+    super
+  end
 end
