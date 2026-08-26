@@ -27,8 +27,8 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
 
     lpar = ext_management_system.with_provider_connection { |connection| provider_object(connection) }
 
-    # Dynamic Reconfiguration requires RMC to be active.
-    raise MiqException::MiqVmError, "RMC is not active on target" if lpar.state == "running" && lpar.rmc_state != "active"
+    # Dynamic Reconfiguration requires RMC to be active for non-IBMi partitions.
+    raise MiqException::MiqVmError, "RMC is not active on target" if rmc_check_required?(lpar)
 
     # The HMC does not allow changing the VSWITCH or the VLAN of a client network adapter.
     # It could be done by deleting and recreating the adapter with the same MAC and options.
@@ -41,6 +41,14 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm::Reconfigure
     build_netadap_delete_config_spec(spec, options) if options.key?(:network_adapter_remove)
 
     spec
+  end
+
+  def rmc_check_required?(lpar)
+    lpar.state == "running" && lpar.rmc_state != "active" && !ibmi_partition?(lpar)
+  end
+
+  def ibmi_partition?(lpar)
+    lpar.try(:type) == "OS400"
   end
 
   def build_memory_config_spec(lpar, spec, options)

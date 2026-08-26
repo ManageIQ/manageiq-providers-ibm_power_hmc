@@ -132,8 +132,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
 
   def verify_credentials(_auth_type = nil, _options = {})
     begin
-      connection = connect(:validate => true)
-      fetch_and_store_hmc_version(connection)
+      with_provider_connection do |connection|
+        connection.logon
+        fetch_and_store_hmc_version(connection)
+      end
       update_dashboard_capability
     rescue => err
       raise MiqException::MiqInvalidCredentialsError, err.message

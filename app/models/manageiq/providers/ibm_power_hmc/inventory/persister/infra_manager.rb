@@ -20,7 +20,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
       builder.add_properties(
         :manager_ref                  => %i[resource name],
         :model_class                  => ::AdvancedSetting,
-        :parent_inventory_collections => %i[vms]
+        :parent_inventory_collections => %i[vms miq_templates]
       )
     end
     add_collection(infra, :hosts_advanced_settings) do |builder|

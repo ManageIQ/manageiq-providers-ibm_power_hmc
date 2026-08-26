@@ -68,9 +68,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :manufacturer         => "IBM",
         :model                => mtype_model,
         :memory_mb            => sys["InstalledSystemMemory"],
+        :memory_mb_configured => sys["ConfigurableSystemMemory"],
+        :memory_mb_available  => sys["CurrentAvailableSystemMemory"],
         :cpu_sockets          => sys["InstalledSystemProcessorUnits"],
         :cpu_total_cores      => sys["InstalledSystemProcessorUnits"],
         :cpu_cores_per_socket => 1,
+        :cpu_configured_cores => sys["ConfigurableSystemProcessorUnits"],
+        :cpu_available_cores  => sys["CurrentAvailableSystemProcessorUnits"],
         :serial_number        => serial
       )
     end
@@ -173,9 +177,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :model                => "#{sys.mtype}#{sys.model}",
       :cpu_speed            => collector.cec_cpu_freqs[sys.uuid],
       :memory_mb            => sys.memory,
+      :memory_mb_configured => sys.config_mem,
+      :memory_mb_available  => sys.avail_mem,
       :cpu_sockets          => sys.cpus,
       :cpu_total_cores      => sys.cpus,
       :cpu_cores_per_socket => 1,
+      :cpu_configured_cores => sys.config_cpus,
+      :cpu_available_cores  => sys.avail_cpus,
       :serial_number        => sys.serial
     )
     parse_host_guest_devices(hardware, sys)
@@ -274,6 +282,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :vendor          => "ibm_power_hmc",
       :description     => lpar.description.to_s,
       :raw_power_state => lpar.state,
+      :tools_status    => lpar.rmc_state,
       :host            => host,
       :resource_pool   => resource_pool
     )
@@ -392,9 +401,11 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
   end
 
   def parse_vm_operating_system(vm, lpar)
+    os_name = lpar.respond_to?(:type) ? lpar.type : nil
+
     if lpar.os.nil? || lpar.os.downcase == "unknown"
       # RSCT is not running on the LPAR
-      if lpar.respond_to?(:type) && lpar.type == "Virtual IO Server"
+      if os_name == "Virtual IO Server"
         os_info = ["VIOS"]
       end
     else
@@ -415,12 +426,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       end
     end
 
-    if os_info
+    if os_info || os_name
       persister.operating_systems.build(
         :vm_or_template => vm,
-        :product_name   => os_info[0],
-        :version        => os_info[1],
-        :build_number   => os_info[2]
+        :product_name   => os_info&.at(0),
+        :version        => os_info&.at(1),
+        :build_number   => os_info&.at(2),
+        :name           => os_name
       )
     end
   end

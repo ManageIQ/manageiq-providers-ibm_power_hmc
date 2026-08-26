@@ -112,13 +112,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :build_number => "SV860_FW860.61 (185)"
     )
     expect(host.hardware).to have_attributes(
-      :cpu_type        => "ppc64",
-      :bitness         => 64,
-      :model           => "828642A",
-      :cpu_speed       => 4_157,
-      :memory_mb       => 720_896,
-      :cpu_total_cores => 16,
-      :serial_number   => "103341V"
+      :cpu_type             => "ppc64",
+      :bitness              => 64,
+      :model                => "828642A",
+      :cpu_speed            => 4_157,
+      :memory_mb            => 720_896,
+      :cpu_total_cores      => 16,
+      :serial_number        => "103341V",
+      :memory_mb_configured => 720_896,
+      :memory_mb_available  => 636_928,
+      :cpu_configured_cores => 16,
+      :cpu_available_cores  => 9.4
     )
 
     io = host.hardware.physical_ports.find_by(:location => "U78C9.001.WZS00M8-P1-C15")
@@ -167,11 +171,13 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Vios",
       :name            => "aramisios",
       :raw_power_state => "running",
-      :power_state     => "on"
+      :power_state     => "on",
+      :tools_status    => "active"
     )
     expect(vios.operating_system).to have_attributes(
       :product_name => "VIOS",
-      :version      => "3.1.0.11"
+      :version      => "3.1.0.11",
+      :name         => "Virtual IO Server"
     )
     expect(vios.hardware).to have_attributes(
       :cpu_type        => "ppc64",
@@ -252,12 +258,14 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :type            => "ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar",
       :name            => "cooplab",
       :raw_power_state => "running",
-      :power_state     => "on"
+      :power_state     => "on",
+      :tools_status    => "active"
     )
     expect(lpar.operating_system).to have_attributes(
       :product_name => "AIX",
       :version      => "7.3",
-      :build_number => "7300-00-00-0000"
+      :build_number => "7300-00-00-0000",
+      :name         => "AIX/Linux"
     )
     expect(lpar.hardware).to have_attributes(
       :cpu_type        => "ppc64",

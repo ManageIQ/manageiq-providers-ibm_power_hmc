@@ -83,6 +83,45 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
         }
       )
     end
+
+    it "Template new (created from scratch in HMC)" do
+      assert_event_triggers_target(
+        "test_data/template.xml",
+        [[:miq_templates, {:ems_ref => '63fe140d-4066-4732-93cd-bbaa0ac2822e'}]],
+        {
+          "uuid"           => "1d43a4a6-903c-46f8-865d-a356559bb17f",
+          "key"            => "TEMPLATE_PARTITION_NEW",
+          "localizedLabel" => "New",
+          "labelParams"    => ["NEW-TEMPLATE"],
+          "initiator"      => "hscroot",
+          "timeStarted"    => 1_643_891_701_901,
+          "timeCompleted"  => 1_643_891_702_051,
+          "status"         => "Completed",
+          "visible"        => true,
+          "template_uuid"  => "63fe140d-4066-4732-93cd-bbaa0ac2822e"
+        }
+      )
+    end
+
+    it "Template new with missing template_uuid returns no targets" do
+      ems_event      = create_ems_event(
+        "test_data/template.xml",
+        {
+          "uuid"           => "1d43a4a6-903c-46f8-865d-a356559bb17f",
+          "key"            => "TEMPLATE_PARTITION_NEW",
+          "localizedLabel" => "New",
+          "labelParams"    => ["NEW-TEMPLATE"],
+          "initiator"      => "hscroot",
+          "timeStarted"    => 1_643_891_701_901,
+          "timeCompleted"  => 1_643_891_702_051,
+          "status"         => "Completed",
+          "visible"        => true
+          # template_uuid intentionally absent — simulates SDK lookup failure
+        }
+      )
+      parsed_targets = described_class.new(ems_event).parse
+      expect(parsed_targets).to be_empty
+    end
     it "Template delete" do
       FactoryBot.create(
         :ibm_power_hmc_template,
@@ -211,6 +250,6 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::EventTargetParser do
     event = IbmPowerHmc::FeedParser.new(File.read(File.join(File.dirname(__FILE__), filename))).objects(:Event).first
     event.usertask = usertask
     event_hash = ManageIQ::Providers::IbmPowerHmc::InfraManager::EventParser.event_to_hash(event, @ems.id)
-    EmsEvent.add(@ems.id, event_hash)
+    EmsEvent.add(@ems.id, event_hash.deep_symbolize_keys)
   end
 end
