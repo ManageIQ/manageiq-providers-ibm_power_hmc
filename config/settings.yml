@@ -1,6 +1,7 @@
 :ems:
   :ems_ibm_power_hmc:
     :api_request_timeout: 60
+    :delete_inventory_on_provider_remove: true
     :blacklisted_event_names: []
     :event_handling:
       :event_groups:
