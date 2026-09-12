@@ -15,6 +15,10 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   has_many :media_repositories, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :iso_images, :through => :media_repositories
 
+  def queue_name_for_ems_refresh
+    parent_manager&.queue_name_for_ems_refresh || super
+  end
+
   def self.params_for_create
     {
       :fields => [
