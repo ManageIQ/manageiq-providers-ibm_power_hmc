@@ -143,6 +143,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :value     => "false",
       :read_only => true
     )
+
+    setting = host.advanced_settings.find_by(:name => "memory_region_size")
+    expect(setting).to have_attributes(
+      :value     => "256",
+      :read_only => true
+    )
   end
 
   def assert_specific_switch

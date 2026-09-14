@@ -249,6 +249,14 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :value        => !sys.is_mem_mirroring_enabled.eql?("none") ? "true" : "false",
       :read_only    => true
     )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "memory_region_size",
+      :display_name => _("Memory Region Size"),
+      :description  => _("Memory Region Size in MB."),
+      :value        => sys.memory_region_size,
+      :read_only    => true
+    )
   end
 
   def parse_lpars
@@ -721,4 +729,6 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       )
     end
   end
+
+
 end
