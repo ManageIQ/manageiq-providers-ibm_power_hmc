@@ -729,6 +729,4 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       )
     end
   end
-
-
 end
