@@ -79,7 +79,7 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
   end
 
   def safe_rate(numerator, denominator)
-    unless denominator.to_i == 0
+    unless denominator.zero?
       100.0 * numerator / denominator
     end
   end
