@@ -221,9 +221,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin do
     expect(@test_obj.net_usage_rate_average_all_vios(network_data_host)).to eq 3.0
   end
 
-  it "safe_rate" do
-    expect(@test_obj.safe_rate(5.0, 10.0)).to eq 50.0
-    expect(@test_obj.safe_rate(5.0, 0.0)).to be_nil
+  describe "#safe_rate" do
+    it "returns 100 * numerator / denominator for a normal case" do
+      expect(@test_obj.safe_rate(5.0, 10.0)).to eq 50.0
+    end
+
+    it "returns nil when denominator is zero" do
+      expect(@test_obj.safe_rate(5.0, 0.0)).to be_nil
+    end
+
+    it "returns correct result when denominator is a non-integer float (e.g. 0.5)" do
+      expect(@test_obj.safe_rate(1.0, 0.5)).to eq 200.0
+    end
   end
 
   it "interpolate_samples" do
