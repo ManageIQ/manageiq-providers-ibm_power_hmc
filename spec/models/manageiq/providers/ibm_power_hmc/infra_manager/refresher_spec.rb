@@ -156,6 +156,7 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     switch = host.switches.find_by(:name => "ETHERNET0(Default)")
 
     expect(switch).not_to be_nil
+    expect(switch).to have_attributes(:virtual_bridge_mode => "Veb")
     expect(switch.lans.count).to eq(1)
     expect(switch.hosts.count).to eq(1)
   end
