@@ -553,46 +553,48 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :read_only    => true
     )
 
-    dedicated_proc = proc_type == "dedicated"
-    maximum_processors = dedicated_proc ? lpar.maximum_procs : lpar.maximum_proc_units
-    minimum_processors = dedicated_proc ? lpar.minimum_procs : lpar.minimum_proc_units
-    persister.vms_and_templates_advanced_settings.build(
-      :resource     => vm,
-      :name         => 'maximum_processors',
-      :display_name => _('Maximum Processors'),
-      :description  => _('maximum number of processors this partition can be assigned'),
-      :value        => maximum_processors,
-      :read_only    => true
-    )
-
-    persister.vms_and_templates_advanced_settings.build(
-      :resource     => vm,
-      :name         => 'minimum_processors',
-      :display_name => _('Minimum Processors'),
-      :description  => _('minimum number of processors this partition should be assigned'),
-      :value        => minimum_processors,
-      :read_only    => true
-    )
-
-    # non-dedicated type partitions also have a min/max amount of virtual processors
-    unless dedicated_proc
+    unless lpar.kind_of?(IbmPowerHmc::PartitionTemplate)
+      dedicated_proc = proc_type == "dedicated"
+      maximum_processors = dedicated_proc ? lpar.maximum_procs : lpar.maximum_proc_units
       persister.vms_and_templates_advanced_settings.build(
         :resource     => vm,
-        :name         => 'maximum_virtual_processors',
-        :display_name => _('Maximum Virtual Processors'),
-        :description  => _('maximum number of virtual processors this partition can be assigned'),
-        :value        => lpar.maximum_vprocs,
+        :name         => 'maximum_processors',
+        :display_name => _('Maximum Processors'),
+        :description  => _('maximum number of processors this partition can be assigned'),
+        :value        => maximum_processors,
         :read_only    => true
       )
 
+      minimum_processors = dedicated_proc ? lpar.minimum_procs : lpar.minimum_proc_units
       persister.vms_and_templates_advanced_settings.build(
         :resource     => vm,
-        :name         => 'minimum_virtual_processors',
-        :display_name => _('Minimum Virtual Processors'),
-        :description  => _('minimum number of virtual processors this partition should be assigned'),
-        :value        => lpar.minimum_vprocs,
+        :name         => 'minimum_processors',
+        :display_name => _('Minimum Processors'),
+        :description  => _('minimum number of processors this partition should be assigned'),
+        :value        => minimum_processors,
         :read_only    => true
       )
+
+      # non-dedicated type partitions also have a min/max amount of virtual processors
+      unless dedicated_proc
+        persister.vms_and_templates_advanced_settings.build(
+          :resource     => vm,
+          :name         => 'maximum_virtual_processors',
+          :display_name => _('Maximum Virtual Processors'),
+          :description  => _('maximum number of virtual processors this partition can be assigned'),
+          :value        => lpar.maximum_vprocs,
+          :read_only    => true
+        )
+
+        persister.vms_and_templates_advanced_settings.build(
+          :resource     => vm,
+          :name         => 'minimum_virtual_processors',
+          :display_name => _('Minimum Virtual Processors'),
+          :description  => _('minimum number of virtual processors this partition should be assigned'),
+          :value        => lpar.minimum_vprocs,
+          :read_only    => true
+        )
+      end
     end
 
     mem_type = lpar.shared_mem == "true" ? "shared" : "dedicated"
