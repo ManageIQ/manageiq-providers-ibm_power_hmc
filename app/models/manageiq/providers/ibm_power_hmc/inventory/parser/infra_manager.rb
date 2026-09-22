@@ -387,7 +387,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
           :uid_ems             => vswitch.uuid,
           :name                => vswitch.name,
           :host                => host,
-          :virtual_bridge_mode => vswitch.mode
+          :virtual_bridge_mode => vswitch.mode&.upcase
         )
         persister.host_switches.build(:host => host, :switch => switch)
       end
