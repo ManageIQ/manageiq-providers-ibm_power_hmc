@@ -384,9 +384,10 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
     if collector.vswitches.key?(sys.uuid)
       collector.vswitches[sys.uuid].each do |vswitch|
         switch = persister.host_virtual_switches.build(
-          :uid_ems => vswitch.uuid,
-          :name    => vswitch.name,
-          :host    => host
+          :uid_ems             => vswitch.uuid,
+          :name                => vswitch.name,
+          :host                => host,
+          :virtual_bridge_mode => vswitch.mode&.upcase
         )
         persister.host_switches.build(:host => host, :switch => switch)
       end
