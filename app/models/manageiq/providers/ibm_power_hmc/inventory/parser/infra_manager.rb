@@ -521,6 +521,17 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       )
     end
 
+    if lpar.respond_to?(:cpu_compat_mode) && lpar.cpu_compat_mode.present?
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => "processor_compatibility_mode",
+        :display_name => _("Processor Compatibility Mode"),
+        :description  => _("Current processor compatibility mode"),
+        :value        => lpar.cpu_compat_mode,
+        :read_only    => true
+      )
+    end
+
     if lpar.respond_to?("ref_code")
       persister.vms_and_templates_advanced_settings.build(
         :resource     => vm,
