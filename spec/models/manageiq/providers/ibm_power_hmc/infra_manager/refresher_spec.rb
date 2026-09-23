@@ -232,6 +232,24 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :read_only => true
     )
 
+    setting = vios.advanced_settings.find_by(:name => "maximum_processors")
+    expect(setting).to have_attributes(
+      :value     => "4",
+      :read_only => true
+    )
+
+    setting = vios.advanced_settings.find_by(:name => "minimum_processors")
+    expect(setting).to have_attributes(
+      :value     => "1",
+      :read_only => true
+    )
+
+    setting = vios.advanced_settings.find_by(:name => "maximum_virtual_processors")
+    expect(setting).to be_nil
+
+    setting = vios.advanced_settings.find_by(:name => "minimum_virtual_processors")
+    expect(setting).to be_nil
+
     setting = vios.advanced_settings.find_by(:name => "memory_type")
     expect(setting).to have_attributes(
       :value     => "dedicated",
@@ -310,6 +328,30 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     setting = lpar.advanced_settings.find_by(:name => "processor_type")
     expect(setting).to have_attributes(
       :value     => "uncapped",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "maximum_processors")
+    expect(setting).to have_attributes(
+      :value     => "2",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "minimum_processors")
+    expect(setting).to have_attributes(
+      :value     => "0.1",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "maximum_virtual_processors")
+    expect(setting).to have_attributes(
+      :value     => "2",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "minimum_virtual_processors")
+    expect(setting).to have_attributes(
+      :value     => "1",
       :read_only => true
     )
 
