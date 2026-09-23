@@ -319,6 +319,12 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :read_only => true
     )
 
+    setting = lpar.advanced_settings.find_by(:name => "processor_compatibility_mode")
+    expect(setting).to have_attributes(
+      :value     => "POWER8",
+      :read_only => true
+    )
+
     setting = lpar.advanced_settings.find_by(:name => "srr_capable")
     expect(setting).to have_attributes(
       :value     => "false",
