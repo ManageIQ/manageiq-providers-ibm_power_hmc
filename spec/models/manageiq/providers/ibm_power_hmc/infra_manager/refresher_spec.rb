@@ -258,13 +258,13 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
 
     setting = vios.advanced_settings.find_by(:name => "minimum_memory")
     expect(setting).to have_attributes(
-      :value     => "8192",
+      :value     => "3072",
       :read_only => true
     )
 
     setting = vios.advanced_settings.find_by(:name => "maximum_memory")
     expect(setting).to have_attributes(
-      :value     => "24576",
+      :value     => "20480",
       :read_only => true
     )
 
