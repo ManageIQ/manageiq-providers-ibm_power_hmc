@@ -256,6 +256,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :read_only => true
     )
 
+    setting = vios.advanced_settings.find_by(:name => "minimum_memory")
+    expect(setting).to have_attributes(
+      :value     => "8192",
+      :read_only => true
+    )
+
+    setting = vios.advanced_settings.find_by(:name => "maximum_memory")
+    expect(setting).to have_attributes(
+      :value     => "24576",
+      :read_only => true
+    )
+
     expect(vios.labels.count).to eq(1)
     expect(vios.labels.first.name).to eq("ManageIQ")
 
@@ -358,6 +370,18 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     setting = lpar.advanced_settings.find_by(:name => "memory_type")
     expect(setting).to have_attributes(
       :value     => "dedicated",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "minimum_memory")
+    expect(setting).to have_attributes(
+      :value     => "4096",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "maximum_memory")
+    expect(setting).to have_attributes(
+      :value     => "8192",
       :read_only => true
     )
 
