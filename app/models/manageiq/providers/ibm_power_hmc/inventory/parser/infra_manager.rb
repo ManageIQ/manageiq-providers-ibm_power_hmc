@@ -619,6 +619,28 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :read_only    => true
     )
 
+    if lpar.respond_to?("min_memory")
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => 'minimum_memory',
+        :display_name => _('Minimum Memory'),
+        :description  => _('minimum amount of memory in MB this partition should be allocated'),
+        :value        => lpar.min_memory,
+        :read_only    => true
+      )
+    end
+
+    if lpar.respond_to?("max_memory")
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => vm,
+        :name         => 'maximum_memory',
+        :display_name => _('Maximum Memory'),
+        :description  => _('maximum amount of memory in MB this partition can be allocated'),
+        :value        => lpar.max_memory,
+        :read_only    => true
+      )
+    end
+
     if lpar.kind_of?(IbmPowerHmc::LogicalPartition)
       persister.vms_and_templates_advanced_settings.build(
         :resource     => vm,
