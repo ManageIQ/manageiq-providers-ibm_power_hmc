@@ -30,6 +30,20 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
         assert_specific_storage
       end
     end
+
+    context "with a parent IBM Power VC" do
+      let(:power_vc) { FactoryBot.create(:ems_ibm_power_vc) }
+      let(:ems)      { FactoryBot.create(:ems_ibm_power_hmc_infra_with_authentication, :parent_manager => power_vc) }
+
+      it "doesn't collect VIOS" do
+        2.times do
+          full_refresh(ems)
+          ems.reload
+
+          assert_ems(:with_vioses => false)
+        end
+      end
+    end
   end
 
   context "#target_refresh" do
@@ -86,13 +100,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
     end
   end
 
-  def assert_ems
+  def assert_ems(with_vioses: true)
     expect(ems.last_refresh_error).to be_nil
     expect(ems.last_refresh_date).not_to be_nil
 
-    expect(ems.vms.count).to be > 1
-
-    expect(ems.type).to eq("ManageIQ::Providers::IbmPowerHmc::InfraManager")
+    expect(ems.vms.count).to eq(with_vioses ? 44 : 34)
+    expect(ems.miq_templates.count).to eq(20)
+    expect(ems.hosts.count).to eq(4)
+    expect(ems.switches.count).to eq(7)
+    expect(ems.lans.count).to eq(10)
+    expect(ems.resource_pools.count).to eq(13)
+    expect(ems.storages.count).to eq(with_vioses ? 5 : 1)
   end
 
   def assert_specific_host
