@@ -397,6 +397,146 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :read_only => true
     )
 
+    if lpar.advanced_settings.find_by(:name => "bootable")
+      setting = lpar.advanced_settings.find_by(:name => "bootable")
+      expect(setting).to have_attributes(
+        :value     => "true",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "conn_monitoring_enabled")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "operation_in_progress")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "redundant_err_path")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "time_ref_partition")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "virtual_attn_led")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "keylock_position")
+      expect(setting).to have_attributes(
+        :value     => "normal",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "logical_serial_number")
+      expect(setting).to have_attributes(
+        :value     => "103341VG",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "powervm_mgmt_capable")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "power_on_with_hypervisor")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "dlpar_io_capable")
+      expect(setting).to have_attributes(
+        :value     => "true",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "dlpar_mem_capable")
+      expect(setting).to have_attributes(
+        :value     => "true",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "dlpar_proc_capable")
+      expect(setting).to have_attributes(
+        :value     => "true",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "dlpar_vios_capable")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "intrusion_detect_capable")
+      expect(setting).to have_attributes(
+        :value     => "true",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "rmc_os_shutdown_capable")
+      expect(setting).to have_attributes(
+        :value     => "true",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "migration_storage_status")
+      expect(setting).to have_attributes(
+        :value     => "Update_Failed",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "dedicated_procs_for_migration")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "migration_state")
+      expect(setting).to have_attributes(
+        :value     => "Not_Migrating",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "remote_restart_state")
+      expect(setting).to have_attributes(
+        :value     => "Invalid",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "ams")
+      expect(setting).to have_attributes(
+        :value     => "false",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "uncapped_weight")
+      expect(setting).to have_attributes(
+        :value     => "128",
+        :read_only => true
+      )
+
+      setting = lpar.advanced_settings.find_by(:name => "desired_uncapped_weight")
+      expect(setting).to have_attributes(
+        :value     => "128",
+        :read_only => true
+      )
+    end
+
     expect(lpar.labels.count).to eq(1)
     expect(lpar.labels.first.name).to eq("ManageIQ")
 
