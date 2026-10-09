@@ -651,7 +651,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :read_only    => true
       )
     end
-    return unless lpar.kind_of?(IbmPowerHmc::BasePartition)
+    return unless lpar.respond_to?(:bootable)
 
     persister.vms_and_templates_advanced_settings.build(
       :resource     => vm,
