@@ -25,6 +25,9 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
     it "supports clone" do
       expect(vm.supports?(:clone)).to be false
     end
+    it "maps error raw power state to on" do
+      expect(described_class.calculate_power_state("error")).to eq("on")
+    end
     it "supports publish" do
       expect(vm.supports?(:publish)).to (be true), "unsupported reason: #{described_class.unsupported_reason(:publish)}"
       expect(archived_vm.supports?(:publish)).to be false
