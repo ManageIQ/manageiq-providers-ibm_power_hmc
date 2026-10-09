@@ -517,6 +517,24 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Refresher do
       :read_only => true
     )
 
+    setting = lpar.advanced_settings.find_by(:name => "ams")
+    expect(setting).to have_attributes(
+      :value     => "false",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "uncapped_weight")
+    expect(setting).to have_attributes(
+      :value     => "128",
+      :read_only => true
+    )
+
+    setting = lpar.advanced_settings.find_by(:name => "desired_uncapped_weight")
+    expect(setting).to have_attributes(
+      :value     => "128",
+      :read_only => true
+    )
+
     expect(lpar.labels.count).to eq(1)
     expect(lpar.labels.first.name).to eq("ManageIQ")
 

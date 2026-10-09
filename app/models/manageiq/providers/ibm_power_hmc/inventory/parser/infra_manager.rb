@@ -655,6 +655,30 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
 
     persister.vms_and_templates_advanced_settings.build(
       :resource     => vm,
+      :name         => "ams",
+      :display_name => _("Active Memory Sharing Enabled"),
+      :description  => _("Whether active memory sharing is enabled for the partition."),
+      :value        => lpar.ams,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "uncapped_weight",
+      :display_name => _("Uncapped Weight"),
+      :description  => _("Current uncapped weight of the partition."),
+      :value        => lpar.uncapped_weight,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "desired_uncapped_weight",
+      :display_name => _("Desired Uncapped Weight"),
+      :description  => _("Desired uncapped weight of the partition."),
+      :value        => lpar.desired_uncapped_weight,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
       :name         => "bootable",
       :display_name => _("Bootable"),
       :description  => _("Whether the partition is bootable."),
