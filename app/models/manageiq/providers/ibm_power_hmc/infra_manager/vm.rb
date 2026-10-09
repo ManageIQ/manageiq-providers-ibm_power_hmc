@@ -84,7 +84,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
   POWER_STATES = {
-    "error"                => "unknown",
+    "error"                => "on",
     "not activated"        => "off",
     "not available"        => "unknown",
     "open firmware"        => "on",
