@@ -651,6 +651,336 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
         :read_only    => true
       )
     end
+    return unless lpar.respond_to?(:bootable)
+
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "ams",
+      :display_name => _("Active Memory Sharing Enabled"),
+      :description  => _("Whether active memory sharing is enabled for the partition."),
+      :value        => lpar.ams,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "uncapped_weight",
+      :display_name => _("Uncapped Weight"),
+      :description  => _("Current uncapped weight of the partition."),
+      :value        => lpar.uncapped_weight,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "desired_uncapped_weight",
+      :display_name => _("Desired Uncapped Weight"),
+      :description  => _("Desired uncapped weight of the partition."),
+      :value        => lpar.desired_uncapped_weight,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "bootable",
+      :display_name => _("Bootable"),
+      :description  => _("Whether the partition is bootable."),
+      :value        => lpar.bootable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "call_home_enabled",
+      :display_name => _("Call Home Enabled"),
+      :description  => _("Whether call home is enabled for the partition."),
+      :value        => lpar.call_home_enabled,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "conn_monitoring_enabled",
+      :display_name => _("Connection Monitoring Enabled"),
+      :description  => _("Whether connection monitoring is enabled."),
+      :value        => lpar.conn_monitoring_enabled,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "operation_in_progress",
+      :display_name => _("Operation In Progress"),
+      :description  => _("Whether an operation is currently in progress on the partition."),
+      :value        => lpar.operation_in_progress,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "redundant_err_path",
+      :display_name => _("Redundant Error Path Reporting Enabled"),
+      :description  => _("Whether redundant error path reporting is enabled."),
+      :value        => lpar.redundant_err_path,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "time_ref_partition",
+      :display_name => _("Time Reference Partition"),
+      :description  => _("Whether the partition is the time reference partition."),
+      :value        => lpar.time_ref_partition,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "virtual_attn_led",
+      :display_name => _("Virtual Service Attention LED"),
+      :description  => _("Whether the virtual service attention LED is on."),
+      :value        => lpar.virtual_attn_led,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "keylock_position",
+      :display_name => _("Keylock Position"),
+      :description  => _("Current keylock position of the partition."),
+      :value        => lpar.keylock_position,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "logical_serial_number",
+      :display_name => _("Logical Serial Number"),
+      :description  => _("Logical serial number of the partition."),
+      :value        => lpar.logical_serial_number,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "progress_state",
+      :display_name => _("Progress State"),
+      :description  => _("Current progress state of the partition."),
+      :value        => lpar.progress_state,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "powervm_mgmt_capable",
+      :display_name => _("PowerVM Management Capable"),
+      :description  => _("Whether the partition is capable of PowerVM management."),
+      :value        => lpar.powervm_mgmt_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "assign_all_resources",
+      :display_name => _("Assign All Resources"),
+      :description  => _("Whether all resources are assigned to the partition."),
+      :value        => lpar.assign_all_resources,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "has_physical_io",
+      :display_name => _("Has Physical IO"),
+      :description  => _("Whether the partition has physical IO assigned."),
+      :value        => lpar.has_physical_io,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "boot_mode",
+      :display_name => _("Boot Mode"),
+      :description  => _("Boot mode of the partition."),
+      :value        => lpar.boot_mode,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "power_on_with_hypervisor",
+      :display_name => _("Power On With Hypervisor"),
+      :description  => _("Whether the partition powers on with the hypervisor."),
+      :value        => lpar.power_on_with_hypervisor,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "kvm_capable",
+      :display_name => _("KVM Capable"),
+      :description  => _("Whether the partition is KVM capable."),
+      :value        => lpar.kvm_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "os_image_date",
+      :display_name => _("OS Image Date"),
+      :description  => _("Date of the OS image installed on the partition."),
+      :value        => lpar.os_image_date,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "dlpar_io_capable",
+      :display_name => _("DLPAR IO Capable"),
+      :description  => _("Whether the partition supports dynamic logical partition IO."),
+      :value        => lpar.dlpar_io_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "dlpar_mem_capable",
+      :display_name => _("DLPAR Memory Capable"),
+      :description  => _("Whether the partition supports dynamic logical partition memory."),
+      :value        => lpar.dlpar_mem_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "dlpar_proc_capable",
+      :display_name => _("DLPAR Processor Capable"),
+      :description  => _("Whether the partition supports dynamic logical partition processors."),
+      :value        => lpar.dlpar_proc_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "dlpar_vios_capable",
+      :display_name => _("DLPAR VIOS Capable"),
+      :description  => _("Whether the partition supports dynamic logical partition VIOS."),
+      :value        => lpar.dlpar_vios_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "intrusion_detect_capable",
+      :display_name => _("Intrusion Detection Capable"),
+      :description  => _("Whether the partition supports internal and external intrusion detection."),
+      :value        => lpar.intrusion_detect_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "rmc_os_shutdown_capable",
+      :display_name => _("RMC OS Shutdown Capable"),
+      :description  => _("Whether the partition supports RMC-initiated OS shutdown."),
+      :value        => lpar.rmc_os_shutdown_capable,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "migration_storage_status",
+      :display_name => _("Migration Storage VIOS Data Status"),
+      :description  => _("Status of the migration storage VIOS data."),
+      :value        => lpar.migration_storage_status,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "migration_storage_timestamp",
+      :display_name => _("Migration Storage VIOS Data Timestamp"),
+      :description  => _("Timestamp of the migration storage VIOS data."),
+      :value        => lpar.migration_storage_timestamp,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "dedicated_procs_for_migration",
+      :display_name => _("Dedicated Processors For Migration"),
+      :description  => _("Whether the partition has dedicated processors for migration."),
+      :value        => lpar.dedicated_procs_for_migration,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "migration_state",
+      :display_name => _("Migration State"),
+      :description  => _("Current migration state of the partition."),
+      :value        => lpar.migration_state,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "remote_restart_state",
+      :display_name => _("Remote Restart State"),
+      :description  => _("Current remote restart state of the partition."),
+      :value        => lpar.remote_restart_state,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "current_secure_boot",
+      :display_name => _("Current Secure Boot"),
+      :description  => _("Current secure boot setting of the partition."),
+      :value        => lpar.current_secure_boot,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "pending_secure_boot",
+      :display_name => _("Pending Secure Boot"),
+      :description  => _("Pending secure boot setting of the partition."),
+      :value        => lpar.pending_secure_boot,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "keystore_signed_updates_enabled",
+      :display_name => _("Key Store Signed Updates Enabled"),
+      :description  => _("Whether key store signed updates are enabled."),
+      :value        => lpar.keystore_signed_updates_enabled,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "keystore_signed_updates_no_verify",
+      :display_name => _("Key Store Signed Updates Without Verification Allowed"),
+      :description  => _("Whether key store signed updates without verification are allowed."),
+      :value        => lpar.keystore_signed_updates_no_verify,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "linux_dynamic_key_secure_boot",
+      :display_name => _("Linux Dynamic Key Secure Boot Enabled"),
+      :description  => _("Whether Linux dynamic key secure boot is enabled."),
+      :value        => lpar.linux_dynamic_key_secure_boot,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "partition_placement",
+      :display_name => _("Partition Placement"),
+      :description  => _("Placement value for the partition."),
+      :value        => lpar.partition_placement,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "min_affinity_score",
+      :display_name => _("Minimum Affinity Score"),
+      :description  => _("Minimum affinity score for the partition."),
+      :value        => lpar.min_affinity_score,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "min_affinity_score_action",
+      :display_name => _("Minimum Affinity Score Action"),
+      :description  => _("Action taken when minimum affinity score is not met."),
+      :value        => lpar.min_affinity_score_action,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "resource_group_name",
+      :display_name => _("Associated Resource Group Name"),
+      :description  => _("Name of the resource group associated with the partition."),
+      :value        => lpar.resource_group_name,
+      :read_only    => true
+    )
+    persister.vms_and_templates_advanced_settings.build(
+      :resource     => vm,
+      :name         => "resource_group_id",
+      :display_name => _("Associated Resource Group ID"),
+      :description  => _("ID of the resource group associated with the partition."),
+      :value        => lpar.resource_group_id,
+      :read_only    => true
+    )
   end
 
   def parse_templates
