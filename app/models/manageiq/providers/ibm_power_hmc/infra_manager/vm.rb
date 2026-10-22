@@ -40,6 +40,11 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
     unsupported_reason(:action)
   end
 
+  # An LPAR in the "error" state can still be powered off.
+  def vm_powered_on?
+    %w[on error].include?(current_state)
+  end
+
   def provider_object(_connection = nil)
     raise StandardError, "Must be implemented in a subclass"
   end
@@ -84,7 +89,7 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::Vm < ManageIQ::Providers::
 
   # See LogicalPartitionState.Enum (/rest/api/web/schema/inc/Enumerations.xsd)
   POWER_STATES = {
-    "error"                => "unknown",
+    "error"                => "error",
     "not activated"        => "off",
     "not available"        => "unknown",
     "open firmware"        => "on",
