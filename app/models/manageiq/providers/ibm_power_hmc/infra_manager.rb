@@ -163,6 +163,9 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
   def self.raw_connect(hostname, port, userid, password, validate_ssl, validate)
     require "ibm_power_hmc"
 
+    # Route SDK request/response debug logs to ibm_power_hmc.log
+    IbmPowerHmc.logger = $ibm_power_hmc_log
+
     hc = IbmPowerHmc::Connection.new(
       :host         => hostname,
       :port         => port,
