@@ -18,7 +18,7 @@ module ManageIQ
           $ibm_power_hmc_log ||= Vmdb::Loggers.create_logger("ibm_power_hmc.log")
 
           require "ibm_power_hmc"
-          IbmPowerHmc.logger = $ibm_power_hmc_log
+          ::IbmPowerHmc.logger = $ibm_power_hmc_log
         end
 
         def self.apply_logger_config(config)
