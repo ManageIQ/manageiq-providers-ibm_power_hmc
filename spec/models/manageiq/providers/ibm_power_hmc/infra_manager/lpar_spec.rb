@@ -79,6 +79,16 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
       expect(vm.supports?(:stop)).to be false
       expect(vm.supports?(:suspend)).to be false
     end
+    it "maps error raw power state to error" do
+      expect(described_class.calculate_power_state("error")).to eq("error")
+    end
+    it "supports stop but not start in error state" do
+      host.advanced_settings.create!(:name => "hmc_managed", :value => "true")
+      vm.raw_power_state = "error"
+      expect(vm.power_state).to eq("error")
+      expect(vm.supports?(:start)).to be false
+      expect(vm.supports?(:stop)).to (be true), "unsupported reason: #{vm.unsupported_reason(:stop)}"
+    end
     it "does not support power operations (no advanced setting)" do
       vm.raw_power_state = "running"
       expect(vm.vm_powered_on?).to be true
