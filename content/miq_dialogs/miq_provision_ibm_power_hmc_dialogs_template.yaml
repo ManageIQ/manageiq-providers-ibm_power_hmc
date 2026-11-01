@@ -92,7 +92,26 @@
           :display: :hide
           :data_type: :string
       :display: :show
+    :storage:
+      :description: Storage
+      :fields:
+        :vscsi_storage:
+          :description: vSCSI Physical Volume (VIOS:device)
+          :notes: "Override the vSCSI backing physical volume at deploy time. Format: VIOS_name:hdiskN"
+          :notes_display: :show
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :vfc_storage:
+          :description: vFC Physical Port (VIOS:port)
+          :notes: "Override the vFC (NPIV) backing FC port at deploy time. Format: VIOS_name:fcsN"
+          :notes_display: :show
+          :required: false
+          :display: :hide
+          :data_type: :string
+      :display: :show
   :dialog_order:
   - :service
   - :environment
   - :network
+  - :storage

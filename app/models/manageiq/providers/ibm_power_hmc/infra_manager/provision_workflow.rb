@@ -26,7 +26,24 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager::ProvisionWorkflow < Manage
     end
   end
 
+  # Extends the base ws_vm_fields to also process the :storage dialog tab,
+  # which the core MiqProvisionVirtWorkflow does not iterate.
+  # This allows API callers to pass vscsi_storage and vfc_storage in vm_fields.
+  def ws_vm_fields(values, fields)
+    super
+    ws_storage_fields(values, fields)
+  end
+
   def self.provider_model
     ManageIQ::Providers::IbmPowerHmc::InfraManager
+  end
+
+  private
+
+  def ws_storage_fields(values, fields)
+    return if (dlg_fields = get_ws_dialog_fields(:storage)).nil?
+
+    data = parse_ws_string(fields)
+    data.keys.each { |key| set_ws_field_value(values, key, data, :storage, dlg_fields) if dlg_fields.key?(key) }
   end
 end

@@ -24,9 +24,11 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     if destination_type.eql?("Vm")
       {
-        :name    => dest_name,
-        :host_id => get_option(:placement_host_name),
-        :vlan    => get_option(:vlan)
+        :name          => dest_name,
+        :host_id       => get_option(:placement_host_name),
+        :vlan          => get_option(:vlan),
+        :vscsi_storage => get_option(:vscsi_storage),
+        :vfc_storage   => get_option(:vfc_storage)
       }
     else
       {
@@ -38,8 +40,10 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::Cloning
   def log_clone_options(clone_options)
     $ibm_power_hmc_log.info("#{request_type} [#{source.name}] to [#{clone_options[:name]}]")
     if destination_type.eql?("Vm")
-      $ibm_power_hmc_log.info("Destination Host: [#{clone_options[:host_id]}]")
-      $ibm_power_hmc_log.info("Destination Vlan: [#{clone_options[:vlan]}]")
+      $ibm_power_hmc_log.info("Destination Host:         [#{clone_options[:host_id]}]")
+      $ibm_power_hmc_log.info("Destination Vlan:         [#{clone_options[:vlan]}]")
+      $ibm_power_hmc_log.info("vSCSI Storage Override:   [#{clone_options[:vscsi_storage]}]")
+      $ibm_power_hmc_log.info("vFC Storage Override:     [#{clone_options[:vfc_storage]}]")
     end
   end
 

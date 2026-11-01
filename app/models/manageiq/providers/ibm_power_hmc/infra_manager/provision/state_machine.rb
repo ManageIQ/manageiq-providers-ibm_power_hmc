@@ -1,4 +1,6 @@
 module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::StateMachine
+  ERROR_DETAIL_MAX_LENGTH = 2048
+
   def create_destination
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     signal :determine_placement
@@ -39,5 +41,36 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::Provision::StateMachine
   def autostart_destination
     $ibm_power_hmc_log.info("#{self.class}##{__method__}")
     super
+  end
+
+  # ManageIQ cuts a task's message to 255 characters, which can drop the reason the HMC gave. Before it does,
+  # keep the full text in options[:error_detail] so a client (e.g. the PMC MCP server) can read it back from
+  # the request task. Only for template provisioning (request_type 'template'). The task's message, state and
+  # status are left exactly as ManageIQ sets them.
+  def provision_error
+    store_error_detail
+    super
+  end
+
+  private
+
+  # Runs in the terminal error phase, where ManageIQ does not recover from an error: it must never raise.
+  # Read before super, because provision_error deletes these phase_context keys.
+  def store_error_detail
+    return unless request_type == 'template'
+
+    detail = phase_context[:error_message].presence
+    detail ||= "[#{phase_context[:exception_class]}]: #{phase_context[:exception_message]}" if phase_context[:exception_message].present?
+    return if detail.blank?
+
+    original = options
+    update!(:options => original.merge(:error_detail => detail.to_s[0, ERROR_DETAIL_MAX_LENGTH]))
+  rescue StandardError => err
+    self.options = original if original # drop the unsaved change so the update in super is not affected
+    begin
+      $ibm_power_hmc_log.warn("#{self.class}#store_error_detail could not store error_detail: #{err.class}")
+    rescue StandardError
+      nil
+    end
   end
 end
