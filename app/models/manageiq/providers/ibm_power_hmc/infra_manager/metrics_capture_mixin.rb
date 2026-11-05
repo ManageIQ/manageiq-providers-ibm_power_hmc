@@ -84,22 +84,18 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     end
   end
 
+  # HMC sample timestamps mark the END of the 30s window they cover, i.e. the sample
+  # timestamped T is the average over [T - SAMPLE_DURATION, T).
+  # The interpolated samples are aligned on the 20s grid (:00, :20, :40) that ManageIQ
+  # uses for realtime metrics, so that ManageIQ does not round (and shift) them.
   def interpolate_samples(processed)
     interpolated = {}
     timestamps = processed.keys.sort
-    t = timestamps.first
-    while t && t + MIQ_SAMPLE_INTERVAL <= timestamps.last + SAMPLE_DURATION
-      selected = timestamps.select { |ts| ts + SAMPLE_DURATION > t && ts < t + MIQ_SAMPLE_INTERVAL }.map do |ts|
-        if ts < t
-          # Actual sample starts before interpolated sample
-          {:ts => ts, :weight => SAMPLE_DURATION - (t - ts)}
-        elsif ts + SAMPLE_DURATION > t + MIQ_SAMPLE_INTERVAL
-          # Actual sample ends after interpolated sample
-          {:ts => ts, :weight => t + MIQ_SAMPLE_INTERVAL - ts}
-        else
-          # Actual sample within interpolated sample time slice
-          {:ts => ts, :weight => SAMPLE_DURATION}
-        end
+    t = timestamps.first && align_to_miq_grid(timestamps.first - SAMPLE_DURATION)
+    while t && t + MIQ_SAMPLE_INTERVAL <= timestamps.last
+      selected = timestamps.select { |ts| ts > t && ts - SAMPLE_DURATION < t + MIQ_SAMPLE_INTERVAL }.map do |ts|
+        # Overlap between the actual sample window [ts - SAMPLE_DURATION, ts) and the interpolated slot
+        {:ts => ts, :weight => [ts, t + MIQ_SAMPLE_INTERVAL].min - [ts - SAMPLE_DURATION, t].max}
       end
       # Interpolated sample time slice must be fully covered by actual samples
       if selected.sum { |ts| ts[:weight] } == MIQ_SAMPLE_INTERVAL
@@ -111,4 +107,10 @@ module ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin
     end
     interpolated
   end
+
+  # Returns the first instant at or after +time+ that falls on the 20s grid (:00, :20, :40).
+  def align_to_miq_grid(time)
+    time + (-time.to_r % MIQ_SAMPLE_INTERVAL.to_i)
+  end
+
 end

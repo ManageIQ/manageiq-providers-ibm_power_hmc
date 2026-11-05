@@ -100,23 +100,23 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Lpar do
       expect(vm.perf_collect_metrics("realtime")).to include(
         {
           vm.ems_ref => {
-            Time.new(2022, 4, 6, 13, 30, 30, "+00:00") => {
+            Time.new(2022, 4, 6, 13, 30, 0, "+00:00")  => {
               "cpu_usage_rate_average"     => 16.2,
               "disk_usage_rate_average"    => 33.217777766927085,
               "mem_usage_absolute_average" => 100.0,
-              "net_usage_rate_average"     => 0.03468531901041667
+              "net_usage_rate_average"     => 1.0405595703125
             },
-            Time.new(2022, 4, 6, 13, 30, 50, "+00:00") => {
+            Time.new(2022, 4, 6, 13, 30, 20, "+00:00") => {
               "cpu_usage_rate_average"     => 12.9,
               "disk_usage_rate_average"    => 28.40305555013021,
               "mem_usage_absolute_average" => 100.0,
-              "net_usage_rate_average"     => 0.03623751627604167
+              "net_usage_rate_average"     => 1.08712548828125
             },
-            Time.new(2022, 4, 6, 13, 31, 10, "+00:00") => {
+            Time.new(2022, 4, 6, 13, 30, 40, "+00:00") => {
               "cpu_usage_rate_average"     => 9.6,
               "disk_usage_rate_average"    => 23.58833333333333,
               "mem_usage_absolute_average" => 100.0,
-              "net_usage_rate_average"     => 0.03778971354166667
+              "net_usage_rate_average"     => 1.13369140625
             }
           }
         }

@@ -22,23 +22,17 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::Host do
       expect(host.perf_collect_metrics("realtime")).to include(
         {
           host.ems_ref => {
-            Time.new(2022, 4, 7, 10, 30, 0, "+00:00")  => {
+            Time.new(2022, 4, 7, 10, 29, 40, "+00:00") => {
               "cpu_usage_rate_average"     => 8.475,
               "disk_usage_rate_average"    => 50.54250865885417,
               "mem_usage_absolute_average" => 30.078125,
-              "net_usage_rate_average"     => 3.5191873372395834
+              "net_usage_rate_average"     => 105.57562011718751
             },
-            Time.new(2022, 4, 7, 10, 30, 20, "+00:00") => {
-              "cpu_usage_rate_average"     => 8.1675,
-              "disk_usage_rate_average"    => 50.495846354166666,
-              "mem_usage_absolute_average" => 30.078125,
-              "net_usage_rate_average"     => 3.643533544921875
-            },
-            Time.new(2022, 4, 7, 10, 30, 40, "+00:00") => {
+            Time.new(2022, 4, 7, 10, 30, 0, "+00:00")  => {
               "cpu_usage_rate_average"     => 7.860000000000001,
               "disk_usage_rate_average"    => 50.44918404947917,
               "mem_usage_absolute_average" => 30.078125,
-              "net_usage_rate_average"     => 3.7678797526041663
+              "net_usage_rate_average"     => 113.03639257812502
             }
           }
         }

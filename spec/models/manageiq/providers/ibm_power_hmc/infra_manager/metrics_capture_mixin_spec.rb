@@ -35,35 +35,36 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin do
     }
   end
 
+  # HMC sample timestamps are the END of the 30s window they cover:
+  #   ts      covers [ts - 30s, ts)
+  #   ts + 30 covers [ts,       ts + 30s)
+  #   ts + 60 covers [ts + 30s, ts + 60s)
+  #   ts + 90 covers [ts + 60s, ts + 90s)
+  # Interpolated samples start on the 20s grid, here ts - 20s since ts is on the grid.
   let(:interpolated_samples) do
     {
-      ts                                            => {
+      ts - described_class::MIQ_SAMPLE_INTERVAL     => {
         :cat1 => 0,
         :cat2 => 100,
         :cat4 => 100
       },
-      ts + described_class::MIQ_SAMPLE_INTERVAL     => {
-        :cat1 => 25,
-        :cat2 => 50,
-        :cat4 => 100
-      },
-      ts + described_class::MIQ_SAMPLE_INTERVAL * 2 => {
+      ts                                            => {
         :cat1 => 50,
         :cat2 => 0,
         :cat3 => 100,
         :cat4 => 100
       },
-      ts + described_class::MIQ_SAMPLE_INTERVAL * 3 => {
+      ts + described_class::MIQ_SAMPLE_INTERVAL     => {
+        :cat1 => 75,
+        :cat2 => 50,
+        :cat3 => 100
+      },
+      ts + described_class::MIQ_SAMPLE_INTERVAL * 2 => {
         :cat1 => 100,
         :cat2 => 100,
         :cat3 => 100
       },
-      ts + described_class::MIQ_SAMPLE_INTERVAL * 4 => {
-        :cat1 => 50,
-        :cat2 => 50,
-        :cat3 => 50
-      },
-      ts + described_class::MIQ_SAMPLE_INTERVAL * 5 => {
+      ts + described_class::MIQ_SAMPLE_INTERVAL * 3 => {
         :cat1 => 0,
         :cat2 => 0,
         :cat3 => 0,
@@ -238,26 +239,64 @@ describe ManageIQ::Providers::IbmPowerHmc::InfraManager::MetricsCaptureMixin do
   it "interpolate_samples" do
     i = @test_obj.interpolate_samples(processed_samples)
     expect(i).to include(interpolated_samples)
-    expect(i.count).to eq(6)
+    expect(i.count).to eq(5)
   end
 
   it "interpolate_samples (without first processed sample)" do
-    expect(@test_obj.interpolate_samples(processed_samples.reject { |k| k == ts }).count).to eq(4)
+    i = @test_obj.interpolate_samples(processed_samples.reject { |k| k == ts })
+    expect(i).to include(interpolated_samples.reject { |k| k < ts })
+    expect(i.count).to eq(4)
   end
 
   it "interpolate_samples (without last processed sample)" do
     i = @test_obj.interpolate_samples(processed_samples.reject { |k| k == ts + described_class::SAMPLE_DURATION * 3 })
-    expect(i).to include(interpolated_samples.select { |k| k <= ts + described_class::MIQ_SAMPLE_INTERVAL * 3 })
+    expect(i).to include(interpolated_samples.select { |k| k <= ts + described_class::MIQ_SAMPLE_INTERVAL * 2 })
     expect(i.count).to eq(4)
   end
 
   it "interpolate_samples (gap in samples)" do
     i = @test_obj.interpolate_samples(processed_samples.reject { |k| k == ts + described_class::SAMPLE_DURATION })
-    expect(i).to include(interpolated_samples.reject { |k| k > ts && k < ts + described_class::SAMPLE_DURATION * 2 })
-    expect(i.count).to eq(4)
+    expect(i).to include(interpolated_samples.reject { |k| k >= ts && k <= ts + described_class::MIQ_SAMPLE_INTERVAL })
+    expect(i.count).to eq(3)
   end
 
   it "interpolate_samples (empty processed sample set)" do
     expect(@test_obj.interpolate_samples({})).to be_empty
+  end
+
+  context "HMC sample timestamps are the end of the sample window" do
+    let(:t0) { Time.utc(2026, 10, 22, 14, 0, 30) }
+    let(:processed) do
+      {
+        t0                                        => {:cpu => 50},
+        t0 + described_class::SAMPLE_DURATION     => {:cpu => 90},
+        t0 + described_class::SAMPLE_DURATION * 2 => {:cpu => 100}
+      }
+    end
+
+    it "stores each value at the start of the window it covers" do
+      expect(@test_obj.interpolate_samples(processed)).to eq(
+        Time.utc(2026, 10, 22, 14, 0, 0)  => {:cpu => 50},  # 14:00:00-14:00:30 -> sample 14:00:30
+        Time.utc(2026, 10, 22, 14, 0, 20) => {:cpu => 70},  # 10s of 14:00:30 + 10s of 14:01:00
+        Time.utc(2026, 10, 22, 14, 0, 40) => {:cpu => 90},  # 14:00:30-14:01:00 -> sample 14:01:00
+        Time.utc(2026, 10, 22, 14, 1, 0)  => {:cpu => 100}  # 14:01:00-14:01:30 -> sample 14:01:30
+      )
+    end
+
+    it "always produces timestamps on the 20s grid, whatever the first sample second is" do
+      [0, 10, 30, 50].each do |first_second|
+        first = Time.utc(2026, 10, 22, 14, 0, 0) + first_second
+        samples = (0..6).to_h { |n| [first + described_class::SAMPLE_DURATION * n, {:cpu => n}] }
+
+        timestamps = @test_obj.interpolate_samples(samples).keys
+        expect(timestamps).not_to be_empty
+        expect(timestamps.map(&:sec)).to all(satisfy { |sec| (sec % described_class::MIQ_SAMPLE_INTERVAL.to_i).zero? })
+      end
+    end
+
+    it "does not shift when the timestamp is rounded by ManageIQ core" do
+      timestamps = @test_obj.interpolate_samples(processed).keys
+      expect(timestamps.map { |t| Metric::Helper.nearest_realtime_timestamp(t) }).to eq(timestamps.map { |t| t.utc.iso8601 })
+    end
   end
 end
