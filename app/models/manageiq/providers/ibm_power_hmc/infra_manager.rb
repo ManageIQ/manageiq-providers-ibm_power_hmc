@@ -12,7 +12,6 @@ class ManageIQ::Providers::IbmPowerHmc::InfraManager < ManageIQ::Providers::Infr
              :autosave    => true
 
   has_many :hosts_advanced_settings, :through => :hosts, :source => :advanced_settings
-  has_many :host_hardwares_advanced_settings, :through => :host_hardwares, :source => :advanced_settings
   has_many :media_repositories, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :iso_images, :through => :media_repositories
 

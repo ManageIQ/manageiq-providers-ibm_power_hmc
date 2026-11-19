@@ -186,163 +186,7 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :cpu_available_cores  => sys.avail_cpus,
       :serial_number        => sys.serial
     )
-    parse_host_hardware_advanced_settings(hardware, sys)
     parse_host_guest_devices(hardware, sys)
-  end
-
-  def parse_host_hardware_advanced_settings(hardware, sys)
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "pending_memory_mirroring_mode",
-      :display_name => _("Pending Memory Mirroring Mode"),
-      :description  => _("Pending memory mirroring mode."),
-      :value        => sys.pending_mem_mirroring_mode,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "memory_mirroring_state",
-      :display_name => _("Memory Mirroring State"),
-      :description  => _("Current memory mirroring state."),
-      :value        => sys.mem_mirroring_state,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "mirrored_memory",
-      :display_name => _("Mirrored Memory"),
-      :description  => _("Current mirrored memory in MB."),
-      :value        => sys.mirrored_mem,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "configured_mirrored_memory",
-      :display_name => _("Configured Mirrored Memory"),
-      :description  => _("Configured mirrored memory in MB."),
-      :value        => sys.configured_mirrored_mem,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "available_mirrored_memory",
-      :display_name => _("Available Mirrored Memory"),
-      :description  => _("Current available mirrored memory in MB."),
-      :value        => sys.avail_mirrored_mem,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "mirrorable_memory_with_defrag",
-      :display_name => _("Mirrorable Memory With Defragmentation"),
-      :description  => _("Mirrorable memory with defragmentation in MB."),
-      :value        => sys.mirrorable_mem_with_defrag,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "mirrorable_memory_without_defrag",
-      :display_name => _("Mirrorable Memory Without Defragmentation"),
-      :description  => _("Mirrorable memory without defragmentation in MB."),
-      :value        => sys.mirrorable_mem_without_defrag,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "mirrored_memory_used_by_hypervisor",
-      :display_name => _("Mirrored Memory Used By Hypervisor"),
-      :description  => _("Mirrored memory used by the hypervisor in MB."),
-      :value        => sys.mirrored_mem_used_by_hypervisor,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "max_mirrored_memory_defragmented",
-      :display_name => _("Maximum Mirrored Memory Defragmented"),
-      :description  => _("Maximum mirrored memory after defragmentation in MB."),
-      :value        => sys.max_mirrored_mem_defragmented,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "temp_memory_for_lpm",
-      :display_name => _("Temporary Memory For LPM"),
-      :description  => _("Temporary memory in use for logical partition mobility in MB."),
-      :value        => sys.temp_mem_for_lpm,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "pending_available_processor_units",
-      :display_name => _("Pending Available Processor Units"),
-      :description  => _("Pending available system processor units."),
-      :value        => sys.pending_avail_cpus,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "linux_only_processor_units",
-      :display_name => _("Linux Only Processor Units"),
-      :description  => _("Number of Linux only processor units."),
-      :value        => sys.linux_cpus,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "linux_or_vios_only_processor_units",
-      :display_name => _("Linux or VIOS Only Processor Units"),
-      :description  => _("Number of Linux or VIOS only processor units."),
-      :value        => sys.linux_or_vios_cpus,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "vios_processor_units",
-      :display_name => _("Virtual I/O Server Processor Units"),
-      :description  => _("Number of Virtual I/O Server processor units."),
-      :value        => sys.vios_cpus,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "shared_processor_pool_count",
-      :display_name => _("Shared Processor Pool Count"),
-      :description  => _("Number of shared processor pools."),
-      :value        => sys.shared_proc_pool_count,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "stealable_processor_units",
-      :display_name => _("Stealable Processor Units"),
-      :description  => _("Current stealable processor units."),
-      :value        => sys.stealable_cpus,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "max_virtual_processors_per_partition",
-      :display_name => _("Maximum Virtual Processors Per Partition"),
-      :description  => _("Maximum allowed virtual processors per partition."),
-      :value        => sys.max_virt_procs_per_lpar,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "min_processor_units_per_virtual_processor",
-      :display_name => _("Minimum Processor Units Per Virtual Processor"),
-      :description  => _("Minimum processor units per virtual processor."),
-      :value        => sys.min_proc_units_per_vproc,
-      :read_only    => true
-    )
-    persister.host_hardwares_advanced_settings.build(
-      :resource     => hardware,
-      :name         => "temp_processor_units_for_lpm",
-      :display_name => _("Temporary Processor Units For LPM"),
-      :description  => _("Temporary processor units in use for logical partition mobility."),
-      :value        => sys.temp_cpus_for_lpm,
-      :read_only    => true
-    )
   end
 
   def parse_host_guest_devices(hardware, sys)
@@ -827,6 +671,158 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :display_name => _("IPL Power On Source"),
       :description  => _("Source of the system power on."),
       :value        => sys.ipl_power_on_source,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "pending_memory_mirroring_mode",
+      :display_name => _("Pending Memory Mirroring Mode"),
+      :description  => _("Pending memory mirroring mode."),
+      :value        => sys.pending_mem_mirroring_mode,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "memory_mirroring_state",
+      :display_name => _("Memory Mirroring State"),
+      :description  => _("Current memory mirroring state."),
+      :value        => sys.mem_mirroring_state,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "mirrored_memory",
+      :display_name => _("Mirrored Memory"),
+      :description  => _("Current mirrored memory in MB."),
+      :value        => sys.mirrored_mem,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "configured_mirrored_memory",
+      :display_name => _("Configured Mirrored Memory"),
+      :description  => _("Configured mirrored memory in MB."),
+      :value        => sys.configured_mirrored_mem,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "available_mirrored_memory",
+      :display_name => _("Available Mirrored Memory"),
+      :description  => _("Current available mirrored memory in MB."),
+      :value        => sys.avail_mirrored_mem,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "mirrorable_memory_with_defrag",
+      :display_name => _("Mirrorable Memory With Defragmentation"),
+      :description  => _("Mirrorable memory with defragmentation in MB."),
+      :value        => sys.mirrorable_mem_with_defrag,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "mirrorable_memory_without_defrag",
+      :display_name => _("Mirrorable Memory Without Defragmentation"),
+      :description  => _("Mirrorable memory without defragmentation in MB."),
+      :value        => sys.mirrorable_mem_without_defrag,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "mirrored_memory_used_by_hypervisor",
+      :display_name => _("Mirrored Memory Used By Hypervisor"),
+      :description  => _("Mirrored memory used by the hypervisor in MB."),
+      :value        => sys.mirrored_mem_used_by_hypervisor,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_mirrored_memory_defragmented",
+      :display_name => _("Maximum Mirrored Memory Defragmented"),
+      :description  => _("Maximum mirrored memory after defragmentation in MB."),
+      :value        => sys.max_mirrored_mem_defragmented,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "temp_memory_for_lpm",
+      :display_name => _("Temporary Memory For LPM"),
+      :description  => _("Temporary memory in use for logical partition mobility in MB."),
+      :value        => sys.temp_mem_for_lpm,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "pending_available_processor_units",
+      :display_name => _("Pending Available Processor Units"),
+      :description  => _("Pending available system processor units."),
+      :value        => sys.pending_avail_cpus,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "linux_only_processor_units",
+      :display_name => _("Linux Only Processor Units"),
+      :description  => _("Number of Linux only processor units."),
+      :value        => sys.linux_cpus,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "linux_or_vios_only_processor_units",
+      :display_name => _("Linux or VIOS Only Processor Units"),
+      :description  => _("Number of Linux or VIOS only processor units."),
+      :value        => sys.linux_or_vios_cpus,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vios_processor_units",
+      :display_name => _("Virtual I/O Server Processor Units"),
+      :description  => _("Number of Virtual I/O Server processor units."),
+      :value        => sys.vios_cpus,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "shared_processor_pool_count",
+      :display_name => _("Shared Processor Pool Count"),
+      :description  => _("Number of shared processor pools."),
+      :value        => sys.shared_proc_pool_count,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "stealable_processor_units",
+      :display_name => _("Stealable Processor Units"),
+      :description  => _("Current stealable processor units."),
+      :value        => sys.stealable_cpus,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_virtual_processors_per_partition",
+      :display_name => _("Maximum Virtual Processors Per Partition"),
+      :description  => _("Maximum allowed virtual processors per partition."),
+      :value        => sys.max_virt_procs_per_lpar,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "min_processor_units_per_virtual_processor",
+      :display_name => _("Minimum Processor Units Per Virtual Processor"),
+      :description  => _("Minimum processor units per virtual processor."),
+      :value        => sys.min_proc_units_per_vproc,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "temp_processor_units_for_lpm",
+      :display_name => _("Temporary Processor Units For LPM"),
+      :description  => _("Temporary processor units in use for logical partition mobility."),
+      :value        => sys.temp_cpus_for_lpm,
       :read_only    => true
     )
   end
