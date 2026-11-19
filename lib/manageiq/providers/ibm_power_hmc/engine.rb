@@ -9,7 +9,7 @@ module ManageIQ
         # Hardware only declares this association in newer core versions. The host hardware
         # advanced settings (resource_type 'Hardware') need it, so add it when it is missing.
         config.to_prepare do
-          ::Hardware.has_many :advanced_settings, :as => :resource, :dependent => :destroy unless ::Hardware.reflect_on_association(:advanced_settings)
+          ::Hardware.has_many :advanced_settings, :as => :resource, :dependent => :destroy, :inverse_of => :resource unless ::Hardware.reflect_on_association(:advanced_settings)
         end
 
         def self.vmdb_plugin?
