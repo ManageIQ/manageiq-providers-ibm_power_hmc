@@ -186,7 +186,163 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :cpu_available_cores  => sys.avail_cpus,
       :serial_number        => sys.serial
     )
+    parse_host_hardware_advanced_settings(hardware, sys)
     parse_host_guest_devices(hardware, sys)
+  end
+
+  def parse_host_hardware_advanced_settings(hardware, sys)
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "pending_memory_mirroring_mode",
+      :display_name => _("Pending Memory Mirroring Mode"),
+      :description  => _("Pending memory mirroring mode."),
+      :value        => sys.pending_mem_mirroring_mode,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "memory_mirroring_state",
+      :display_name => _("Memory Mirroring State"),
+      :description  => _("Current memory mirroring state."),
+      :value        => sys.mem_mirroring_state,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "mirrored_memory",
+      :display_name => _("Mirrored Memory"),
+      :description  => _("Current mirrored memory in MB."),
+      :value        => sys.mirrored_mem,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "configured_mirrored_memory",
+      :display_name => _("Configured Mirrored Memory"),
+      :description  => _("Configured mirrored memory in MB."),
+      :value        => sys.configured_mirrored_mem,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "available_mirrored_memory",
+      :display_name => _("Available Mirrored Memory"),
+      :description  => _("Current available mirrored memory in MB."),
+      :value        => sys.avail_mirrored_mem,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "mirrorable_memory_with_defrag",
+      :display_name => _("Mirrorable Memory With Defragmentation"),
+      :description  => _("Mirrorable memory with defragmentation in MB."),
+      :value        => sys.mirrorable_mem_with_defrag,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "mirrorable_memory_without_defrag",
+      :display_name => _("Mirrorable Memory Without Defragmentation"),
+      :description  => _("Mirrorable memory without defragmentation in MB."),
+      :value        => sys.mirrorable_mem_without_defrag,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "mirrored_memory_used_by_hypervisor",
+      :display_name => _("Mirrored Memory Used By Hypervisor"),
+      :description  => _("Mirrored memory used by the hypervisor in MB."),
+      :value        => sys.mirrored_mem_used_by_hypervisor,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "max_mirrored_memory_defragmented",
+      :display_name => _("Maximum Mirrored Memory Defragmented"),
+      :description  => _("Maximum mirrored memory after defragmentation in MB."),
+      :value        => sys.max_mirrored_mem_defragmented,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "temp_memory_for_lpm",
+      :display_name => _("Temporary Memory For LPM"),
+      :description  => _("Temporary memory in use for logical partition mobility in MB."),
+      :value        => sys.temp_mem_for_lpm,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "pending_available_processor_units",
+      :display_name => _("Pending Available Processor Units"),
+      :description  => _("Pending available system processor units."),
+      :value        => sys.pending_avail_cpus,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "linux_only_processor_units",
+      :display_name => _("Linux Only Processor Units"),
+      :description  => _("Number of Linux only processor units."),
+      :value        => sys.linux_cpus,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "linux_or_vios_only_processor_units",
+      :display_name => _("Linux or VIOS Only Processor Units"),
+      :description  => _("Number of Linux or VIOS only processor units."),
+      :value        => sys.linux_or_vios_cpus,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "vios_processor_units",
+      :display_name => _("Virtual I/O Server Processor Units"),
+      :description  => _("Number of Virtual I/O Server processor units."),
+      :value        => sys.vios_cpus,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "shared_processor_pool_count",
+      :display_name => _("Shared Processor Pool Count"),
+      :description  => _("Number of shared processor pools."),
+      :value        => sys.shared_proc_pool_count,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "stealable_processor_units",
+      :display_name => _("Stealable Processor Units"),
+      :description  => _("Current stealable processor units."),
+      :value        => sys.stealable_cpus,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "max_virtual_processors_per_partition",
+      :display_name => _("Maximum Virtual Processors Per Partition"),
+      :description  => _("Maximum allowed virtual processors per partition."),
+      :value        => sys.max_virt_procs_per_lpar,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "min_processor_units_per_virtual_processor",
+      :display_name => _("Minimum Processor Units Per Virtual Processor"),
+      :description  => _("Minimum processor units per virtual processor."),
+      :value        => sys.min_proc_units_per_vproc,
+      :read_only    => true
+    )
+    persister.host_hardwares_advanced_settings.build(
+      :resource     => hardware,
+      :name         => "temp_processor_units_for_lpm",
+      :display_name => _("Temporary Processor Units For LPM"),
+      :description  => _("Temporary processor units in use for logical partition mobility."),
+      :value        => sys.temp_cpus_for_lpm,
+      :read_only    => true
+    )
   end
 
   def parse_host_guest_devices(hardware, sys)
@@ -255,6 +411,422 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Parser::InfraManager < Manage
       :display_name => _("Memory Region Size"),
       :description  => _("Memory Region Size in MB."),
       :value        => sys.memory_region_size,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "system_description",
+      :display_name => _("System Description"),
+      :description  => _("Description of the managed system."),
+      :value        => sys.description,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "system_type",
+      :display_name => _("System Type"),
+      :description  => _("Type of the managed system."),
+      :value        => sys.system_type,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "processor_throttling",
+      :display_name => _("Processor Throttling"),
+      :description  => _("Whether processor throttling is enabled."),
+      :value        => sys.processor_throttling,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "sp_version",
+      :display_name => _("Service Processor Version"),
+      :description  => _("Version of the service processor."),
+      :value        => sys.sp_version,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "sp_failover_enabled",
+      :display_name => _("Service Processor Failover Enabled"),
+      :description  => _("Whether service processor failover is enabled."),
+      :value        => sys.sp_failover_enabled,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "sp_failover_reason",
+      :display_name => _("Service Processor Failover Reason"),
+      :description  => _("Reason for the last service processor failover."),
+      :value        => sys.sp_failover_reason,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "sp_failover_state",
+      :display_name => _("Service Processor Failover State"),
+      :description  => _("Current service processor failover state."),
+      :value        => sys.sp_failover_state,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "physical_attn_led",
+      :display_name => _("Physical Attention LED"),
+      :description  => _("State of the physical system attention LED."),
+      :value        => sys.physical_attn_led,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "virtual_attn_led",
+      :display_name => _("Virtual Attention LED"),
+      :description  => _("State of the virtual system attention LED."),
+      :value        => sys.virtual_attn_led,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "permanent_memory",
+      :display_name => _("Permanent System Memory"),
+      :description  => _("Permanent system memory in MB."),
+      :value        => sys.permanent_mem,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "pending_memory_region_size",
+      :display_name => _("Pending Memory Region Size"),
+      :description  => _("Pending memory region size in MB."),
+      :value        => sys.pending_memory_region_size,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "memory_used_by_hypervisor",
+      :display_name => _("Memory Used By Hypervisor"),
+      :description  => _("Memory used by the hypervisor in MB."),
+      :value        => sys.mem_used_by_hypervisor,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "huge_page_count",
+      :display_name => _("Huge Page Count"),
+      :description  => _("Number of huge pages."),
+      :value        => sys.huge_page_count,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "huge_page_size",
+      :display_name => _("Huge Page Size"),
+      :description  => _("Size of a huge page."),
+      :value        => sys.huge_page_size,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_huge_pages",
+      :display_name => _("Maximum Huge Pages"),
+      :description  => _("Maximum number of huge pages."),
+      :value        => sys.max_huge_pages,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "available_huge_pages",
+      :display_name => _("Available Huge Pages"),
+      :description  => _("Current number of available huge pages."),
+      :value        => sys.avail_huge_pages,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "pending_available_huge_pages",
+      :display_name => _("Pending Available Huge Pages"),
+      :description  => _("Pending number of available huge pages."),
+      :value        => sys.pending_avail_huge_pages,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "requested_huge_pages",
+      :display_name => _("Requested Huge Pages"),
+      :description  => _("Number of requested huge pages."),
+      :value        => sys.requested_huge_pages,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "configurable_huge_pages",
+      :display_name => _("Configurable Huge Pages"),
+      :description  => _("Number of configurable huge pages."),
+      :value        => sys.configurable_huge_pages,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "supported_processor_compat_modes",
+      :display_name => _("Supported Processor Compatibility Modes"),
+      :description  => _("Supported partition processor compatibility modes."),
+      :value        => sys.cpu_compat_modes.join(", "),
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_key_length",
+      :display_name => _("vTPM Key Length"),
+      :description  => _("Virtual Trusted Platform Module key length."),
+      :value        => sys.vtpm_key_length,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_key_status",
+      :display_name => _("vTPM Key Status"),
+      :description  => _("Virtual Trusted Platform Module key status."),
+      :value        => sys.vtpm_key_status,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_version",
+      :display_name => _("vTPM Version"),
+      :description  => _("Virtual Trusted Platform Module version."),
+      :value        => sys.vtpm_version,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_max_partitions",
+      :display_name => _("vTPM Maximum Partitions"),
+      :description  => _("Maximum supported vTPM partitions."),
+      :value        => sys.vtpm_max_lpars,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_available_partitions",
+      :display_name => _("vTPM Available Partitions"),
+      :description  => _("Available vTPM partitions."),
+      :value        => sys.vtpm_lpars,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_min_key_store_size",
+      :display_name => _("vTPM Minimum Key Store Size"),
+      :description  => _("Minimum vTPM key store size."),
+      :value        => sys.vtpm_min_key_store_size,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vtpm_max_key_store_size",
+      :display_name => _("vTPM Maximum Key Store Size"),
+      :description  => _("Maximum vTPM key store size."),
+      :value        => sys.vtpm_max_key_store_size,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "supported_vtpm_versions",
+      :display_name => _("Supported vTPM Versions"),
+      :description  => _("Supported Virtual Trusted Platform Module versions."),
+      :value        => sys.supported_vtpm_versions.join(", "),
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "supported_vtpm2_encryption_levels",
+      :display_name => _("Supported vTPM 2 Encryption Levels"),
+      :description  => _("Supported vTPM 2.0 encryption levels."),
+      :value        => sys.supported_vtpm2_encryption_levels.join(", "),
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "current_power_saving_mode",
+      :display_name => _("Current Power Saving Mode"),
+      :description  => _("Current power saving mode."),
+      :value        => sys.current_power_saving_mode,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "required_power_saving_mode",
+      :display_name => _("Required Power Saving Mode"),
+      :description  => _("Required power saving mode."),
+      :value        => sys.required_power_saving_mode,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "supported_power_saving_modes",
+      :display_name => _("Supported Power Saving Modes"),
+      :description  => _("Supported power saving mode types."),
+      :value        => sys.supported_power_saving_modes.join(", "),
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_inactive_migrations",
+      :display_name => _("Maximum Inactive Migrations"),
+      :description  => _("Maximum number of inactive migrations."),
+      :value        => sys.max_inactive_migrations,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_active_migrations",
+      :display_name => _("Maximum Active Migrations"),
+      :description  => _("Maximum number of active migrations."),
+      :value        => sys.max_active_migrations,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_fw_active_migrations",
+      :display_name => _("Maximum Firmware Active Migrations"),
+      :description  => _("Maximum number of firmware active migrations."),
+      :value        => sys.max_fw_active_migrations,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "max_fw_inactive_migrations",
+      :display_name => _("Maximum Firmware Inactive Migrations"),
+      :description  => _("Maximum number of firmware inactive migrations."),
+      :value        => sys.max_fw_inactive_migrations,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "inactive_migrations_in_progress",
+      :display_name => _("Inactive Migrations In Progress"),
+      :description  => _("Number of inactive migrations in progress."),
+      :value        => sys.inactive_migrations_in_progress,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "active_migrations_in_progress",
+      :display_name => _("Active Migrations In Progress"),
+      :description  => _("Number of active migrations in progress."),
+      :value        => sys.active_migrations_in_progress,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "inactive_lpar_migration_capable",
+      :display_name => _("Inactive Partition Migration Capable"),
+      :description  => _("Whether inactive partition migration is supported."),
+      :value        => sys.inactive_lpar_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "active_lpar_migration_capable",
+      :display_name => _("Active Partition Migration Capable"),
+      :description  => _("Whether active partition migration is supported."),
+      :value        => sys.active_lpar_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "ibmi_lpar_migration_capable",
+      :display_name => _("IBM i Partition Migration Capable"),
+      :description  => _("Whether IBM i partition migration is supported."),
+      :value        => sys.ibmi_lpar_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "sriov_migration_capable",
+      :display_name => _("SR-IOV Migration Capable"),
+      :description  => _("Whether SR-IOV partition migration is supported."),
+      :value        => sys.sriov_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "pmem_migration_capable",
+      :display_name => _("Persistent Memory Migration Capable"),
+      :description  => _("Whether persistent memory partition migration is supported."),
+      :value        => sys.pmem_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "redundant_msps_migration_capable",
+      :display_name => _("Redundant MSPs Migration Capable"),
+      :description  => _("Whether redundant MSPs partition migration is supported."),
+      :value        => sys.redundant_msps_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "affinity_check_migration_capable",
+      :display_name => _("Affinity Check Migration Capable"),
+      :description  => _("Whether partition affinity check is supported for migration."),
+      :value        => sys.affinity_check_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "vswitch_migration_capable",
+      :display_name => _("Virtual Switch Migration Capable"),
+      :description  => _("Whether virtual switch change during partition migration is supported."),
+      :value        => sys.vswitch_migration_capable,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "npiv_validation_policy",
+      :display_name => _("NPIV Validation Policy"),
+      :description  => _("NPIV validation policy used for migration."),
+      :value        => sys.npiv_validation_policy,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "inactive_profile_migration_policy",
+      :display_name => _("Inactive Profile Migration Policy"),
+      :description  => _("Inactive profile migration policy."),
+      :value        => sys.inactive_profile_migration_policy,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "ipl_lpar_start_policy",
+      :display_name => _("IPL Partition Start Policy"),
+      :description  => _("Power-on logical partition start policy."),
+      :value        => sys.ipl_lpar_start_policy,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "ipl_power_on_side",
+      :display_name => _("IPL Power On Side"),
+      :description  => _("Current power-on side."),
+      :value        => sys.ipl_power_on_side,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "ipl_keylock",
+      :display_name => _("IPL System Keylock"),
+      :description  => _("Current system keylock position."),
+      :value        => sys.ipl_keylock,
+      :read_only    => true
+    )
+    persister.hosts_advanced_settings.build(
+      :resource     => host,
+      :name         => "ipl_power_on_source",
+      :display_name => _("IPL Power On Source"),
+      :description  => _("Source of the system power on."),
+      :value        => sys.ipl_power_on_source,
       :read_only    => true
     )
   end

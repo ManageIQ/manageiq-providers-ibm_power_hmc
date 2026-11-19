@@ -30,6 +30,13 @@ class ManageIQ::Providers::IbmPowerHmc::Inventory::Persister::InfraManager < Man
         :parent_inventory_collections => %i[hosts]
       )
     end
+    add_collection(infra, :host_hardwares_advanced_settings) do |builder|
+      builder.add_properties(
+        :manager_ref                  => %i[resource name],
+        :model_class                  => ::AdvancedSetting,
+        :parent_inventory_collections => %i[host_hardwares]
+      )
+    end
     add_collection(infra, :resource_pools)
     add_collection(infra, :vm_resource_pools)
     add_collection(infra, :parent_blue_folders)
